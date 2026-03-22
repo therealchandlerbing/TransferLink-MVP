@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #E8EAED; color: #1a1a2e;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; line-height: 1.5;
+}
+:root {
+  --navy: #0F1D2F; --navy-light: #1a2d42; --accent: #1B9AAA; --accent-dark: #168a99; --accent-light: #E8F6F8;
+  --amber: #F4A261; --amber-dark: #E08A3A; --amber-light: #FFF3E0;
+  --red: #E63946; --red-light: #FDEAEA; --green: #2A9D8F; --green-light: #E6F5F0;
+  --purple: #7C4DFF; --purple-light: #EDE7F6;
+  --gray-50: #F8F9FA; --gray-100: #F0F2F5; --gray-200: #E2E6EA; --gray-300: #CED4DA;
+  --gray-400: #ADB5BD; --gray-500: #6C757D; --gray-600: #5A6370; --gray-700: #495057;
+  --gray-800: #343A40; --gray-900: #212529; --white: #FFFFFF;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.12);
+  --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 20px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+.page-wrapper { animation: pageIn 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
+@keyframes pageIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes sc { 0% { top: 0 } 50% { top: calc(100% - 3px) } 100% { top: 0 } }
+@keyframes bp { 0%,100% { box-shadow: 0 0 0 0 rgba(230,57,70,.4) } 50% { box-shadow: 0 0 0 6px rgba(230,57,70,0) } }
+@keyframes qp { 0%,100% { opacity:.3; transform:scale(.95) } 50% { opacity:.6; transform:scale(1.05) } }
+@keyframes fadeIn { from { opacity:0; transform:translateY(-8px) } to { opacity:1; transform:translateY(0) } }
+@keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:.6 } }
+@keyframes slideUp { from { opacity:0; transform:translateY(20px) } to { opacity:1; transform:translateY(0) } }
+@keyframes toastIn { from { opacity:0; transform:translateY(-100%) } to { opacity:1; transform:translateY(0) } }
+@keyframes drawCheck { to { stroke-dashoffset: 0 } }
+@keyframes confirmBounce { 0% { transform: scale(0.3); opacity:0 } 50% { transform: scale(1.05) } 100% { transform: scale(1); opacity:1 } }
+textarea:focus, input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+button:active { transform: scale(0.97); }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
