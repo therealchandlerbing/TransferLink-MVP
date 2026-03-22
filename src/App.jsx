@@ -78,7 +78,7 @@ export default function App() {
   return (
     <div style={{ maxWidth: 680, margin: '0 auto', minHeight: '100vh', position: 'relative', fontFamily: "'Inter',system-ui,sans-serif", color: C.tx }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #1a1a2e; }
         .card-hover:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(15,29,47,.12) !important; }

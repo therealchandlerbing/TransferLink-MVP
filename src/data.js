@@ -106,20 +106,116 @@ export const PERSONAS = [
 ];
 
 export const DEMO_SCREEN_MAP = [
-  {screen:0, title:"Welcome to TransferLink", desc:"Home screen with role-based entry points"},
-  {screen:15, title:"Login & Onboarding", desc:"Facility staff signs in and sees workflow overview"},
-  {screen:17, title:"Facility Dashboard", desc:"Active alerts, transfer stats, and follow-ups"},
-  {screen:1, title:"Patient Roster", desc:"View all residents at Cascade View"},
-  {screen:2, title:"Patient Record", desc:"Full clinical record for Maggie Tanaka"},
-  {screen:3, title:"Initiate Transfer", desc:"Nurse documents reason, symptoms, interventions"},
-  {screen:4, title:"Confirm Transfer", desc:"Review all data before generating QR"},
-  {screen:5, title:"QR Code Ready", desc:"Scannable code for EMS crew"},
-  {screen:7, title:"EMS Scans QR", desc:"EMS crew scans code on arrival"},
-  {screen:8, title:"EMS Transport View", desc:"EMS sees full record with comfort preferences"},
-  {screen:9, title:"ED Scans QR", desc:"ED staff scans code on arrival"},
-  {screen:10, title:"ED Full Record", desc:"ED sees complete transfer data and history"},
-  {screen:11, title:"ED Return Documentation", desc:"ED staff documents diagnosis and discharge plan"},
-  {screen:12, title:"Record Updated", desc:"Confirmation that facility has been notified"},
-  {screen:13, title:"Facility Receives Update", desc:"Nurse sees ED return info on patient record"},
-  {screen:14, title:"Full Timeline", desc:"Complete audit trail of every handoff event"},
+  {
+    screen: 0,
+    title: "Welcome to TransferLink",
+    desc: "A QR code-based transfer system built from WA State research",
+    scene: "47 healthcare professionals across Washington State confirmed what every LTC nurse already knows: the paper-based transfer process is broken, unreliable, and puts patients at real risk. This is what the research said to build instead.",
+    note: "81% of respondents said they were more likely to complete a transfer form if it was electronic. 61% said a QR code linking to POLST documents would be useful."
+  },
+  {
+    screen: 15,
+    title: "Login & Onboarding",
+    desc: "Facility staff signs in — no separate app, no EMR password",
+    scene: "It's March 20, 2026. RN Sarah Mitchell starts her night shift at Cascade View Assisted Living. She logs in with a facility ID — no separate app to install, no EMR portal to navigate.",
+    note: "Zero friction at login means nurses are in the record in seconds, not minutes."
+  },
+  {
+    screen: 17,
+    title: "Facility Dashboard",
+    desc: "Real-time visibility into active transfers and follow-up alerts",
+    scene: "Sarah's dashboard shows one active transfer, three follow-up alerts, and recent activity. Maggie Tanaka's name is at the top — her transfer to Providence Regional is in progress.",
+    note: "Charge nurses currently manage this visibility through whiteboards, sticky notes, and phone calls."
+  },
+  {
+    screen: 1,
+    title: "Patient Roster",
+    desc: "Every resident at Cascade View, searchable at a glance",
+    scene: "Four residents tonight. Maggie Tanaka — Room 204, 87 years old — is showing an active transfer badge. One tap to her full record.",
+    note: "The color bar on each card shows code status at a glance. No hunting through files."
+  },
+  {
+    screen: 2,
+    title: "Patient Record",
+    desc: "Full clinical record, built at admission, always current",
+    scene: "Maggie's complete record is right here: DNR/DNI with POLST on file, Japanese speaker, Penicillin and Sulfa drug allergies. Everything the ED needs — captured once at admission, never lost.",
+    note: "Before: a paper packet that may or may not reach the treating physician. Language needs and code status were regularly missed."
+  },
+  {
+    screen: 3,
+    title: "Initiate Transfer",
+    desc: "Add only what's new — the baseline is already documented",
+    scene: "2:47 AM. Maggie's O2 sat has dropped to 84% and she isn't responding to albuterol. Sarah adds only what changed tonight: the reason, the symptoms, what's been tried. The baseline data is already here. Under 2 minutes total.",
+    note: "Top barriers in the survey: 'takes too long' (38%) and 'too much information required' (31%). This form only asks for what changed."
+  },
+  {
+    screen: 4,
+    title: "Confirm Transfer",
+    desc: "Final review before the QR code generates",
+    scene: "One last look before the QR is generated: DNR/DNI. POLST on file. Language: Japanese. These aren't checkboxes to rush through — they are the information that determines what happens the moment EMS walks in.",
+    note: "A patient in this study was identified as Korean-speaking instead of Japanese-speaking. Significant distress followed — resolved the moment the correct interpreter arrived. Language is surfaced first. Always."
+  },
+  {
+    screen: 5,
+    title: "QR Code Ready — The Hero Moment",
+    desc: "One scan replaces the paper packet at every handoff point",
+    scene: "This is the moment everything changes. One QR code — printable, displayable on a tablet, or attached to a wristband — carries everything. EMS scans it on arrival. The ED scans it on arrival. No packet. No phone call to the facility.",
+    note: "61% of survey respondents said a QR code linking to POLST documents would be useful. An additional 28% said maybe. This is that."
+  },
+  {
+    screen: 7,
+    title: "EMS Scans QR",
+    desc: "Crew scans on arrival — no app install, no login required",
+    scene: "3:14 AM. EMS arrives at Cascade View. One scan from their tablet or phone. The record opens in a web browser — no app to install, no credentials to enter for transport teams.",
+    note: "The same QR code works at every handoff point. EMS. ED. The same current record, every time."
+  },
+  {
+    screen: 8,
+    title: "EMS Transport View",
+    desc: "Critical safety info surfaces first — then comfort and preferences",
+    scene: "The first things EMS sees: Japanese speaker. DNR/DNI. POLST on file. Below that: Maggie calms with traditional Japanese music and becomes agitated in loud environments. These aren't soft extras.",
+    note: "Person-centered care preferences directly affect how a patient survives a frightening 3 AM transfer."
+  },
+  {
+    screen: 9,
+    title: "ED Scans QR",
+    desc: "Same code, same record — no re-entering demographics",
+    scene: "Providence Regional Emergency Department. The triage nurse scans the same QR code. Same record, updated in real time. The Japanese interpreter is already being called before Maggie reaches the bay.",
+    note: "One record. Every handoff. Zero duplicate data entry."
+  },
+  {
+    screen: 10,
+    title: "ED Full Record",
+    desc: "Complete history, POLST on file — all from a single scan",
+    scene: "The treating physician has everything: A-FIB, CHF, COPD, current medications, the POLST. The record that arrived with Maggie is the same one built the day she was admitted to Cascade View.",
+    note: "POLST forms are frequently unavailable at the moment of crisis. One patient in this research received CPR against their explicit wishes. The POLST is always one tap away."
+  },
+  {
+    screen: 11,
+    title: "ED Return Documentation",
+    desc: "ED closes the loop — diagnosis, vitals, discharge plan",
+    scene: "Maggie is stable. The ED physician takes 90 seconds to document: COPD exacerbation, prednisone and azithromycin prescribed, pulmonology follow-up in 7 days. The moment it's submitted, Cascade View is automatically notified.",
+    note: "ED-to-facility return is consistently the most broken part of the current process. Phone reports get missed. Faxes sit unread. This closes that loop automatically."
+  },
+  {
+    screen: 12,
+    title: "Loop Closed",
+    desc: "Facility notified automatically — no fax, no phone tag",
+    scene: "The record is sealed. Cascade View has been notified — the full diagnosis, new prescriptions, and the follow-up plan — before Maggie arrives back at the facility. No phone tag. No fax in a queue.",
+    note: "TransferLink treats the return as equally important as the initial transfer. Both directions. One record."
+  },
+  {
+    screen: 13,
+    title: "Facility Receives Update",
+    desc: "Morning shift sees the complete picture before the patient returns",
+    scene: "7:22 AM at Cascade View. The morning RN opens Maggie's record: COPD exacerbation, O2 at 2L/min, 5-day medication course, pulmonology follow-up in one week. All documented before Maggie walks back in.",
+    note: "In the current system, the patient often arrives before any information does."
+  },
+  {
+    screen: 14,
+    title: "Full Audit Trail",
+    desc: "Every scan, every handoff — timestamped and accountable",
+    scene: "Initiated 2:47 AM. EMS scanned 3:14 AM. ED scanned 3:52 AM. Return documented 6:15 PM. Facility notified 6:15 PM. One patient. One record. Every handoff accounted for.",
+    note: "This audit trail protects patients, facilities, and care teams. It's built into every transfer — not an add-on."
+  },
 ];

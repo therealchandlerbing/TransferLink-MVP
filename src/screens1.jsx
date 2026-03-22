@@ -5,56 +5,120 @@ import { AllergyB, CodeBanner, PtHd, Steps, TransferTracker, PtSwitcher, POLST, 
 // ===== S0 — HOME =====
 export const S0 = ({ go, m, onStartDemo }) => {
   const rs = [
-    { s: 1, i: '📋', t: 'LTC Nurse', d: 'Start a transfer', c: C.accent },
-    { s: 7, i: '🚑', t: 'EMS Crew', d: 'Scan on transport', c: C.amber },
-    { s: 9, i: '🏥', t: 'ED Staff', d: 'Receive a patient', c: C.green },
-    { s: 13, i: '🏠', t: 'Facility Return', d: 'Patient is back', c: C.purple },
+    { s: 1,  i: '📋', t: 'LTC Nurse',       d: 'Initiate a transfer',   c: C.accent },
+    { s: 7,  i: '🚑', t: 'EMS Crew',         d: 'Scan on transport',     c: C.amber  },
+    { s: 9,  i: '🏥', t: 'ED Staff',          d: 'Receive a patient',     c: C.green  },
+    { s: 13, i: '🏠', t: 'Facility Return',   d: 'Patient is back',       c: C.purple },
   ];
   const nav2 = [
-    { s: 15, i: '🔐', t: 'Login', c: '#546E7A' },
+    { s: 15, i: '🔐', t: 'Login',     c: '#546E7A' },
     { s: 17, i: '📊', t: 'Dashboard', c: '#0097A7' },
-    { s: 18, i: '📁', t: 'History', c: '#5C6BC0' },
-    { s: 19, i: '📋', t: 'SBAR', c: '#7B1FA2' },
+    { s: 18, i: '📁', t: 'History',   c: '#5C6BC0' },
+    { s: 19, i: '📋', t: 'SBAR',      c: '#7B1FA2' },
   ];
+
+  const stats = [
+    { n: '47',   label: 'Clinicians Surveyed',     sub: 'Across Washington State'       },
+    { n: '81%',  label: 'Prefer Electronic Forms',  sub: 'Over paper-based transfer'     },
+    { n: '61%',  label: 'Want QR for POLST',        sub: 'Plus 28% said maybe'           },
+  ];
+
+  const stories = [
+    {
+      tag: 'Language & Communication',
+      color: C.accent,
+      body: 'A patient was identified as Korean-speaking instead of Japanese-speaking at transfer. Significant distress throughout her ED visit. It resolved the moment the correct interpreter arrived.',
+      resolution: 'Language is now the first field on every record, visible at every handoff point.',
+    },
+    {
+      tag: 'Advanced Directives',
+      color: C.red,
+      body: 'A patient received CPR against their explicit wishes because the POLST document was unavailable at the time of transfer from the LTC facility.',
+      resolution: 'The POLST is now one tap away from the QR code — at every point in the care chain.',
+    },
+  ];
+
   return (
-    <div style={{ minHeight: '100vh', background: `linear-gradient(160deg,${C.navy},#1E2F4D 40%,#2A3F6A)`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: m ? 16 : 32, position: 'relative' }}>
-      <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle at 1px 1px,rgba(255,255,255,.03) 1px,transparent 0)', backgroundSize: '32px 32px' }} />
-      <div style={{ textAlign: 'center', marginBottom: m ? 24 : 36, position: 'relative' }}>
-        <div style={{ fontSize: m ? 10 : 12, fontWeight: 700, letterSpacing: 4, color: C.accent, textTransform: 'uppercase', marginBottom: 12 }}>Prototype Preview</div>
-        <div style={{ fontSize: m ? 32 : 42, fontWeight: 900, color: '#fff', letterSpacing: -1 }}>Transfer<span style={{ color: C.accent }}>Link</span></div>
-        <div style={{ fontSize: m ? 13 : 16, color: 'rgba(255,255,255,.55)', marginTop: 10 }}>One patient. One record. Every handoff.</div>
+    <div style={{ minHeight: '100vh', background: `linear-gradient(160deg,${C.navy},#1A2B45 45%,#22395E)`, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: m ? '28px 16px 36px' : '40px 32px 48px', position: 'relative' }}>
+      {/* Subtle dot grid */}
+      <div style={{ position: 'fixed', inset: 0, backgroundImage: 'radial-gradient(circle at 1px 1px,rgba(255,255,255,.025) 1px,transparent 0)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
+
+      {/* ── HEADER ── */}
+      <div style={{ textAlign: 'center', marginBottom: m ? 20 : 28, position: 'relative', maxWidth: 540, width: '100%' }}>
+        <div style={{ fontSize: m ? 10 : 11, fontWeight: 700, letterSpacing: 3.5, color: C.accent, textTransform: 'uppercase', marginBottom: 14 }}>
+          DNP Research · WA State · 2026
+        </div>
+        <div style={{ fontFamily: "'Manrope','Inter',sans-serif", fontSize: m ? 34 : 48, fontWeight: 900, color: '#fff', letterSpacing: -1.5, lineHeight: 1 }}>
+          Transfer<span style={{ color: C.accent }}>Link</span>
+        </div>
+        <div style={{ fontSize: m ? 13 : 15, color: 'rgba(255,255,255,.5)', marginTop: 12, letterSpacing: .1 }}>
+          One patient. One record. Every handoff.
+        </div>
       </div>
+
+      {/* ── STATS ROW ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: m ? 8 : 12, maxWidth: 540, width: '100%', marginBottom: m ? 16 : 20, position: 'relative' }}>
+        {stats.map((st, i) => (
+          <div key={i} style={{ background: 'rgba(255,255,255,.06)', borderRadius: m ? 12 : 14, padding: m ? '12px 8px' : '16px 12px', textAlign: 'center', border: '1px solid rgba(255,255,255,.07)' }}>
+            <div style={{ fontFamily: "'Manrope','Inter',sans-serif", fontSize: m ? 20 : 26, fontWeight: 900, color: C.accent, lineHeight: 1 }}>{st.n}</div>
+            <div style={{ fontSize: m ? 9 : 10, fontWeight: 700, color: 'rgba(255,255,255,.7)', marginTop: 5, lineHeight: 1.35 }}>{st.label}</div>
+            <div style={{ fontSize: m ? 8 : 9, color: 'rgba(255,255,255,.3)', marginTop: 3 }}>{st.sub}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── CLINICAL STORIES ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr', gap: m ? 8 : 12, maxWidth: 540, width: '100%', marginBottom: m ? 16 : 22, position: 'relative' }}>
+        {stories.map((st, i) => (
+          <div key={i} style={{ background: 'rgba(255,255,255,.05)', borderRadius: m ? 12 : 14, padding: m ? '14px 13px' : '18px 16px', borderLeft: `3px solid ${st.color}55` }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: st.color, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 8 }}>{st.tag}</div>
+            <div style={{ fontSize: m ? 11 : 12, color: 'rgba(255,255,255,.62)', lineHeight: 1.65, marginBottom: 10 }}>{st.body}</div>
+            <div style={{ fontSize: m ? 10 : 11, color: 'rgba(255,255,255,.88)', fontWeight: 600, lineHeight: 1.45 }}>→ {st.resolution}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── ROLE CARDS ── */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: m ? 10 : 14, maxWidth: 540, width: '100%', position: 'relative' }}>
         {rs.map(r => (
-          <div key={r.s} onClick={() => go(r.s)} className="hover-scale" style={{ background: 'rgba(255,255,255,.07)', backdropFilter: 'blur(16px)', border: `1px solid ${r.c}30`, borderRadius: m ? 18 : 22, padding: m ? '20px 14px 18px' : '28px 22px 24px', cursor: 'pointer', textAlign: 'center', transition: 'all .25s', position: 'relative', overflow: 'hidden', boxShadow: `0 4px 24px ${r.c}10` }}>
+          <div key={r.s} onClick={() => go(r.s)} className="hover-scale" style={{ background: 'rgba(255,255,255,.07)', backdropFilter: 'blur(16px)', border: `1px solid ${r.c}28`, borderRadius: m ? 18 : 20, padding: m ? '20px 14px 18px' : '26px 20px 22px', cursor: 'pointer', textAlign: 'center', transition: 'all .25s', position: 'relative', overflow: 'hidden', boxShadow: `0 4px 24px ${r.c}0d` }}>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg,transparent,${r.c},transparent)` }} />
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, top: 0, background: `radial-gradient(ellipse at 50% 0%,${r.c}18,transparent 70%)`, pointerEvents: 'none' }} />
-            <div style={{ width: m ? 48 : 56, height: m ? 48 : 56, borderRadius: m ? 24 : 28, background: `${r.c}22`, border: `1.5px solid ${r.c}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', marginBottom: m ? 10 : 14 }}>
-              <span style={{ fontSize: m ? 22 : 26 }}>{r.i}</span>
+            <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(ellipse at 50% 0%,${r.c}14,transparent 65%)`, pointerEvents: 'none' }} />
+            <div style={{ width: m ? 46 : 52, height: m ? 46 : 52, borderRadius: '50%', background: `${r.c}1e`, border: `1.5px solid ${r.c}38`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', marginBottom: m ? 10 : 13 }}>
+              <span style={{ fontSize: m ? 22 : 24 }}>{r.i}</span>
             </div>
-            <div style={{ fontSize: m ? 13 : 16, fontWeight: 800, color: '#fff', marginBottom: 4 }}>{r.t}</div>
-            <div style={{ fontSize: m ? 10 : 12, color: 'rgba(255,255,255,.45)', fontWeight: 500 }}>{r.d}</div>
+            <div style={{ fontSize: m ? 13 : 15, fontWeight: 800, color: '#fff', marginBottom: 4 }}>{r.t}</div>
+            <div style={{ fontSize: m ? 10 : 11, color: 'rgba(255,255,255,.42)', fontWeight: 500 }}>{r.d}</div>
           </div>
         ))}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: m ? 7 : 10, maxWidth: 540, width: '100%', marginTop: m ? 10 : 14, position: 'relative' }}>
+
+      {/* ── SECONDARY NAV ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: m ? 7 : 10, maxWidth: 540, width: '100%', marginTop: m ? 10 : 13, position: 'relative' }}>
         {nav2.map(n => (
-          <div key={n.s} onClick={() => go(n.s)} style={{ background: 'rgba(255,255,255,.05)', border: `1px solid rgba(255,255,255,.1)`, borderBottom: `2px solid ${n.c}60`, borderRadius: 12, padding: m ? '11px 6px' : '13px 10px', cursor: 'pointer', textAlign: 'center', transition: 'all .2s' }}>
-            <div style={{ fontSize: m ? 15 : 18, marginBottom: 3 }}>{n.i}</div>
-            <div style={{ fontSize: m ? 9 : 10, fontWeight: 700, color: 'rgba(255,255,255,.7)', letterSpacing: .3 }}>{n.t}</div>
+          <div key={n.s} onClick={() => go(n.s)} style={{ background: 'rgba(255,255,255,.05)', border: '1px solid rgba(255,255,255,.08)', borderBottom: `2px solid ${n.c}55`, borderRadius: 12, padding: m ? '11px 6px' : '12px 10px', cursor: 'pointer', textAlign: 'center', transition: 'all .2s' }}>
+            <div style={{ fontSize: m ? 15 : 17, marginBottom: 3 }}>{n.i}</div>
+            <div style={{ fontSize: m ? 9 : 10, fontWeight: 700, color: 'rgba(255,255,255,.65)', letterSpacing: .3 }}>{n.t}</div>
           </div>
         ))}
       </div>
-      <div style={{ marginTop: m ? 16 : 24, position: 'relative' }}>
-        <button onClick={onStartDemo} style={{ padding: '12px 32px', borderRadius: 12, background: `linear-gradient(135deg,${C.accent},${C.accentD})`, color: '#fff', border: 'none', fontSize: 14, fontWeight: 700, cursor: 'pointer', boxShadow: `0 4px 16px ${C.accentG}`, fontFamily: 'inherit' }}>▶ Start Guided Demo</button>
+
+      {/* ── DEMO CTA ── */}
+      <div style={{ marginTop: m ? 18 : 26, position: 'relative' }}>
+        <button onClick={onStartDemo} style={{ padding: m ? '13px 28px' : '14px 36px', borderRadius: 14, background: `linear-gradient(135deg,${C.accent},${C.accentD})`, color: '#fff', border: 'none', fontSize: m ? 14 : 15, fontWeight: 700, cursor: 'pointer', boxShadow: `0 4px 20px rgba(27,154,170,.35)`, fontFamily: 'inherit', letterSpacing: .2 }}>
+          ▶ Start Guided Tour — Maggie's Story
+        </button>
       </div>
-      <div style={{ marginTop: m ? 16 : 24, textAlign: 'center', position: 'relative' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: m ? 16 : 32, marginBottom: 16 }}>
-          {[['4', 'Patient Records'], ['81%', 'Prefer Electronic'], ['< 5 min', 'Target Completion']].map(([n, l], i) => (
-            <div key={i}><div style={{ fontSize: m ? 18 : 22, fontWeight: 800, color: C.accent }}>{n}</div><div style={{ fontSize: m ? 9 : 11, color: 'rgba(255,255,255,.35)', marginTop: 2 }}>{l}</div></div>
-          ))}
+
+      {/* ── FOOTER ATTRIBUTION ── */}
+      <div style={{ marginTop: m ? 20 : 28, textAlign: 'center', position: 'relative', maxWidth: 480 }}>
+        <div style={{ fontSize: m ? 10 : 11, color: 'rgba(255,255,255,.28)', lineHeight: 1.9 }}>
+          Research: Lily Schroeder, DNP Candidate · ER Nurse, 12+ years<br />
+          WA State LTC Transformation Workgroup · 360 Social Impact Studios
         </div>
-        <div style={{ fontSize: 11, color: 'rgba(255,255,255,.25)' }}>Prototype demonstration. No real patient data.</div>
+        <div style={{ fontSize: 10, color: 'rgba(255,255,255,.15)', marginTop: 6 }}>
+          Prototype demonstration · No real patient data
+        </div>
       </div>
     </div>
   );

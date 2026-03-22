@@ -65,7 +65,10 @@ export const GuidedDemo = ({ onExit, demoStep, setDemoStep, navigate, selectPati
       <div style={{ display: 'flex', gap: 3, flexShrink: 0 }}>
         {steps.map((_, i) => <div key={i} style={{ width: i === demoStep ? 12 : 5, height: 5, borderRadius: 3, background: i < demoStep ? C.green : i === demoStep ? C.accent : 'rgba(255,255,255,.2)', transition: 'all .3s' }} />)}
       </div>
-      <span style={{ flex: 1, fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,.8)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.title}</span>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,.9)' }}>{s.title}</span>
+        {s.desc && <span style={{ fontSize: 11, color: 'rgba(255,255,255,.4)', marginLeft: 6 }}>— {s.desc}</span>}
+      </div>
       <span style={{ fontSize: 11, color: 'rgba(255,255,255,.4)', flexShrink: 0 }}>{demoStep + 1}/{steps.length}</span>
       <button onClick={() => setCollapsed(false)} style={{ background: 'rgba(255,255,255,.1)', border: 'none', borderRadius: 8, color: '#fff', fontSize: 12, fontWeight: 600, padding: '5px 10px', cursor: 'pointer', flexShrink: 0, fontFamily: 'inherit' }}>▲ Expand</button>
       <button onClick={onExit} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,.4)', fontSize: 16, cursor: 'pointer', padding: '0 4px', lineHeight: 1 }}>✕</button>
@@ -87,8 +90,10 @@ export const GuidedDemo = ({ onExit, demoStep, setDemoStep, navigate, selectPati
           </div>
         </div>
         {/* Step info */}
-        <div style={{ fontSize: m ? 13 : 15, fontWeight: 700, color: '#fff', marginBottom: 2, lineHeight: 1.3 }}>{s.title}</div>
-        <div style={{ fontSize: m ? 11 : 12, color: 'rgba(255,255,255,.55)', marginBottom: 10, lineHeight: 1.4 }}>{s.desc}</div>
+        <div style={{ fontSize: m ? 12 : 13, fontWeight: 800, color: '#fff', marginBottom: 4, lineHeight: 1.3, letterSpacing: -.1 }}>{s.title}</div>
+        {s.scene && <div style={{ fontSize: m ? 11 : 12, color: 'rgba(255,255,255,.82)', marginBottom: s.note ? 7 : 10, lineHeight: 1.6 }}>{s.scene}</div>}
+        {s.note && <div style={{ fontSize: m ? 10 : 11, color: C.accent, marginBottom: 10, lineHeight: 1.5, borderLeft: `2px solid rgba(27,154,170,.4)`, paddingLeft: 8 }}>{s.note}</div>}
+        {!s.scene && <div style={{ fontSize: m ? 11 : 12, color: 'rgba(255,255,255,.5)', marginBottom: 10, lineHeight: 1.4 }}>{s.desc}</div>}
         {/* Controls */}
         <div style={{ display: 'flex', gap: 8 }}>
           <button onClick={() => goToStep(demoStep - 1)} disabled={demoStep === 0} style={{ padding: m ? '7px 12px' : '8px 16px', borderRadius: 8, border: '1px solid rgba(255,255,255,.2)', background: 'transparent', color: '#fff', fontSize: m ? 12 : 13, fontWeight: 600, cursor: demoStep === 0 ? 'not-allowed' : 'pointer', opacity: demoStep === 0 ? .3 : 1, fontFamily: 'inherit' }}>← Prev</button>
