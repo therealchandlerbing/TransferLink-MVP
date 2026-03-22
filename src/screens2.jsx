@@ -123,11 +123,10 @@ export const S13 = ({ go, m, p, patients, ptId, setPt }) => (
         <span style={{ fontSize: 20 }}>✅</span>
         <div><div style={{ fontWeight: 700, fontSize: 14, color: C.greenD }}>{p.short} has returned from the ED</div><div style={{ fontSize: 12, color: C.txS }}>{p.er.time || 'Today'} · via {p.tx.dest?.split(',')[0]}</div></div>
       </div>
-      {import('./clinical.jsx').then(() => null)}
       <Cd m={m} style={{ border: `2px solid ${C.green}25`, borderLeft: `4px solid ${C.green}` }} ch={<>
         <SL ch="ED Return Information" ic="🏥" />
         <FR l="Diagnosis" v={<strong>{p.er.dx}</strong>} hl />
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 8, margin: '8px 0 12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr 1fr' : '1fr 1fr 1fr 1fr', gap: 8, margin: '8px 0 12px' }}>
           {[['BP', p.er.bp], ['Pulse', p.er.hr], ['RR', p.er.rr], ['SPO2', p.er.sp]].map(([l, v], i) => (
             <div key={i} style={{ background: C.lG, borderRadius: 10, padding: '10px 8px', textAlign: 'center', border: `1px solid ${C.green}20` }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: C.green, textTransform: 'uppercase' }}>{l}</div>

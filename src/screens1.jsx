@@ -27,13 +27,13 @@ export const S0 = ({ go, m, onStartDemo }) => {
     {
       tag: 'Language & Communication',
       color: C.accent,
-      body: 'A patient was identified as Korean-speaking instead of Japanese-speaking at transfer. Significant distress throughout her ED visit. It resolved the moment the correct interpreter arrived.',
+      body: 'A patient was identified as Korean-speaking instead of Japanese-speaking at transfer — a documented pattern in LTC-to-ED handoffs where language information is absent or buried. The correct interpreter resolved communication immediately upon arrival.',
       resolution: 'Language is now the first field on every record, visible at every handoff point.',
     },
     {
-      tag: 'Advanced Directives',
+      tag: 'Advance Directives',
       color: C.red,
-      body: 'A patient received CPR against their explicit wishes because the POLST document was unavailable at the time of transfer from the LTC facility.',
+      body: 'Survey respondents reported cases where POLST forms and advance directive documents were unavailable at the point of transfer, creating risk that a resident\'s documented wishes would not be honored during a crisis.',
       resolution: 'The POLST is now one tap away from the QR code — at every point in the care chain.',
     },
   ];
@@ -76,6 +76,9 @@ export const S0 = ({ go, m, onStartDemo }) => {
             <div style={{ fontSize: m ? 10 : 11, color: 'rgba(255,255,255,.88)', fontWeight: 600, lineHeight: 1.45 }}>→ {st.resolution}</div>
           </div>
         ))}
+        <div style={{ gridColumn: '1 / -1', fontSize: m ? 9 : 10, color: 'rgba(255,255,255,.25)', textAlign: 'center', marginTop: 4, lineHeight: 1.5 }}>
+          Composite accounts based on clinician survey responses. No individual patient is identified.
+        </div>
       </div>
 
       {/* ── ROLE CARDS ── */}
@@ -106,7 +109,7 @@ export const S0 = ({ go, m, onStartDemo }) => {
       {/* ── DEMO CTA ── */}
       <div style={{ marginTop: m ? 18 : 26, position: 'relative' }}>
         <button onClick={onStartDemo} style={{ padding: m ? '13px 28px' : '14px 36px', borderRadius: 14, background: `linear-gradient(135deg,${C.accent},${C.accentD})`, color: '#fff', border: 'none', fontSize: m ? 14 : 15, fontWeight: 700, cursor: 'pointer', boxShadow: `0 4px 20px rgba(27,154,170,.35)`, fontFamily: 'inherit', letterSpacing: .2 }}>
-          ▶ Start Guided Tour — Maggie's Story
+          ▶ Start Guided Tour — Follow a Transfer
         </button>
       </div>
 
@@ -273,7 +276,9 @@ export const S4 = ({ go, m, p, patients, ptId, setPt }) => (
 );
 
 // ===== S5 — QR READY =====
-export const S5 = ({ go, m, p }) => (
+export const S5 = ({ go, m, p }) => {
+  const [shared, setShared] = useState(false);
+  return (
   <div style={{ minHeight: '100vh', background: C.bg }}>
     <TB m={m} left={<Bk go={go} to={2} label="Record" />} ctr="QR Code Ready" />
     <Steps cur={3} m={m} />
@@ -303,15 +308,18 @@ export const S5 = ({ go, m, p }) => (
       </>} />
       <div style={{ display: 'flex', flexDirection: m ? 'column' : 'row', gap: m ? 8 : 12, marginTop: 4 }}>
         <Bt full outline ch="Print Summary" onClick={() => go(6)} m={m} />
-        <Bt full ch="Share Link" onClick={() => alert('Share link copied!')} m={m} />
+        <Bt full ch={shared ? '✓ Link Copied!' : 'Share Link'} bg={shared ? C.green : C.accent} onClick={() => { setShared(true); setTimeout(() => setShared(false), 2000); }} m={m} />
       </div>
     </div>
   </div>
-);
+  );
+};
 
 // ===== S6 — PRINT PREVIEW =====
 export const S6 = ({ go, m, p }) => {
   const [pr, setPr] = useState(false);
+  const [pdf, setPdf] = useState(false);
+  const [fax, setFax] = useState(false);
   return (
     <div style={{ minHeight: '100vh', background: '#E0E0E0' }}>
       <TB m={m} left={<Bk go={go} to={5} label="Back" />} ctr="Print Preview" />
@@ -338,8 +346,8 @@ export const S6 = ({ go, m, p }) => {
           {pr ? <div style={{ color: C.green, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}><Chk s={20} c={C.green} /> Sent to printer</div>
             : <>
               <Bt ch="🖨 Print" onClick={() => { setPr(true); setTimeout(() => setPr(false), 2000); }} m={m} />
-              <Bt ch="📄 Download PDF" outline onClick={() => alert('PDF downloaded (simulated)')} m={m} />
-              <Bt ch="📠 Send via Fax" outline bg={C.txS} onClick={() => alert('Sent to (425) 555-0312 (simulated)')} m={m} />
+              <Bt ch={pdf ? '✓ Downloaded' : '📄 Download PDF'} outline bg={pdf ? C.green : undefined} onClick={() => { setPdf(true); setTimeout(() => setPdf(false), 2000); }} m={m} />
+              <Bt ch={fax ? '✓ Fax Sent' : '📠 Send via Fax'} outline bg={fax ? C.green : C.txS} onClick={() => { setFax(true); setTimeout(() => setFax(false), 2000); }} m={m} />
             </>}
         </div>
       </div>

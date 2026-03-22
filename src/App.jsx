@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { C, BellIco } from './components.jsx';
 import { INIT_PATIENTS, NEW_PT_TEMPLATE, DEMO_SCREEN_MAP } from './data.js';
 import { ToastContainer, NotificationCenter, GuidedDemo, IntakeModal, S15 } from './modals.jsx';
@@ -23,7 +23,13 @@ export default function App() {
     { text: 'Robert Chen — INR follow-up due today', sub: 'Scheduled for 3:00 PM', type: 'info' },
   ]);
 
-  const m = window.innerWidth < 520;
+  const [winW, setWinW] = useState(window.innerWidth);
+  useEffect(() => {
+    const handler = () => setWinW(window.innerWidth);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+  const m = winW < 520;
 
   const go = useCallback((s) => {
     if (s === 'add') { setShowIntake(true); return; }
@@ -43,7 +49,7 @@ export default function App() {
   const p = patients.find(x => x.id === ptId) || patients[0];
 
   const update = useCallback((txData) => {
-    setPatients(ps => ps.map(x => x.id === ptId ? { ...x, tx: { ...x.tx, ...txData, time: x.tx.time || 'March 20, 2026 at 2:47 PM', nurse: x.tx.nurse || (persona ? persona.name : 'RN Sarah Mitchell') } } : x));
+    setPatients(ps => ps.map(x => x.id === ptId ? { ...x, tx: { ...x.tx, ...txData, time: x.tx.time || 'March 20, 2026 at 2:47 AM', nurse: x.tx.nurse || (persona ? persona.name : 'RN Sarah Mitchell') } } : x));
   }, [ptId, persona]);
 
   const updateER = useCallback((erData) => {
@@ -78,7 +84,6 @@ export default function App() {
   return (
     <div style={{ maxWidth: 680, margin: '0 auto', minHeight: '100vh', position: 'relative', fontFamily: "'Inter',system-ui,sans-serif", color: C.tx }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #1a1a2e; }
         .card-hover:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(15,29,47,.12) !important; }
@@ -101,7 +106,7 @@ export default function App() {
       {demo && <GuidedDemo onExit={() => setDemo(false)} demoStep={demoStep} setDemoStep={setDemoStep} navigate={go} selectPatient={setPtId} m={m} />}
 
       {screen === 0 && <S0 go={go} m={m} onStartDemo={() => { setDemo(true); setDemoStep(0); go(0); }} />}
-      <div style={{ paddingBottom: demo ? (m ? 120 : 100) : 0 }}>
+      <div style={{ paddingBottom: demo ? (m ? 180 : 110) : 0 }}>
         {screen === 15 && <S15 go={go} m={m} setPersona={setPersona} setRole={setRole} />}
         {screen === 17 && <S17 {...sharedProps} alerts={dashAlerts} dismissAlert={dismissAlert} />}
         {screen === 18 && <S18 go={go} m={m} patients={patients} setPt={setPtId} />}
