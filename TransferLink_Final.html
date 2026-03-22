@@ -1,0 +1,6121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>TransferLink</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #E8EAED; color: #1a1a2e;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; line-height: 1.5;
+}
+:root {
+  --navy: #0F1D2F; --navy-light: #1a2d42; --accent: #1B9AAA; --accent-dark: #168a99; --accent-light: #E8F6F8;
+  --amber: #F4A261; --amber-dark: #E08A3A; --amber-light: #FFF3E0;
+  --red: #E63946; --red-light: #FDEAEA; --green: #2A9D8F; --green-light: #E6F5F0;
+  --purple: #7C4DFF; --purple-light: #EDE7F6;
+  --gray-50: #F8F9FA; --gray-100: #F0F2F5; --gray-200: #E2E6EA; --gray-300: #CED4DA;
+  --gray-400: #ADB5BD; --gray-500: #6C757D; --gray-600: #5A6370; --gray-700: #495057;
+  --gray-800: #343A40; --gray-900: #212529; --white: #FFFFFF;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.12);
+  --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 20px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+.page-wrapper { animation: pageIn 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
+@keyframes pageIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes sc { 0% { top: 0 } 50% { top: calc(100% - 3px) } 100% { top: 0 } }
+@keyframes bp { 0%,100% { box-shadow: 0 0 0 0 rgba(230,57,70,.4) } 50% { box-shadow: 0 0 0 6px rgba(230,57,70,0) } }
+@keyframes qp { 0%,100% { opacity:.3; transform:scale(.95) } 50% { opacity:.6; transform:scale(1.05) } }
+@keyframes fadeIn { from { opacity:0; transform:translateY(-8px) } to { opacity:1; transform:translateY(0) } }
+@keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:.6 } }
+@keyframes slideUp { from { opacity:0; transform:translateY(20px) } to { opacity:1; transform:translateY(0) } }
+@keyframes toastIn { from { opacity:0; transform:translateY(-100%) } to { opacity:1; transform:translateY(0) } }
+@keyframes drawCheck { to { stroke-dashoffset: 0 } }
+@keyframes confirmBounce { 0% { transform: scale(0.3); opacity:0 } 50% { transform: scale(1.05) } 100% { transform: scale(1); opacity:1 } }
+textarea:focus, input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+button:active { transform: scale(0.97); }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/javascript">
+const {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useMemo
+} = React;
+
+// ===== DESIGN TOKENS =====
+const C = {
+  navy: "#0F1D2F",
+  navyL: "#1a2d42",
+  accent: "#1B9AAA",
+  accentD: "#168a99",
+  accentG: "rgba(27,154,170,0.20)",
+  amber: "#F4A261",
+  amberD: "#E08A3A",
+  red: "#E63946",
+  green: "#2A9D8F",
+  greenD: "#228B7E",
+  purple: "#7C4DFF",
+  bg: "#F0F2F5",
+  card: "#FFF",
+  dis: "#9E9E9E",
+  lA: "#E8F6F8",
+  lR: "#FDEAEA",
+  lW: "#FFF3E0",
+  lG: "#E6F5F0",
+  lP: "#EDE7F6",
+  bdr: "#E0E4EA",
+  tx: "#1a1a2e",
+  txS: "#5A6678",
+  txT: "#8E99A8"
+};
+
+// ===== PATIENT DATABASE (Rich Model with Comfort Preferences) =====
+const INIT_PATIENTS = [{
+  id: 0,
+  name: 'Margaret "Maggie" Tanaka',
+  short: "Maggie Tanaka",
+  init: "MT",
+  room: 204,
+  dob: "04/12/1938",
+  age: 87,
+  lang: "Japanese",
+  flag: "🇯🇵",
+  contact: "David Tanaka",
+  contactRel: "Son, POA",
+  contactPh: "(206) 555-0147",
+  fac: "Cascade View Assisted Living",
+  facAddr: "4200 Evergreen Way, Everett, WA 98201",
+  facPh: "(425) 555-0312",
+  code: "DNR / DNI",
+  codeType: "dnr",
+  polst: true,
+  allergy: ["Penicillin", "Sulfa drugs"],
+  hx: ["A-FIB", "CHF", "COPD", "DM (Type 2)"],
+  meds: [{
+    n: "Metoprolol 50mg",
+    f: "BID",
+    t: "Cardiac"
+  }, {
+    n: "Lasix 40mg",
+    f: "Daily",
+    t: "Cardiac"
+  }, {
+    n: "Metformin 500mg",
+    f: "BID",
+    t: "Endocrine"
+  }, {
+    n: "Eliquis 5mg",
+    f: "BID",
+    t: "Anticoag"
+  }, {
+    n: "Albuterol",
+    f: "PRN",
+    t: "Respiratory"
+  }],
+  mLvl: 2,
+  fLvl: 2,
+  dev: ["O2 at 2 L/min", "CPAP"],
+  risks: ["Falls", "Aspiration", "Needs Meds Crushed"],
+  iso: "None",
+  comfort: {
+    light: "Prefers dim lighting at night",
+    comm: "Responds to calm, slow speech in Japanese",
+    fam: "Son David visits daily, involved in all care decisions",
+    cult: "Buddhist traditions. Prefers rice-based meals",
+    dist: "Agitated in loud environments. Calms with traditional Japanese music"
+  },
+  tx: {
+    reason: "Acute shortness of breath, O2 sat dropped to 84%, not responding to PRN albuterol",
+    symp: ["Shortness of Breath"],
+    intv: "Administered PRN albuterol nebulizer, increased O2 to 4 L/min, placed in high Fowler's position",
+    chg: "Increased confusion at night, decreased appetite x2 days, new productive cough",
+    dest: "Providence Regional Medical Center, Everett",
+    time: "March 20, 2026 at 2:47 PM",
+    nurse: "RN Sarah Mitchell"
+  },
+  er: {
+    dx: "Acute exacerbation of COPD with hypoxemia",
+    bp: "138/82",
+    hr: "96",
+    rr: "22",
+    sp: "93% on 3L",
+    rx: "Prednisone 40mg x5 days, Azithromycin 250mg x5 days",
+    rpt: "Called RN Mitchell at Cascade View, 6:12 PM",
+    ins: "Follow up with pulmonology within 7 days. Continue O2 at 2 L/min. Monitor for worsening cough or fever. Return to ED if O2 sat drops below 90%.",
+    dr: "Dr. James Park, MD",
+    time: "March 20, 2026 at 6:15 PM"
+  }
+}, {
+  id: 1,
+  name: "Robert Chen",
+  short: "Robert Chen",
+  init: "RC",
+  room: 118,
+  dob: "09/23/1946",
+  age: 79,
+  lang: "English",
+  flag: "🇺🇸",
+  contact: "Linda Chen",
+  contactRel: "Wife",
+  contactPh: "(206) 555-0283",
+  fac: "Cascade View Assisted Living",
+  facAddr: "4200 Evergreen Way, Everett, WA 98201",
+  facPh: "(425) 555-0312",
+  code: "Full Code",
+  codeType: "full",
+  polst: false,
+  allergy: ["Metformin", "Iodine contrast"],
+  hx: ["DM (Type 2)", "CKD Stage 3", "Hypertension", "Peripheral Neuropathy"],
+  meds: [{
+    n: "Glipizide 10mg",
+    f: "BID",
+    t: "Endocrine"
+  }, {
+    n: "Lisinopril 20mg",
+    f: "Daily",
+    t: "Cardiac"
+  }, {
+    n: "Amlodipine 5mg",
+    f: "Daily",
+    t: "Cardiac"
+  }, {
+    n: "Gabapentin 300mg",
+    f: "TID",
+    t: "Neuro"
+  }, {
+    n: "Sevelamer 800mg",
+    f: "TID",
+    t: "Renal"
+  }],
+  mLvl: 1,
+  fLvl: 1,
+  dev: ["Glucose monitor"],
+  risks: ["Falls", "Hypoglycemia"],
+  iso: "None",
+  comfort: {
+    light: "Normal lighting, no preference",
+    comm: "Alert and conversant in English. Hearing aid in right ear.",
+    fam: "Wife Linda visits every evening. Son Kevin calls weekly.",
+    cult: "No specific cultural preferences noted",
+    dist: "Becomes anxious about blood sugar readings. Reassurance helps."
+  },
+  tx: {
+    reason: "Blood glucose dropped to 42 mg/dL, diaphoretic, confused, not responsive to oral glucose gel",
+    symp: ["Altered Mental Status"],
+    intv: "Administered oral glucose gel x2, juice box, checked glucose q15min. Glucose at 58 after 30 min but patient still confused.",
+    chg: "Reduced appetite x3 days, Glipizide dose increased last week by PCP, one episode of vomiting yesterday",
+    dest: "Providence Regional Medical Center, Everett",
+    time: "March 20, 2026 at 10:15 AM",
+    nurse: "RN Sarah Mitchell"
+  },
+  er: {
+    dx: "Severe hypoglycemia with altered mental status",
+    bp: "152/88",
+    hr: "104",
+    rr: "18",
+    sp: "98% RA",
+    rx: "Glipizide reduced to 5mg BID, D50 administered in ED",
+    rpt: "Called RN Mitchell at Cascade View, 2:30 PM",
+    ins: "Hold Glipizide tonight. Resume at 5mg BID tomorrow. Check BG q4h for 48 hours. Follow up with endocrinology within 5 days. Return if BG < 60 or AMS recurs.",
+    dr: "Dr. Anika Patel, MD",
+    time: "March 20, 2026 at 2:45 PM"
+  }
+}, {
+  id: 2,
+  name: "Dorothy Williams",
+  short: "Dorothy Williams",
+  init: "DW",
+  room: 305,
+  dob: "01/07/1935",
+  age: 91,
+  lang: "English",
+  flag: "🇺🇸",
+  contact: "Patricia Williams-Scott",
+  contactRel: "Daughter, POA",
+  contactPh: "(425) 555-0891",
+  fac: "Cascade View Assisted Living",
+  facAddr: "4200 Evergreen Way, Everett, WA 98201",
+  facPh: "(425) 555-0312",
+  code: "DNR",
+  codeType: "dnr",
+  polst: true,
+  allergy: ["Aspirin", "Codeine", "Latex"],
+  hx: ["CVA (2023)", "A-FIB", "Vascular Dementia", "Osteoporosis", "Chronic UTIs"],
+  meds: [{
+    n: "Warfarin 3mg",
+    f: "Daily",
+    t: "Anticoag"
+  }, {
+    n: "Donepezil 10mg",
+    f: "Daily",
+    t: "Neuro"
+  }, {
+    n: "Calcium/Vit D",
+    f: "Daily",
+    t: "Bone"
+  }, {
+    n: "Omeprazole 20mg",
+    f: "Daily",
+    t: "GI"
+  }, {
+    n: "Cranberry extract",
+    f: "BID",
+    t: "Urinary"
+  }],
+  mLvl: 3,
+  fLvl: 3,
+  dev: ["Wheelchair", "Bed alarm"],
+  risks: ["Falls", "Elopement", "Skin breakdown", "Dysphagia"],
+  iso: "None",
+  comfort: {
+    light: "Nightlight required. Afraid of the dark.",
+    comm: "Limited verbal. Responds to touch and familiar voices. Daughter's voice calms her.",
+    fam: "Daughter Patricia visits MWF. Granddaughter Sundays. Very involved family.",
+    cult: "Christian faith. Enjoys hymns. Pastor visits monthly.",
+    dist: "Becomes agitated during personal care. Singing hymns during care helps significantly."
+  },
+  tx: {
+    reason: "Found on floor next to wheelchair, laceration to right forehead, brief LOC per aide, INR due today",
+    symp: ["Fall/Injury", "Altered Mental Status"],
+    intv: "Applied pressure to laceration, ice pack, neuro checks q15min, vitals stable. Unable to obtain INR at facility.",
+    chg: "Increased restlessness x2 days, refused breakfast this morning, new bruising on left arm noted yesterday",
+    dest: "Providence Regional Medical Center, Everett",
+    time: "March 20, 2026 at 8:30 AM",
+    nurse: "RN David Park"
+  },
+  er: {
+    dx: "Mechanical fall with forehead laceration, supratherapeutic INR (4.8)",
+    bp: "128/74",
+    hr: "78",
+    rr: "16",
+    sp: "96% RA",
+    rx: "Warfarin held x2 days, resume at 2mg daily. Steri-strips applied. Tetanus updated.",
+    rpt: "Called RN Park at Cascade View, 1:15 PM",
+    ins: "Monitor laceration for signs of infection. Neuro checks q4h x24h. Recheck INR in 3 days. Fall precautions. No Warfarin tonight or tomorrow. Resume 2mg on day 3. Return if increased confusion, vomiting, or new bleeding.",
+    dr: "Dr. Maria Santos, MD",
+    time: "March 20, 2026 at 1:20 PM"
+  }
+}, {
+  id: 3,
+  name: "James Martinez",
+  short: "James Martinez",
+  init: "JM",
+  room: 112,
+  dob: "11/30/1941",
+  age: 84,
+  lang: "Spanish",
+  flag: "🇲🇽",
+  contact: "Maria Martinez",
+  contactRel: "Wife",
+  contactPh: "(206) 555-0467",
+  fac: "Cascade View Assisted Living",
+  facAddr: "4200 Evergreen Way, Everett, WA 98201",
+  facPh: "(425) 555-0312",
+  code: "Full Code",
+  codeType: "full",
+  polst: false,
+  allergy: ["NSAIDs", "ACE inhibitors"],
+  hx: ["COPD", "Prior MI (2021)", "CHF (EF 35%)", "Anxiety", "GERD"],
+  meds: [{
+    n: "Carvedilol 12.5mg",
+    f: "BID",
+    t: "Cardiac"
+  }, {
+    n: "Entresto 49/51mg",
+    f: "BID",
+    t: "Cardiac"
+  }, {
+    n: "Spironolactone 25mg",
+    f: "Daily",
+    t: "Cardiac"
+  }, {
+    n: "Tiotropium",
+    f: "Daily",
+    t: "Respiratory"
+  }, {
+    n: "Lorazepam 0.5mg",
+    f: "PRN",
+    t: "Psych"
+  }, {
+    n: "Pantoprazole 40mg",
+    f: "Daily",
+    t: "GI"
+  }],
+  mLvl: 1,
+  fLvl: 2,
+  dev: ["O2 at 1 L/min", "Daily weights", "Telemetry-ready"],
+  risks: ["Falls", "Fluid overload", "Anxiety episodes"],
+  iso: "None",
+  comfort: {
+    light: "Keeps TV on for background noise, especially sports",
+    comm: "Bilingual (Spanish/English). Prefers Spanish when anxious. Wife translates when needed.",
+    fam: "Wife Maria visits daily, brings home-cooked meals. Large extended family visits weekends.",
+    cult: "Catholic faith. Rosary at bedside. Priest visits weekly. Family brings traditional Mexican food.",
+    dist: "Anxiety escalates with chest sensations. Lorazepam PRN helps. Wife's presence is most effective."
+  },
+  tx: {
+    reason: "Acute onset chest pain radiating to left arm, diaphoretic, new 3+ pitting edema bilateral lower extremities, weight up 6 lbs in 3 days",
+    symp: ["Chest Pain"],
+    intv: "O2 increased to 3 L/min, elevated HOB, obtained vitals, placed on facility pulse ox monitoring, called 911",
+    chg: "Progressive dyspnea on exertion x4 days, sleeping upright x2 nights, decreased urine output, missed Entresto dose x2 days (nausea)",
+    dest: "Providence Regional Medical Center, Everett",
+    time: "March 20, 2026 at 4:22 PM",
+    nurse: "RN Sarah Mitchell"
+  },
+  er: {
+    dx: "Acute decompensated heart failure (CHF exacerbation), troponin negative",
+    bp: "168/96",
+    hr: "110",
+    rr: "26",
+    sp: "89% on 3L",
+    rx: "IV Lasix 40mg in ED, resume Entresto. Add Metolazone 2.5mg PRN. Strict I&Os.",
+    rpt: "Called RN Mitchell at Cascade View, 10:45 PM",
+    ins: "Daily weights (call if >2 lb gain). Strict 1.5L fluid restriction. Low sodium diet. Monitor for worsening dyspnea. Follow up with cardiology within 3 days. Return immediately for chest pain, worsening SOB, or weight gain >3 lbs.",
+    dr: "Dr. James Park, MD",
+    time: "March 20, 2026 at 10:50 PM"
+  }
+}];
+const NEW_PT_TEMPLATE = {
+  name: "Eleanor Vasquez",
+  short: "Eleanor Vasquez",
+  init: "EV",
+  room: 210,
+  dob: "06/18/1943",
+  age: 82,
+  lang: "Spanish",
+  flag: "🇲🇽",
+  contact: "Rosa Delgado",
+  contactRel: "Daughter, POA",
+  contactPh: "(206) 555-0734",
+  fac: "Cascade View Assisted Living",
+  facAddr: "4200 Evergreen Way, Everett, WA 98201",
+  facPh: "(425) 555-0312",
+  code: "Full Code",
+  codeType: "full",
+  polst: false,
+  allergy: ["Morphine", "Latex"],
+  hx: ["Hypertension", "DM (Type 2)", "Osteoarthritis", "Depression"],
+  meds: [{
+    n: "Lisinopril 10mg",
+    f: "Daily",
+    t: "Cardiac"
+  }, {
+    n: "Metformin 500mg",
+    f: "BID",
+    t: "Endocrine"
+  }, {
+    n: "Acetaminophen 650mg",
+    f: "Q6H PRN",
+    t: "Pain"
+  }, {
+    n: "Sertraline 50mg",
+    f: "Daily",
+    t: "Psych"
+  }],
+  mLvl: 1,
+  fLvl: 2,
+  dev: ["Rolling walker"],
+  risks: ["Falls", "Depression screening due"],
+  iso: "None",
+  comfort: {
+    light: "Prefers natural light during the day, dim at night",
+    comm: "Bilingual (Spanish/English). Prefers Spanish for medical discussions.",
+    fam: "Daughter Rosa visits Tu/Th/Sat. Very involved, calls daily.",
+    cult: "Catholic. Rosary important. Enjoys telenovelas and Latin music.",
+    dist: "Becomes withdrawn when in pain. Gentle conversation in Spanish helps."
+  },
+  tx: {
+    reason: "",
+    symp: [],
+    intv: "",
+    chg: "",
+    dest: "",
+    time: "",
+    nurse: ""
+  },
+  er: {
+    dx: "",
+    bp: "",
+    hr: "",
+    rr: "",
+    sp: "",
+    rx: "",
+    rpt: "",
+    ins: "",
+    dr: "",
+    time: ""
+  }
+};
+const PERSONAS = [{
+  name: "Sarah Mitchell",
+  role: "RN / LVN",
+  shift: "Day (7a-7p)"
+}, {
+  name: "David Park",
+  role: "RN / LVN",
+  shift: "Night (7p-7a)"
+}, {
+  name: "Dr. Angela Kim",
+  role: "MD / NP",
+  shift: "Day (7a-7p)"
+}, {
+  name: "Teresa Morales",
+  role: "Charge Nurse",
+  shift: "Day (7a-7p)"
+}, {
+  name: "Mark Johnson",
+  role: "Administrator",
+  shift: "Day (7a-7p)"
+}];
+const DEMO_SCREEN_MAP = [{
+  screen: 0,
+  title: "Welcome to TransferLink",
+  desc: "Home screen with role-based entry points"
+}, {
+  screen: 15,
+  title: "Login & Onboarding",
+  desc: "Facility staff signs in and sees workflow overview"
+}, {
+  screen: 17,
+  title: "Facility Dashboard",
+  desc: "Active alerts, transfer stats, and follow-ups"
+}, {
+  screen: 1,
+  title: "Patient Roster",
+  desc: "View all residents at Cascade View"
+}, {
+  screen: 2,
+  title: "Patient Record",
+  desc: "Full clinical record for Maggie Tanaka"
+}, {
+  screen: 3,
+  title: "Initiate Transfer",
+  desc: "Nurse documents reason, symptoms, interventions"
+}, {
+  screen: 4,
+  title: "Confirm Transfer",
+  desc: "Review all data before generating QR"
+}, {
+  screen: 5,
+  title: "QR Code Ready",
+  desc: "Scannable code for EMS crew"
+}, {
+  screen: 7,
+  title: "EMS Scans QR",
+  desc: "EMS crew scans code on arrival"
+}, {
+  screen: 8,
+  title: "EMS Transport View",
+  desc: "EMS sees full record with comfort preferences"
+}, {
+  screen: 9,
+  title: "ED Scans QR",
+  desc: "ED staff scans code on arrival"
+}, {
+  screen: 10,
+  title: "ED Full Record",
+  desc: "ED sees complete transfer data and history"
+}, {
+  screen: 11,
+  title: "ED Return Documentation",
+  desc: "ED staff documents diagnosis and discharge plan"
+}, {
+  screen: 12,
+  title: "Record Updated",
+  desc: "Confirmation that facility has been notified"
+}, {
+  screen: 13,
+  title: "Facility Receives Update",
+  desc: "Nurse sees ED return info on patient record"
+}, {
+  screen: 14,
+  title: "Full Timeline",
+  desc: "Complete audit trail of every handoff event"
+}];
+
+// ===== SVG ICONS =====
+const Chev = () => /*#__PURE__*/React.createElement("svg", {
+  width: "18",
+  height: "18",
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2.5"
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M15 18l-6-6 6-6"
+}));
+const Chk = ({
+  s = 14,
+  c = "#fff"
+}) => /*#__PURE__*/React.createElement("svg", {
+  width: s,
+  height: s,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: c,
+  strokeWidth: "3",
+  strokeLinecap: "round"
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M20 6L9 17l-5-5"
+}));
+const DnA = () => /*#__PURE__*/React.createElement("svg", {
+  width: "16",
+  height: "16",
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: C.txS,
+  strokeWidth: "2"
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M6 9l6 6 6-6"
+}));
+const WarnIco = () => /*#__PURE__*/React.createElement("svg", {
+  width: "18",
+  height: "18",
+  viewBox: "0 0 24 24",
+  fill: C.red
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M12 2L1 21h22L12 2zm0 4l7.53 13H4.47L12 6zm-1 5v4h2v-4h-2zm0 6v2h2v-2h-2z"
+}));
+const PlusIco = () => /*#__PURE__*/React.createElement("svg", {
+  width: "18",
+  height: "18",
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2.5",
+  strokeLinecap: "round"
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M12 5v14M5 12h14"
+}));
+const BellIco = ({
+  n
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    position: "relative",
+    cursor: "pointer"
+  }
+}, /*#__PURE__*/React.createElement("svg", {
+  width: "20",
+  height: "20",
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "#fff",
+  strokeWidth: "2"
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M13.73 21a2 2 0 0 1-3.46 0"
+})), n > 0 && /*#__PURE__*/React.createElement("span", {
+  style: {
+    position: "absolute",
+    top: -4,
+    right: -6,
+    background: C.red,
+    color: "#fff",
+    fontSize: 9,
+    fontWeight: 800,
+    borderRadius: 10,
+    padding: "1px 5px",
+    minWidth: 16,
+    textAlign: "center"
+  }
+}, n));
+
+// ===== QR CODE =====
+const QR = ({
+  sz = 200
+}) => {
+  const g = 25,
+    cs = sz / g,
+    cells = [];
+  const sd = [1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1];
+  for (let r = 0; r < g; r++) for (let c = 0; c < g; c++) {
+    const inF = r < 7 && c < 7 || r < 7 && c >= g - 7 || r >= g - 7 && c < 7;
+    if (inF) {
+      const cr = r < 7 ? r : r - (g - 7),
+        cc = c < 7 ? c : c - (g - 7);
+      if ([0, 2, 3].includes(Math.max(Math.abs(cr - 3), Math.abs(cc - 3)))) cells.push(/*#__PURE__*/React.createElement("rect", {
+        key: r + "-" + c,
+        x: c * cs,
+        y: r * cs,
+        width: cs,
+        height: cs,
+        fill: C.navy,
+        rx: 1
+      }));
+    } else if (((r * 31 + c * 17 + sd[(r + c) % sd.length]) * 2654435761 >>> 0) % 3 !== 0) cells.push(/*#__PURE__*/React.createElement("rect", {
+      key: r + "-" + c,
+      x: c * cs,
+      y: r * cs,
+      width: cs,
+      height: cs,
+      fill: C.navy,
+      rx: .5
+    }));
+  }
+  return /*#__PURE__*/React.createElement("svg", {
+    width: sz,
+    height: sz,
+    viewBox: `0 0 ${sz} ${sz}`,
+    style: {
+      borderRadius: 8
+    }
+  }, /*#__PURE__*/React.createElement("rect", {
+    width: sz,
+    height: sz,
+    fill: "#fff",
+    rx: 8
+  }), cells);
+};
+
+// ===== PRIMITIVE COMPONENTS =====
+const Bg = ({
+  ch,
+  bg,
+  color = "#fff",
+  pulse,
+  style: s,
+  onClick
+}) => /*#__PURE__*/React.createElement("span", {
+  onClick: onClick,
+  style: {
+    display: "inline-flex",
+    alignItems: "center",
+    padding: "5px 12px",
+    borderRadius: 20,
+    fontSize: 12,
+    fontWeight: 700,
+    color,
+    background: bg || C.accent,
+    whiteSpace: "nowrap",
+    animation: pulse ? "bp 2s ease infinite" : "none",
+    cursor: onClick ? "pointer" : "default",
+    ...s
+  }
+}, ch);
+const Av = ({
+  sz = 48,
+  init = "MT"
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    width: sz,
+    height: sz,
+    borderRadius: sz / 2,
+    background: `linear-gradient(135deg,${C.accent},${C.accentD})`,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#fff",
+    fontWeight: 800,
+    fontSize: sz * .36,
+    flexShrink: 0,
+    boxShadow: `0 2px 8px ${C.accentG}`
+  }
+}, init);
+const Cd = ({
+  ch,
+  hl,
+  style: s,
+  m,
+  onClick
+}) => /*#__PURE__*/React.createElement("div", {
+  onClick: onClick,
+  style: {
+    background: hl || C.card,
+    borderRadius: 16,
+    padding: m ? "14px" : "18px 20px",
+    marginBottom: m ? 10 : 14,
+    border: `1px solid ${hl ? "transparent" : C.bdr}`,
+    boxShadow: "0 1px 3px rgba(15,29,47,.04),0 4px 12px rgba(15,29,47,.03)",
+    cursor: onClick ? "pointer" : "default",
+    transition: "all .2s",
+    ...s
+  }
+}, ch);
+const Bt = ({
+  ch,
+  onClick,
+  bg = C.accent,
+  full,
+  outline,
+  style: s,
+  m,
+  disabled
+}) => /*#__PURE__*/React.createElement("button", {
+  disabled: disabled,
+  onClick: onClick,
+  style: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    padding: m ? "14px 16px" : "14px 28px",
+    borderRadius: 12,
+    fontSize: m ? 14 : 15,
+    fontWeight: 600,
+    cursor: disabled ? "not-allowed" : "pointer",
+    border: outline ? `2px solid ${bg}` : "none",
+    color: outline ? bg : "#fff",
+    background: outline ? "transparent" : disabled ? C.dis : bg,
+    width: full ? "100%" : "auto",
+    minHeight: 48,
+    transition: "all .15s",
+    opacity: disabled ? .5 : 1,
+    fontFamily: "inherit",
+    ...s
+  }
+}, ch);
+const SL = ({
+  ch,
+  ic
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontSize: 11,
+    fontWeight: 700,
+    textTransform: "uppercase",
+    letterSpacing: 1.2,
+    color: C.txS,
+    marginBottom: 10,
+    display: "flex",
+    alignItems: "center",
+    gap: 6
+  }
+}, ic && /*#__PURE__*/React.createElement("span", {
+  style: {
+    fontSize: 14
+  }
+}, ic), ch);
+const TB = ({
+  left,
+  ctr,
+  right,
+  m,
+  accent
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: m ? "12px 14px" : "14px 20px",
+    background: `linear-gradient(135deg,${C.navy},${C.navyL})`,
+    color: "#fff",
+    position: "sticky",
+    top: 0,
+    zIndex: 10,
+    minHeight: 52,
+    borderBottom: accent ? `3px solid ${accent}` : "none"
+  }
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    flex: 1,
+    display: "flex",
+    alignItems: "center"
+  }
+}, left), /*#__PURE__*/React.createElement("div", {
+  style: {
+    flex: 2,
+    textAlign: "center",
+    fontWeight: 700,
+    fontSize: m ? 13 : 15,
+    letterSpacing: -.2
+  }
+}, ctr), /*#__PURE__*/React.createElement("div", {
+  style: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    gap: 8
+  }
+}, right || null));
+const Bk = ({
+  go,
+  to,
+  label = "Back"
+}) => /*#__PURE__*/React.createElement("button", {
+  onClick: () => go(to),
+  style: {
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    gap: 4,
+    fontSize: 14,
+    opacity: .9,
+    minHeight: 44,
+    minWidth: 44,
+    color: "#fff",
+    background: "none",
+    border: "none",
+    padding: 0,
+    fontFamily: "inherit"
+  }
+}, /*#__PURE__*/React.createElement(Chev, null), label);
+const FR = ({
+  l,
+  v,
+  hl
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    marginBottom: 8,
+    ...(hl ? {
+      background: C.lA,
+      padding: "6px 10px",
+      borderRadius: 8,
+      margin: "0 -4px 8px"
+    } : {})
+  }
+}, /*#__PURE__*/React.createElement("span", {
+  style: {
+    fontSize: 11,
+    fontWeight: 700,
+    color: C.txS,
+    textTransform: "uppercase",
+    letterSpacing: .8
+  }
+}, l), /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontSize: 14,
+    color: C.tx,
+    marginTop: 1
+  }
+}, v));
+const Chips = ({
+  items,
+  bg = C.lA,
+  color = C.tx
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 6,
+    marginTop: 4
+  }
+}, items.map((t, i) => /*#__PURE__*/React.createElement(Bg, {
+  key: i,
+  ch: t,
+  bg: bg,
+  color: color,
+  style: {
+    fontSize: 12,
+    fontWeight: 600
+  }
+})));
+const TxIn = ({
+  value,
+  onChange,
+  placeholder,
+  rows,
+  m
+}) => rows ? /*#__PURE__*/React.createElement("textarea", {
+  value: value,
+  onChange: e => onChange(e.target.value),
+  placeholder: placeholder,
+  rows: rows,
+  style: {
+    width: "100%",
+    padding: "10px 14px",
+    borderRadius: 10,
+    border: `1px solid ${C.bdr}`,
+    fontSize: 14,
+    color: C.tx,
+    background: "#F8F9FB",
+    resize: "vertical",
+    fontFamily: "inherit",
+    boxSizing: "border-box"
+  }
+}) : /*#__PURE__*/React.createElement("input", {
+  value: value,
+  onChange: e => onChange(e.target.value),
+  placeholder: placeholder,
+  style: {
+    width: "100%",
+    padding: "10px 14px",
+    borderRadius: 10,
+    border: `1px solid ${C.bdr}`,
+    fontSize: 14,
+    color: C.tx,
+    background: "#F8F9FB",
+    boxSizing: "border-box",
+    fontFamily: "inherit"
+  }
+});
+
+// ===== SHARED CLINICAL UI =====
+const AllergyB = ({
+  p,
+  m
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    background: `linear-gradient(90deg,${C.lR},#FFF5F3)`,
+    border: `1px solid ${C.red}`,
+    borderLeft: `4px solid ${C.red}`,
+    borderRadius: 10,
+    padding: m ? "8px 12px" : "10px 16px",
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: m ? 10 : 14
+  }
+}, /*#__PURE__*/React.createElement(WarnIco, null), /*#__PURE__*/React.createElement("span", {
+  style: {
+    fontSize: m ? 12 : 13,
+    fontWeight: 700,
+    color: C.red
+  }
+}, "ALLERGIES: ", p.allergy.join(", ")));
+const CodeBanner = ({
+  p,
+  lg,
+  m
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "flex",
+    alignItems: "center",
+    gap: m ? 6 : 10,
+    flexWrap: "wrap",
+    ...(lg ? {
+      padding: m ? "10px 14px" : "14px 20px",
+      background: `linear-gradient(90deg,${C.lR},#FFF5F3)`,
+      borderRadius: 12,
+      marginBottom: m ? 10 : 14,
+      border: `1.5px solid ${C.red}`,
+      borderLeft: `4px solid ${C.red}`
+    } : {})
+  }
+}, /*#__PURE__*/React.createElement(Bg, {
+  ch: p.code,
+  bg: p.codeType === "dnr" ? C.red : C.green,
+  pulse: lg
+}), p.polst && /*#__PURE__*/React.createElement(Bg, {
+  ch: "\u2713 POLST",
+  bg: C.green
+}), /*#__PURE__*/React.createElement(Bg, {
+  ch: p.flag + " " + p.lang,
+  bg: C.accent
+}));
+const PtHd = ({
+  p,
+  onQR,
+  m
+}) => /*#__PURE__*/React.createElement(Cd, {
+  m: m,
+  style: {
+    borderLeft: `4px solid ${C.accent}`
+  },
+  ch: /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: m ? 10 : 14,
+      alignItems: "flex-start"
+    }
+  }, /*#__PURE__*/React.createElement(Av, {
+    sz: m ? 42 : 48,
+    init: p.init
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      minWidth: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 17 : 20,
+      fontWeight: 800,
+      color: C.navy,
+      marginBottom: 2
+    }
+  }, p.name), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: C.txS,
+      marginBottom: 10
+    }
+  }, "DOB: ", p.dob, " \xB7 Age ", p.age, " \xB7 Room ", p.room), /*#__PURE__*/React.createElement(CodeBanner, {
+    p: p,
+    m: m
+  })), onQR && /*#__PURE__*/React.createElement("div", {
+    onClick: onQR,
+    style: {
+      cursor: "pointer",
+      textAlign: "center",
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement(QR, {
+    sz: m ? 48 : 56
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: C.accent,
+      fontWeight: 600,
+      marginTop: 2
+    }
+  }, "QR")))
+});
+const Steps = ({
+  cur,
+  m
+}) => {
+  const st = ["Review", "Transfer", "Confirm", "QR Code"];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: m ? "12px 10px" : "14px 20px",
+      background: C.card,
+      borderBottom: `1px solid ${C.bdr}`,
+      gap: m ? 4 : 8
+    }
+  }, st.map((s, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: m ? 4 : 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: m ? 24 : 28,
+      height: m ? 24 : 28,
+      borderRadius: 14,
+      background: i <= cur ? C.accent : C.bdr,
+      color: i <= cur ? "#fff" : C.txS,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: m ? 11 : 12,
+      fontWeight: 700,
+      boxShadow: i === cur ? `0 0 0 3px ${C.accentG}` : "none"
+    }
+  }, i < cur ? /*#__PURE__*/React.createElement(Chk, {
+    s: 14
+  }) : i + 1), !m && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11,
+      fontWeight: i === cur ? 700 : 500,
+      color: i <= cur ? C.accent : C.txS,
+      whiteSpace: "nowrap"
+    }
+  }, s), i < st.length - 1 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: m ? 16 : 32,
+      height: 2,
+      background: i < cur ? C.accent : C.bdr,
+      borderRadius: 1
+    }
+  }))));
+};
+const Coll = ({
+  title,
+  ic,
+  ch,
+  open: d = true,
+  m
+}) => {
+  const [o, setO] = useState(d);
+  return /*#__PURE__*/React.createElement(Cd, {
+    m: m,
+    ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      onClick: () => setO(!o),
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        cursor: "pointer",
+        minHeight: 28
+      }
+    }, /*#__PURE__*/React.createElement(SL, {
+      ch: title,
+      ic: ic
+    }), /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: C.txS,
+      strokeWidth: "2",
+      style: {
+        transition: "transform .2s",
+        transform: o ? "rotate(180deg)" : "rotate(0)",
+        flexShrink: 0
+      }
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M6 9l6 6 6-6"
+    }))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        maxHeight: o ? 2000 : 0,
+        overflow: "hidden",
+        transition: "max-height .3s ease",
+        marginTop: o ? 8 : 0
+      }
+    }, ch))
+  });
+};
+const MScale = ({
+  lvl,
+  m
+}) => {
+  const ls = ["A&Ox4\nAlert", "Disoriented\nFollows Instr.", "Disoriented\nNo Follow", "Non-Verbal"];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 4,
+      marginTop: 6
+    }
+  }, ls.map((l, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      flex: 1,
+      padding: m ? "6px 3px" : "8px 6px",
+      borderRadius: 8,
+      textAlign: "center",
+      fontSize: m ? 8 : 10,
+      fontWeight: i === lvl - 1 ? 700 : 500,
+      lineHeight: 1.3,
+      background: i === lvl - 1 ? C.accent : "#F0F2F5",
+      color: i === lvl - 1 ? "#fff" : C.txT,
+      border: i === lvl - 1 ? `2px solid ${C.accentD}` : "1px solid transparent"
+    }
+  }, l.split("\n").map((x, j) => /*#__PURE__*/React.createElement("div", {
+    key: j
+  }, x)))));
+};
+const FScale = ({
+  lvl,
+  m
+}) => {
+  const ls = ["Independent", "With Assistance", "Non-Ambulatory"];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 4,
+      marginTop: 6
+    }
+  }, ls.map((l, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      flex: 1,
+      padding: m ? "8px 4px" : "10px 8px",
+      borderRadius: 8,
+      textAlign: "center",
+      fontSize: m ? 10 : 11,
+      fontWeight: i === lvl - 1 ? 700 : 500,
+      background: i === lvl - 1 ? C.amber : "#F0F2F5",
+      color: i === lvl - 1 ? "#fff" : C.txT,
+      border: i === lvl - 1 ? `2px solid ${C.amberD}` : "1px solid transparent"
+    }
+  }, l)));
+};
+const MScaleSelect = ({
+  lvl,
+  setLvl,
+  m
+}) => {
+  const ls = ["A&Ox4\nAlert", "Disoriented\nFollows Instr.", "Disoriented\nNo Follow", "Non-Verbal"];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 4,
+      marginTop: 6
+    }
+  }, ls.map((l, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    onClick: () => setLvl(i + 1),
+    style: {
+      flex: 1,
+      padding: m ? "6px 3px" : "8px 6px",
+      borderRadius: 8,
+      textAlign: "center",
+      fontSize: m ? 8 : 10,
+      fontWeight: i === lvl - 1 ? 700 : 500,
+      lineHeight: 1.3,
+      background: i === lvl - 1 ? C.accent : "#F0F2F5",
+      color: i === lvl - 1 ? "#fff" : C.txT,
+      border: i === lvl - 1 ? `2px solid ${C.accentD}` : "1px solid transparent",
+      cursor: "pointer"
+    }
+  }, l.split("\n").map((x, j) => /*#__PURE__*/React.createElement("div", {
+    key: j
+  }, x)))));
+};
+const FScaleSelect = ({
+  lvl,
+  setLvl,
+  m
+}) => {
+  const ls = ["Independent", "With Assistance", "Non-Ambulatory"];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 4,
+      marginTop: 6
+    }
+  }, ls.map((l, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    onClick: () => setLvl(i + 1),
+    style: {
+      flex: 1,
+      padding: m ? "8px 4px" : "10px 8px",
+      borderRadius: 8,
+      textAlign: "center",
+      fontSize: m ? 10 : 11,
+      fontWeight: i === lvl - 1 ? 700 : 500,
+      background: i === lvl - 1 ? C.amber : "#F0F2F5",
+      color: i === lvl - 1 ? "#fff" : C.txT,
+      border: i === lvl - 1 ? `2px solid ${C.amberD}` : "1px solid transparent",
+      cursor: "pointer"
+    }
+  }, l)));
+};
+
+// ===== PERSON-CENTERED CARE SECTION =====
+const ComfortSection = ({
+  p,
+  m,
+  defaultOpen = false
+}) => {
+  const items = [{
+    ic: "💡",
+    l: "Lighting",
+    v: p.comfort.light
+  }, {
+    ic: "💬",
+    l: "Communication",
+    v: p.comfort.comm
+  }, {
+    ic: "👨‍👩‍👧",
+    l: "Family",
+    v: p.comfort.fam
+  }, {
+    ic: "🙏",
+    l: "Cultural/Spiritual",
+    v: p.comfort.cult
+  }, {
+    ic: "🧘",
+    l: "Distress Management",
+    v: p.comfort.dist
+  }];
+  return /*#__PURE__*/React.createElement(Coll, {
+    title: "Person-Centered Care Preferences",
+    ic: "\uD83D\uDD4A\uFE0F",
+    open: defaultOpen,
+    m: m,
+    ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: "linear-gradient(90deg,#F3E5F5,#FCE4EC)",
+        borderRadius: 10,
+        padding: "8px 12px",
+        marginBottom: 12,
+        display: "flex",
+        alignItems: "center",
+        gap: 8
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 14
+      }
+    }, "\uD83D\uDC9C"), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 11,
+        fontWeight: 600,
+        color: "#6A1B9A"
+      }
+    }, "These preferences help ensure dignified, person-centered care during transitions")), items.map((it, i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        display: "flex",
+        gap: 10,
+        alignItems: "flex-start",
+        padding: "8px 0",
+        borderBottom: i < items.length - 1 ? `1px solid ${C.bdr}15` : "none"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 16,
+        flexShrink: 0,
+        marginTop: 2
+      }
+    }, it.ic), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 11,
+        fontWeight: 700,
+        color: C.txS,
+        textTransform: "uppercase",
+        letterSpacing: .6
+      }
+    }, it.l), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        color: C.tx,
+        marginTop: 2,
+        lineHeight: 1.5
+      }
+    }, it.v)))))
+  });
+};
+
+// ===== TRANSFER PROGRESS TRACKER =====
+const TransferTracker = ({
+  visited,
+  m
+}) => {
+  const stages = [{
+    label: "Facility",
+    scrs: [1, 2, 3],
+    ic: "🏥",
+    c: C.accent
+  }, {
+    label: "EMS Scan",
+    scrs: [7, 8],
+    ic: "🚑",
+    c: C.amber
+  }, {
+    label: "ED Scan",
+    scrs: [9, 10],
+    ic: "🏥",
+    c: C.green
+  }, {
+    label: "ED Return",
+    scrs: [11, 12],
+    ic: "📋",
+    c: C.green
+  }, {
+    label: "Back Home",
+    scrs: [13],
+    ic: "🏠",
+    c: C.purple
+  }];
+  const activeIdx = stages.reduce((max, s, i) => s.scrs.some(x => visited.has(x)) ? i : max, -1);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.card,
+      borderRadius: 14,
+      padding: m ? "12px 10px" : "14px 18px",
+      marginBottom: m ? 10 : 14,
+      border: `1px solid ${C.bdr}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      fontWeight: 700,
+      textTransform: "uppercase",
+      letterSpacing: 1,
+      color: C.txS,
+      marginBottom: 10
+    }
+  }, "Transfer Progress"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: m ? 2 : 4
+    }
+  }, stages.map((s, i) => /*#__PURE__*/React.createElement(React.Fragment, {
+    key: i
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: m ? 28 : 32,
+      height: m ? 28 : 32,
+      borderRadius: 16,
+      background: i <= activeIdx ? s.c : "#E8E8E8",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: m ? 12 : 14,
+      boxShadow: i === activeIdx ? `0 0 0 3px ${s.c}30` : "none",
+      transition: "all .3s"
+    }
+  }, i <= activeIdx ? /*#__PURE__*/React.createElement("span", null, s.ic) : /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 10,
+      color: C.txT
+    }
+  }, i + 1)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 8 : 9,
+      fontWeight: 600,
+      color: i <= activeIdx ? C.tx : C.txT,
+      marginTop: 4,
+      textAlign: "center"
+    }
+  }, s.label)), i < stages.length - 1 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 2,
+      flex: .6,
+      background: i < activeIdx ? stages[i + 1].c : C.bdr,
+      borderRadius: 1,
+      marginBottom: 16,
+      transition: "background .3s"
+    }
+  })))));
+};
+
+// ===== PATIENT SWITCHER =====
+const PtSwitcher = ({
+  patients,
+  ptId,
+  setPt,
+  m
+}) => {
+  const [open, setOpen] = useState(false);
+  const p = patients[ptId];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "relative"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    onClick: () => setOpen(!open),
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      cursor: "pointer",
+      padding: "4px 10px",
+      borderRadius: 20,
+      background: "rgba(255,255,255,.12)",
+      minHeight: 36
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      background: "rgba(255,255,255,.25)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: 10,
+      fontWeight: 700,
+      color: "#fff"
+    }
+  }, p.init), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600,
+      color: "#fff"
+    }
+  }, p.short), /*#__PURE__*/React.createElement(DnA, null)), open && /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      top: "100%",
+      right: 0,
+      marginTop: 6,
+      background: "#fff",
+      borderRadius: 14,
+      boxShadow: "0 8px 32px rgba(0,0,0,.2)",
+      border: `1px solid ${C.bdr}`,
+      overflow: "hidden",
+      zIndex: 50,
+      minWidth: 240
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "10px 14px",
+      borderBottom: `1px solid ${C.bdr}`,
+      fontSize: 11,
+      fontWeight: 700,
+      color: C.txS,
+      textTransform: "uppercase"
+    }
+  }, "Switch Patient"), patients.map((pt, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    onClick: () => {
+      setPt(pt.id);
+      setOpen(false);
+    },
+    style: {
+      padding: "10px 14px",
+      display: "flex",
+      alignItems: "center",
+      gap: 10,
+      cursor: "pointer",
+      background: pt.id === ptId ? C.lA : "transparent",
+      borderBottom: `1px solid ${C.bdr}15`
+    }
+  }, /*#__PURE__*/React.createElement(Av, {
+    sz: 28,
+    init: pt.init
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 600,
+      color: C.navy
+    }
+  }, pt.short), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: C.txS
+    }
+  }, "Room ", pt.room, " \xB7 ", pt.code)), pt.id === ptId && /*#__PURE__*/React.createElement(Chk, {
+    s: 14,
+    c: C.accent
+  })))));
+};
+
+// ===== POLST OVERLAY =====
+const POLST = ({
+  p,
+  onClose,
+  m
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,.65)",
+    zIndex: 100,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: m ? 12 : 0
+  },
+  onClick: onClose
+}, /*#__PURE__*/React.createElement("div", {
+  onClick: e => e.stopPropagation(),
+  style: {
+    background: "#fff",
+    borderRadius: 20,
+    padding: m ? 20 : 32,
+    maxWidth: 520,
+    width: "95%",
+    maxHeight: "85vh",
+    overflow: "auto",
+    boxShadow: "0 20px 60px rgba(0,0,0,.3)"
+  }
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20
+  }
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontSize: m ? 16 : 18,
+    fontWeight: 800,
+    color: C.navy
+  }
+}, "POLST Document"), /*#__PURE__*/React.createElement("button", {
+  onClick: onClose,
+  style: {
+    fontSize: 22,
+    color: C.txS,
+    minHeight: 44,
+    minWidth: 44,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 22,
+    background: "#F5F5F5",
+    border: "none",
+    cursor: "pointer"
+  }
+}, "\u2715")), /*#__PURE__*/React.createElement("div", {
+  style: {
+    border: `3px solid ${C.red}`,
+    borderRadius: 14,
+    overflow: "hidden"
+  }
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    background: C.red,
+    padding: "10px 16px",
+    textAlign: "center"
+  }
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontWeight: 800,
+    fontSize: 13,
+    color: "#fff"
+  }
+}, "PHYSICIAN ORDERS FOR LIFE-SUSTAINING TREATMENT")), /*#__PURE__*/React.createElement("div", {
+  style: {
+    padding: 16
+  }
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "flex",
+    gap: 10,
+    alignItems: "center",
+    marginBottom: 16
+  }
+}, /*#__PURE__*/React.createElement(Av, {
+  sz: 32,
+  init: p.init
+}), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontSize: 14,
+    fontWeight: 700
+  }
+}, p.name), /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontSize: 12,
+    color: C.txS
+  }
+}, "DOB: ", p.dob))), /*#__PURE__*/React.createElement("div", {
+  style: {
+    background: C.lR,
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 8
+  }
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontWeight: 700,
+    fontSize: 12,
+    color: C.red,
+    textTransform: "uppercase",
+    marginBottom: 4
+  }
+}, "Section A: CPR"), /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontSize: 14
+  }
+}, "\u2611 Do Not Attempt Resuscitation (DNR)")), /*#__PURE__*/React.createElement("div", {
+  style: {
+    background: "#F5F5F5",
+    borderRadius: 10,
+    padding: 12
+  }
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontWeight: 700,
+    fontSize: 12,
+    color: C.navy,
+    textTransform: "uppercase",
+    marginBottom: 4
+  }
+}, "Section B: Interventions"), /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontSize: 14
+  }
+}, "\u2611 Comfort-focused treatment only"))))));
+
+// ===== SCANNER =====
+const Scanner = ({
+  label,
+  onDone,
+  m
+}) => {
+  const [done, setDone] = useState(false);
+  const [prog, setProg] = useState(0);
+  useEffect(() => {
+    const iv = setInterval(() => setProg(p => Math.min(p + 2, 100)), 36);
+    const t = setTimeout(() => {
+      setDone(true);
+      clearInterval(iv);
+    }, 1800);
+    return () => {
+      clearTimeout(t);
+      clearInterval(iv);
+    };
+  }, []);
+  useEffect(() => {
+    if (done) {
+      const t = setTimeout(onDone, 700);
+      return () => clearTimeout(t);
+    }
+  }, [done]);
+  const sz = m ? 220 : 260;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: "100vh",
+      background: "radial-gradient(ellipse at center,#1a1a2e,#0a0a0f)",
+      display: "flex",
+      flexDirection: "column"
+    }
+  }, /*#__PURE__*/React.createElement(TB, {
+    ctr: label,
+    m: m
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      flexDirection: "column",
+      padding: 20
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "relative"
+    }
+  }, [[0, 0], [1, 0], [0, 1], [1, 1]].map(([x, y], i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      position: "absolute",
+      width: 28,
+      height: 28,
+      ...(y === 0 ? {
+        top: -4
+      } : {
+        bottom: -4
+      }),
+      ...(x === 0 ? {
+        left: -4
+      } : {
+        right: -4
+      }),
+      borderColor: done ? C.green : C.accent,
+      borderStyle: "solid",
+      borderWidth: 0,
+      ...(y === 0 ? {
+        borderTopWidth: 3
+      } : {
+        borderBottomWidth: 3
+      }),
+      ...(x === 0 ? {
+        borderLeftWidth: 3
+      } : {
+        borderRightWidth: 3
+      }),
+      borderRadius: 8
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: sz,
+      height: sz,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
+      overflow: "hidden",
+      borderRadius: 12
+    }
+  }, !done && /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 3,
+      background: `linear-gradient(90deg,transparent,${C.accent},transparent)`,
+      animation: "sc 1.5s ease-in-out infinite"
+    }
+  }), /*#__PURE__*/React.createElement(QR, {
+    sz: m ? 160 : 180
+  }), done && /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      inset: 0,
+      background: "rgba(42,157,143,.2)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 72,
+      height: 72,
+      borderRadius: 36,
+      background: C.green,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      boxShadow: `0 4px 20px rgba(42,157,143,.4)`,
+      animation: "confirmBounce .5s cubic-bezier(.22,1,.36,1)"
+    }
+  }, /*#__PURE__*/React.createElement(Chk, {
+    s: 40
+  }))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: sz,
+      height: 3,
+      background: "#333",
+      borderRadius: 2,
+      marginTop: 20,
+      overflow: "hidden"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: "100%",
+      background: done ? C.green : C.accent,
+      width: prog + "%",
+      transition: "width .1s linear,background .3s",
+      borderRadius: 2
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "#fff",
+      marginTop: 16,
+      fontSize: 16,
+      fontWeight: 600
+    }
+  }, done ? "✓ Scan Successful" : "Scanning QR Code..."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "rgba(255,255,255,.4)",
+      marginTop: 6,
+      fontSize: 13
+    }
+  }, done ? "Loading patient record..." : "Hold device over patient QR code")));
+};
+
+// ===== RECORD SECTIONS =====
+const Sections = ({
+  p,
+  tx,
+  er,
+  m,
+  comfortOpen
+}) => /*#__PURE__*/React.createElement(React.Fragment, null, tx && /*#__PURE__*/React.createElement(Cd, {
+  m: m,
+  hl: C.lW,
+  style: {
+    border: `1.5px solid ${C.amber}`,
+    borderLeft: `4px solid ${C.amber}`
+  },
+  ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SL, {
+    ch: "Active Transfer Details",
+    ic: "\uD83D\uDEA8"
+  }), /*#__PURE__*/React.createElement(FR, {
+    l: "Reason for Transfer",
+    v: p.tx.reason,
+    hl: true
+  }), /*#__PURE__*/React.createElement(FR, {
+    l: "Symptoms",
+    v: /*#__PURE__*/React.createElement(Chips, {
+      items: p.tx.symp,
+      bg: C.amber,
+      color: "#fff"
+    })
+  }), /*#__PURE__*/React.createElement(FR, {
+    l: "Interventions",
+    v: p.tx.intv
+  }), /*#__PURE__*/React.createElement(FR, {
+    l: "Recent Changes (72h)",
+    v: p.tx.chg
+  }), /*#__PURE__*/React.createElement(FR, {
+    l: "Destination",
+    v: p.tx.dest
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: C.txS,
+      marginTop: 6,
+      paddingTop: 6,
+      borderTop: `1px solid ${C.amber}30`
+    }
+  }, "Initiated: ", p.tx.time, " by ", p.tx.nurse))
+}), /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "grid",
+    gridTemplateColumns: m ? "1fr" : "1fr 1fr",
+    gap: m ? 10 : 14
+  }
+}, /*#__PURE__*/React.createElement(Coll, {
+  title: "Contacts & Facility",
+  ic: "\uD83D\uDC65",
+  m: m,
+  ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(FR, {
+    l: "Contact",
+    v: /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, p.contact), " (", p.contactRel, ")")
+  }), /*#__PURE__*/React.createElement(FR, {
+    l: "Phone",
+    v: /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: C.accent,
+        fontWeight: 600
+      }
+    }, p.contactPh)
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 1,
+      background: C.bdr,
+      margin: "8px 0"
+    }
+  }), /*#__PURE__*/React.createElement(FR, {
+    l: "Facility",
+    v: /*#__PURE__*/React.createElement("strong", null, p.fac)
+  }), /*#__PURE__*/React.createElement(FR, {
+    l: "Address",
+    v: p.facAddr
+  }), /*#__PURE__*/React.createElement(FR, {
+    l: "Phone",
+    v: p.facPh
+  }))
+}), /*#__PURE__*/React.createElement(Coll, {
+  title: "Medications",
+  ic: "\uD83D\uDC8A",
+  m: m,
+  ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: C.txS,
+      marginBottom: 8
+    }
+  }, p.meds.length, " active medications"), p.meds.map((med, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: "6px 0",
+      borderBottom: `1px solid ${C.bdr}15`
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13
+    }
+  }, med.n), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 4
+    }
+  }, /*#__PURE__*/React.createElement(Bg, {
+    ch: med.f,
+    bg: C.lA,
+    color: C.accent,
+    style: {
+      fontSize: 10,
+      padding: "2px 7px"
+    }
+  }), /*#__PURE__*/React.createElement(Bg, {
+    ch: med.t,
+    bg: "#F0F0F0",
+    color: C.txS,
+    style: {
+      fontSize: 10,
+      padding: "2px 7px"
+    }
+  })))))
+})), /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "grid",
+    gridTemplateColumns: m ? "1fr" : "1fr 1fr",
+    gap: m ? 10 : 14
+  }
+}, /*#__PURE__*/React.createElement(Coll, {
+  title: "History & Baselines",
+  ic: "\uD83D\uDCCB",
+  m: m,
+  ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(FR, {
+    l: "Conditions",
+    v: /*#__PURE__*/React.createElement(Chips, {
+      items: p.hx
+    })
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 12
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11,
+      fontWeight: 700,
+      color: C.txS,
+      textTransform: "uppercase"
+    }
+  }, "Baseline Mentation"), /*#__PURE__*/React.createElement(MScale, {
+    lvl: p.mLvl,
+    m: m
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 12
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11,
+      fontWeight: 700,
+      color: C.txS,
+      textTransform: "uppercase"
+    }
+  }, "Functional Status"), /*#__PURE__*/React.createElement(FScale, {
+    lvl: p.fLvl,
+    m: m
+  })))
+}), /*#__PURE__*/React.createElement(Coll, {
+  title: "Devices & Risks",
+  ic: "\u26A0\uFE0F",
+  m: m,
+  ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(FR, {
+    l: "Devices",
+    v: /*#__PURE__*/React.createElement(Chips, {
+      items: p.dev
+    })
+  }), /*#__PURE__*/React.createElement(FR, {
+    l: "Risk Alerts",
+    v: /*#__PURE__*/React.createElement(Chips, {
+      items: p.risks,
+      bg: C.lW,
+      color: "#7B3E00"
+    })
+  }), /*#__PURE__*/React.createElement(FR, {
+    l: "Isolation",
+    v: /*#__PURE__*/React.createElement(Bg, {
+      ch: "✓ " + p.iso,
+      bg: "#F0F2F5",
+      color: C.green,
+      style: {
+        fontSize: 12
+      }
+    })
+  }))
+})), /*#__PURE__*/React.createElement(ComfortSection, {
+  p: p,
+  m: m,
+  defaultOpen: comfortOpen || false
+}), er ? /*#__PURE__*/React.createElement(Cd, {
+  m: m,
+  style: {
+    border: `2px solid ${C.green}`,
+    borderLeft: `4px solid ${C.green}`,
+    position: "relative"
+  },
+  ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Bg, {
+    ch: "NEW",
+    bg: C.green,
+    style: {
+      position: "absolute",
+      top: -10,
+      right: 16,
+      fontSize: 11
+    }
+  }), /*#__PURE__*/React.createElement(SL, {
+    ch: "ED Return Information",
+    ic: "\u2705"
+  }), /*#__PURE__*/React.createElement(FR, {
+    l: "Diagnosis",
+    v: /*#__PURE__*/React.createElement("strong", null, p.er.dx),
+    hl: true
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: m ? "1fr 1fr" : "1fr 1fr 1fr 1fr",
+      gap: 8,
+      margin: "8px 0"
+    }
+  }, [["BP", p.er.bp], ["Pulse", p.er.hr], ["RR", p.er.rr], ["SPO2", p.er.sp]].map(([l, v], i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      background: C.lG,
+      borderRadius: 10,
+      padding: "10px 12px",
+      border: `1px solid ${C.green}30`,
+      textAlign: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      fontWeight: 700,
+      color: C.green,
+      textTransform: "uppercase"
+    }
+  }, l), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 16,
+      fontWeight: 700,
+      color: C.navy
+    }
+  }, v)))), /*#__PURE__*/React.createElement(FR, {
+    l: "Prescriptions",
+    v: p.er.rx
+  }), /*#__PURE__*/React.createElement(FR, {
+    l: "Report Called",
+    v: "Yes, " + p.er.rpt
+  }), /*#__PURE__*/React.createElement(FR, {
+    l: "Instructions",
+    v: p.er.ins
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: C.txS,
+      marginTop: 6,
+      paddingTop: 6,
+      borderTop: `1px solid ${C.green}30`
+    }
+  }, "Completed by ", p.er.dr, ", ", p.er.time))
+}) : /*#__PURE__*/React.createElement(Cd, {
+  m: m,
+  style: {
+    border: "2px dashed #CCC",
+    background: "#FAFAFA"
+  },
+  ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SL, {
+    ch: "ED Return Information",
+    ic: "\uD83C\uDFE5"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      padding: "24px 10px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 32,
+      opacity: .3
+    }
+  }, "\uD83C\uDFE5"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.dis,
+      fontSize: 14,
+      marginTop: 6
+    }
+  }, "No ED visit data"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.txT,
+      fontSize: 12,
+      marginTop: 4
+    }
+  }, "Completed by ED staff during a transfer")))
+}));
+
+// ===== GUIDED DEMO MODE =====
+function GuidedDemo({
+  onExit,
+  demoStep,
+  setDemoStep,
+  navigate,
+  selectPatient,
+  m
+}) {
+  const steps = DEMO_SCREEN_MAP;
+  const s = steps[demoStep];
+  if (!s) return null;
+  const goToStep = idx => {
+    const st = steps[idx];
+    if (!st) return;
+    setDemoStep(idx);
+    if (st.screen >= 2) selectPatient(0);
+    navigate(st.screen);
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "fixed",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      zIndex: 200,
+      background: "linear-gradient(180deg,rgba(15,29,47,0.95),rgba(15,29,47,0.98))",
+      backdropFilter: "blur(12px)",
+      borderTop: "2px solid rgba(27,154,170,0.4)",
+      padding: m ? "12px 14px" : "16px 24px",
+      animation: "slideUp .3s ease"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 700,
+      margin: "0 auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 3
+    }
+  }, steps.map((_, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      width: i === demoStep ? 16 : 6,
+      height: 6,
+      borderRadius: 3,
+      background: i < demoStep ? C.green : i === demoStep ? C.accent : "rgba(255,255,255,.2)",
+      transition: "all .3s"
+    }
+  }))), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11,
+      color: "rgba(255,255,255,.5)"
+    }
+  }, "Step ", demoStep + 1, " of ", steps.length)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 14 : 16,
+      fontWeight: 700,
+      color: "#fff",
+      marginBottom: 2
+    }
+  }, s.title), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: "rgba(255,255,255,.6)",
+      marginBottom: 12
+    }
+  }, s.desc), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => goToStep(demoStep - 1),
+    disabled: demoStep === 0,
+    style: {
+      padding: "8px 16px",
+      borderRadius: 8,
+      border: "1px solid rgba(255,255,255,.2)",
+      background: "transparent",
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 600,
+      cursor: demoStep === 0 ? "not-allowed" : "pointer",
+      opacity: demoStep === 0 ? .3 : 1,
+      fontFamily: "inherit"
+    }
+  }, "\u2190 Previous"), demoStep < steps.length - 1 ? /*#__PURE__*/React.createElement("button", {
+    onClick: () => goToStep(demoStep + 1),
+    style: {
+      padding: "8px 20px",
+      borderRadius: 8,
+      border: "none",
+      background: C.accent,
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 600,
+      cursor: "pointer",
+      fontFamily: "inherit"
+    }
+  }, "Next \u2192") : /*#__PURE__*/React.createElement("button", {
+    onClick: onExit,
+    style: {
+      padding: "8px 20px",
+      borderRadius: 8,
+      border: "none",
+      background: C.green,
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 600,
+      cursor: "pointer",
+      fontFamily: "inherit"
+    }
+  }, "\u2713 Finish Demo"), /*#__PURE__*/React.createElement("button", {
+    onClick: onExit,
+    style: {
+      marginLeft: "auto",
+      padding: "8px 12px",
+      borderRadius: 8,
+      border: "none",
+      background: "rgba(255,255,255,.08)",
+      color: "rgba(255,255,255,.6)",
+      fontSize: 12,
+      cursor: "pointer",
+      fontFamily: "inherit"
+    }
+  }, "Exit"))));
+}
+
+// ===== TOAST SYSTEM =====
+function ToastContainer({
+  toasts
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "fixed",
+      top: 60,
+      right: 16,
+      zIndex: 300,
+      display: "flex",
+      flexDirection: "column",
+      gap: 8
+    }
+  }, toasts.map(t => /*#__PURE__*/React.createElement("div", {
+    key: t.id,
+    style: {
+      background: t.type === "success" ? C.green : t.type === "error" ? C.red : C.accent,
+      color: "#fff",
+      padding: "10px 16px",
+      borderRadius: 10,
+      fontSize: 13,
+      fontWeight: 600,
+      boxShadow: "0 4px 16px rgba(0,0,0,.2)",
+      animation: "toastIn .3s ease",
+      maxWidth: 320
+    }
+  }, t.text)));
+}
+
+// ===== NOTIFICATION CENTER =====
+function NotificationCenter({
+  notifications,
+  onClose,
+  onSelect,
+  m
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "fixed",
+      inset: 0,
+      zIndex: 150,
+      background: "rgba(0,0,0,.5)"
+    },
+    onClick: onClose
+  }, /*#__PURE__*/React.createElement("div", {
+    onClick: e => e.stopPropagation(),
+    style: {
+      position: "absolute",
+      top: 0,
+      right: 0,
+      width: m ? "100%" : "380px",
+      height: "100%",
+      background: "#fff",
+      boxShadow: "-8px 0 32px rgba(0,0,0,.15)",
+      overflow: "auto",
+      animation: "slideUp .2s ease"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "16px 20px",
+      borderBottom: `1px solid ${C.bdr}`,
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 16,
+      fontWeight: 800,
+      color: C.navy
+    }
+  }, "Notifications"), /*#__PURE__*/React.createElement("button", {
+    onClick: onClose,
+    style: {
+      fontSize: 18,
+      color: C.txS,
+      background: "#F5F5F5",
+      border: "none",
+      borderRadius: 16,
+      width: 32,
+      height: 32,
+      cursor: "pointer"
+    }
+  }, "\u2715")), notifications.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: 40,
+      textAlign: "center",
+      color: C.txT
+    }
+  }, "No notifications yet") : notifications.map((n, i) => /*#__PURE__*/React.createElement("div", {
+    key: n.id || i,
+    onClick: () => onSelect(n),
+    style: {
+      padding: "12px 20px",
+      borderBottom: `1px solid ${C.bdr}`,
+      cursor: "pointer",
+      background: n.unread ? "#F0FAFB" : "transparent"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: C.tx,
+      fontWeight: n.unread ? 600 : 400
+    }
+  }, n.text), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: C.txT,
+      marginTop: 2
+    }
+  }, n.time)))));
+}
+
+// ===== PATIENT INTAKE MODAL (5-Step Wizard) =====
+const IntakeModal = ({
+  onClose,
+  onSave,
+  m
+}) => {
+  const [step, setStep] = useState(0);
+  const [d, setD] = useState({
+    ...NEW_PT_TEMPLATE
+  });
+  const upd = (k, v) => setD(prev => ({
+    ...prev,
+    [k]: v
+  }));
+  const updComfort = (k, v) => setD(prev => ({
+    ...prev,
+    comfort: {
+      ...prev.comfort,
+      [k]: v
+    }
+  }));
+  const allHx = ["A-FIB", "CHF", "COPD", "DM (Type 2)", "CKD", "Hypertension", "CVA/Stroke", "Prior MI", "Osteoarthritis", "Osteoporosis", "Depression", "Anxiety", "Dementia", "Cancer"];
+  const allRisks = ["Falls", "Aspiration", "Skin breakdown", "Elopement", "Harm to Self/Others", "Needs Meds Crushed", "Hypoglycemia", "Fluid overload", "Depression screening due"];
+  const allDevs = ["O2", "CPAP", "Wheelchair", "Rolling walker", "Bed alarm", "Foley catheter", "Glucose monitor", "Pacemaker", "Daily weights", "Telemetry-ready"];
+  const toggleArr = (arr, item) => arr.includes(item) ? arr.filter(x => x !== item) : [...arr, item];
+  const stepTitles = ["Demographics", "Clinical", "Contacts", "Care Prefs", "Review"];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,.5)",
+      zIndex: 100,
+      display: "flex",
+      alignItems: "flex-start",
+      justifyContent: "center",
+      padding: m ? 0 : 20,
+      paddingTop: m ? 0 : 40,
+      overflow: "auto"
+    },
+    onClick: onClose
+  }, /*#__PURE__*/React.createElement("div", {
+    onClick: e => e.stopPropagation(),
+    style: {
+      background: "#fff",
+      borderRadius: m ? 0 : 20,
+      width: m ? "100%" : "95%",
+      maxWidth: 620,
+      maxHeight: m ? "100vh" : "90vh",
+      overflow: "auto",
+      boxShadow: "0 20px 60px rgba(0,0,0,.25)"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "sticky",
+      top: 0,
+      background: "#fff",
+      zIndex: 5,
+      borderBottom: `1px solid ${C.bdr}`,
+      padding: "16px 20px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 18,
+      fontWeight: 800,
+      color: C.navy
+    }
+  }, "New Patient Intake"), /*#__PURE__*/React.createElement("button", {
+    onClick: onClose,
+    style: {
+      fontSize: 20,
+      color: C.txS,
+      minHeight: 40,
+      minWidth: 40,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 20,
+      background: "#F5F5F5",
+      border: "none",
+      cursor: "pointer"
+    }
+  }, "\u2715")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 4
+    }
+  }, stepTitles.map((s, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    onClick: () => setStep(i),
+    style: {
+      flex: 1,
+      padding: "6px 4px",
+      borderRadius: 8,
+      textAlign: "center",
+      fontSize: 10,
+      fontWeight: i === step ? 700 : 500,
+      background: i === step ? C.accent : i < step ? C.lA : "#F0F2F5",
+      color: i === step ? "#fff" : i < step ? C.accent : C.txT,
+      cursor: "pointer",
+      transition: "all .2s"
+    }
+  }, m ? i + 1 : s)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: m ? "16px" : "24px"
+    }
+  }, step === 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SL, {
+    ch: "Patient Demographics",
+    ic: "\uD83D\uDC64"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: m ? "1fr" : "1fr 1fr",
+      gap: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600,
+      color: C.txS
+    }
+  }, "Full Name"), /*#__PURE__*/React.createElement(TxIn, {
+    value: d.name,
+    onChange: v => upd("name", v),
+    m: m
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600,
+      color: C.txS
+    }
+  }, "Preferred Short Name"), /*#__PURE__*/React.createElement(TxIn, {
+    value: d.short,
+    onChange: v => upd("short", v),
+    m: m
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600,
+      color: C.txS
+    }
+  }, "Date of Birth"), /*#__PURE__*/React.createElement(TxIn, {
+    value: d.dob,
+    onChange: v => upd("dob", v),
+    m: m
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600,
+      color: C.txS
+    }
+  }, "Room Number"), /*#__PURE__*/React.createElement(TxIn, {
+    value: String(d.room),
+    onChange: v => upd("room", Number(v) || 0),
+    m: m
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600,
+      color: C.txS
+    }
+  }, "Language"), /*#__PURE__*/React.createElement(TxIn, {
+    value: d.lang,
+    onChange: v => upd("lang", v),
+    m: m
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600,
+      color: C.txS
+    }
+  }, "Age"), /*#__PURE__*/React.createElement(TxIn, {
+    value: String(d.age),
+    onChange: v => upd("age", Number(v) || 0),
+    m: m
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 16
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600,
+      color: C.txS
+    }
+  }, "Code Status"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      marginTop: 6
+    }
+  }, [["Full Code", "full"], ["DNR", "dnr"], ["DNR / DNI", "dnr"]].map(([label, type], i) => /*#__PURE__*/React.createElement("span", {
+    key: i,
+    onClick: () => {
+      upd("code", label);
+      upd("codeType", type);
+    },
+    style: {
+      padding: "8px 16px",
+      borderRadius: 20,
+      fontSize: 13,
+      fontWeight: 600,
+      background: d.code === label ? type === "dnr" ? C.red : C.green : "#F0F2F5",
+      color: d.code === label ? "#fff" : C.txS,
+      cursor: "pointer",
+      border: d.code === label ? "none" : `1px solid ${C.bdr}`
+    }
+  }, label))))), step === 1 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SL, {
+    ch: "Allergies",
+    ic: "\u26A0\uFE0F"
+  }), /*#__PURE__*/React.createElement(TxIn, {
+    value: d.allergy.join(", "),
+    onChange: v => upd("allergy", v.split(",").map(x => x.trim()).filter(Boolean)),
+    m: m,
+    placeholder: "Comma-separated (e.g. Morphine, Latex)"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 16
+    }
+  }, /*#__PURE__*/React.createElement(SL, {
+    ch: "Medical History",
+    ic: "\uD83D\uDCCB"
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexWrap: "wrap",
+      gap: 6
+    }
+  }, allHx.map((h, i) => {
+    const sel = d.hx.includes(h);
+    return /*#__PURE__*/React.createElement("span", {
+      key: i,
+      onClick: () => upd("hx", toggleArr(d.hx, h)),
+      style: {
+        padding: "6px 14px",
+        borderRadius: 20,
+        fontSize: 12,
+        fontWeight: 600,
+        background: sel ? C.accent : "#F0F2F5",
+        color: sel ? "#fff" : C.txS,
+        cursor: "pointer",
+        border: sel ? "none" : `1px solid ${C.bdr}`
+      }
+    }, sel ? "✓ " : "", h);
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 16
+    }
+  }, /*#__PURE__*/React.createElement(SL, {
+    ch: "Baseline Mentation",
+    ic: "\uD83E\uDDE0"
+  })), /*#__PURE__*/React.createElement(MScaleSelect, {
+    lvl: d.mLvl,
+    setLvl: v => upd("mLvl", v),
+    m: m
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 16
+    }
+  }, /*#__PURE__*/React.createElement(SL, {
+    ch: "Functional Status",
+    ic: "\uD83D\uDEB6"
+  })), /*#__PURE__*/React.createElement(FScaleSelect, {
+    lvl: d.fLvl,
+    setLvl: v => upd("fLvl", v),
+    m: m
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 16
+    }
+  }, /*#__PURE__*/React.createElement(SL, {
+    ch: "Devices",
+    ic: "\uD83D\uDD27"
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexWrap: "wrap",
+      gap: 6
+    }
+  }, allDevs.map((dv, i) => {
+    const sel = d.dev.includes(dv);
+    return /*#__PURE__*/React.createElement("span", {
+      key: i,
+      onClick: () => upd("dev", toggleArr(d.dev, dv)),
+      style: {
+        padding: "6px 12px",
+        borderRadius: 20,
+        fontSize: 11,
+        fontWeight: 600,
+        background: sel ? C.lA : "#F0F2F5",
+        color: sel ? C.accent : C.txS,
+        cursor: "pointer"
+      }
+    }, sel ? "✓ " : "", dv);
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 16
+    }
+  }, /*#__PURE__*/React.createElement(SL, {
+    ch: "Risk Alerts",
+    ic: "\uD83D\uDD14"
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexWrap: "wrap",
+      gap: 6
+    }
+  }, allRisks.map((r, i) => {
+    const sel = d.risks.includes(r);
+    return /*#__PURE__*/React.createElement("span", {
+      key: i,
+      onClick: () => upd("risks", toggleArr(d.risks, r)),
+      style: {
+        padding: "6px 12px",
+        borderRadius: 20,
+        fontSize: 11,
+        fontWeight: 600,
+        background: sel ? C.lW : "#F0F2F5",
+        color: sel ? "#7B3E00" : C.txS,
+        cursor: "pointer"
+      }
+    }, sel ? "✓ " : "", r);
+  }))), step === 2 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SL, {
+    ch: "Emergency Contact",
+    ic: "\uD83D\uDC65"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: m ? "1fr" : "1fr 1fr",
+      gap: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600,
+      color: C.txS
+    }
+  }, "Contact Name"), /*#__PURE__*/React.createElement(TxIn, {
+    value: d.contact,
+    onChange: v => upd("contact", v),
+    m: m
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600,
+      color: C.txS
+    }
+  }, "Relationship"), /*#__PURE__*/React.createElement(TxIn, {
+    value: d.contactRel,
+    onChange: v => upd("contactRel", v),
+    m: m
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600,
+      color: C.txS
+    }
+  }, "Phone"), /*#__PURE__*/React.createElement(TxIn, {
+    value: d.contactPh,
+    onChange: v => upd("contactPh", v),
+    m: m
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 16
+    }
+  }, /*#__PURE__*/React.createElement(SL, {
+    ch: "Facility Information",
+    ic: "\uD83C\uDFE5"
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#F8F9FB",
+      borderRadius: 10,
+      padding: 12,
+      border: `1px solid ${C.bdr}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 600,
+      color: C.navy
+    }
+  }, "Cascade View Assisted Living"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: C.txS
+    }
+  }, "4200 Evergreen Way, Everett, WA 98201")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 16
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600,
+      color: C.txS
+    }
+  }, "Isolation Precautions"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      marginTop: 6
+    }
+  }, ["None", "MRSA", "VRE", "C-Diff"].map((iso, i) => /*#__PURE__*/React.createElement("span", {
+    key: i,
+    onClick: () => upd("iso", iso),
+    style: {
+      padding: "6px 14px",
+      borderRadius: 20,
+      fontSize: 12,
+      fontWeight: 600,
+      background: d.iso === iso ? C.accent : "#F0F2F5",
+      color: d.iso === iso ? "#fff" : C.txS,
+      cursor: "pointer"
+    }
+  }, iso))))), step === 3 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "linear-gradient(90deg,#F3E5F5,#FCE4EC)",
+      borderRadius: 12,
+      padding: "12px 16px",
+      marginBottom: 16,
+      display: "flex",
+      alignItems: "center",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 20
+    }
+  }, "\uD83D\uDC9C"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 700,
+      color: "#6A1B9A"
+    }
+  }, "Person-Centered Care Preferences"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: "#8E24AA"
+    }
+  }, "These travel with the patient to every handoff point"))), [["light", "Lighting Preferences", "💡", "e.g. Prefers dim lighting at night"], ["comm", "Communication Needs", "💬", "e.g. Responds to calm, slow speech"], ["fam", "Family Involvement", "👨‍👩‍👧", "e.g. Daughter visits daily, involved in decisions"], ["cult", "Cultural/Spiritual", "🙏", "e.g. Catholic faith, rosary at bedside"], ["dist", "Distress Management", "🧘", "e.g. Gentle conversation helps when in pain"]].map(([k, label, ic, ph], i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      marginBottom: 4
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 14
+    }
+  }, ic), /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600,
+      color: C.txS
+    }
+  }, label)), /*#__PURE__*/React.createElement(TxIn, {
+    value: d.comfort[k],
+    onChange: v => updComfort(k, v),
+    placeholder: ph,
+    rows: 2,
+    m: m
+  })))), step === 4 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.lG,
+      borderRadius: 12,
+      padding: "12px 16px",
+      marginBottom: 16,
+      display: "flex",
+      alignItems: "center",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement(Chk, {
+    s: 20,
+    c: C.green
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 14,
+      fontWeight: 600,
+      color: C.greenD
+    }
+  }, "Review and confirm patient record")), /*#__PURE__*/React.createElement(Cd, {
+    m: m,
+    style: {
+      borderLeft: `4px solid ${C.accent}`
+    },
+    ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 10,
+        alignItems: "center",
+        marginBottom: 12
+      }
+    }, /*#__PURE__*/React.createElement(Av, {
+      sz: 36,
+      init: d.name.split(" ").map(x => x[0]).join("").slice(0, 2).toUpperCase()
+    }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 16,
+        fontWeight: 800,
+        color: C.navy
+      }
+    }, d.name), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        color: C.txS
+      }
+    }, "Room ", d.room, " \xB7 DOB: ", d.dob, " \xB7 Age ", d.age))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 6,
+        marginBottom: 10
+      }
+    }, /*#__PURE__*/React.createElement(Bg, {
+      ch: d.code,
+      bg: d.codeType === "dnr" ? C.red : C.green
+    }), /*#__PURE__*/React.createElement(Bg, {
+      ch: d.flag + " " + d.lang,
+      bg: C.accent
+    })), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        color: C.txS,
+        marginBottom: 4
+      }
+    }, "Allergies: ", /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: C.red,
+        fontWeight: 600
+      }
+    }, d.allergy.join(", "))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        color: C.txS,
+        marginBottom: 4
+      }
+    }, "Conditions: ", d.hx.join(", ")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        color: C.txS,
+        marginBottom: 4
+      }
+    }, "Medications: ", d.meds.map(x => x.n).join(", ")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        color: C.txS,
+        marginBottom: 4
+      }
+    }, "Devices: ", d.dev.join(", ")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        color: C.txS
+      }
+    }, "Contact: ", d.contact, " (", d.contactRel, ") ", d.contactPh))
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "sticky",
+      bottom: 0,
+      background: "#fff",
+      borderTop: `1px solid ${C.bdr}`,
+      padding: "14px 20px",
+      display: "flex",
+      gap: 10
+    }
+  }, step > 0 && /*#__PURE__*/React.createElement(Bt, {
+    ch: "Back",
+    outline: true,
+    onClick: () => setStep(step - 1),
+    m: m,
+    style: {
+      flex: 1
+    }
+  }), step < 4 ? /*#__PURE__*/React.createElement(Bt, {
+    ch: step === 0 ? "Next: Clinical" : "Next",
+    onClick: () => setStep(step + 1),
+    m: m,
+    style: {
+      flex: step > 0 ? 1 : undefined
+    },
+    full: step === 0
+  }) : /*#__PURE__*/React.createElement(Bt, {
+    ch: "\u2713 Save and Generate QR",
+    bg: C.green,
+    onClick: () => {
+      const init = d.name.split(" ").map(x => x[0]).join("").slice(0, 2).toUpperCase();
+      onSave({
+        ...d,
+        init,
+        id: -1
+      });
+    },
+    m: m,
+    full: true
+  }))));
+};
+
+// ===== SCREEN COMPONENTS =====
+const S0 = ({
+  go,
+  m,
+  onStartDemo
+}) => {
+  const rs = [{
+    s: 1,
+    i: "📋",
+    t: "LTC Nurse",
+    d: "Start a transfer",
+    c: C.accent
+  }, {
+    s: 7,
+    i: "🚑",
+    t: "EMS Crew",
+    d: "Scan on transport",
+    c: C.amber
+  }, {
+    s: 9,
+    i: "🏥",
+    t: "ED Staff",
+    d: "Receive a patient",
+    c: C.green
+  }, {
+    s: 13,
+    i: "🏠",
+    t: "Facility Return",
+    d: "Patient is back",
+    c: C.purple
+  }];
+  const nav2 = [{
+    s: 15,
+    i: "🔐",
+    t: "Login",
+    c: "#546E7A"
+  }, {
+    s: 17,
+    i: "📊",
+    t: "Dashboard",
+    c: "#0097A7"
+  }, {
+    s: 18,
+    i: "📁",
+    t: "History",
+    c: "#5C6BC0"
+  }, {
+    s: 19,
+    i: "📋",
+    t: "SBAR",
+    c: "#7B1FA2"
+  }];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: "100vh",
+      background: `linear-gradient(160deg,${C.navy},#1E2F4D 40%,#2A3F6A)`,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: m ? 16 : 32,
+      position: "relative"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      inset: 0,
+      backgroundImage: "radial-gradient(circle at 1px 1px,rgba(255,255,255,.03) 1px,transparent 0)",
+      backgroundSize: "32px 32px"
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      marginBottom: m ? 24 : 36,
+      position: "relative"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 10 : 12,
+      fontWeight: 700,
+      letterSpacing: 4,
+      color: C.accent,
+      textTransform: "uppercase",
+      marginBottom: 12
+    }
+  }, "Prototype Preview"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 32 : 42,
+      fontWeight: 900,
+      color: "#fff",
+      letterSpacing: -1
+    }
+  }, "Transfer", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: C.accent
+    }
+  }, "Link")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 13 : 16,
+      color: "rgba(255,255,255,.55)",
+      marginTop: 10
+    }
+  }, "One patient. One record. Every handoff.")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: m ? 10 : 16,
+      maxWidth: 540,
+      width: "100%",
+      position: "relative"
+    }
+  }, rs.map(r => /*#__PURE__*/React.createElement("div", {
+    key: r.s,
+    onClick: () => go(r.s),
+    style: {
+      background: "rgba(255,255,255,.06)",
+      backdropFilter: "blur(12px)",
+      border: "1px solid rgba(255,255,255,.1)",
+      borderRadius: m ? 16 : 20,
+      padding: m ? "22px 14px" : "30px 22px",
+      cursor: "pointer",
+      textAlign: "center",
+      transition: "all .25s",
+      position: "relative",
+      overflow: "hidden"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 3,
+      background: `linear-gradient(90deg,transparent,${r.c},transparent)`,
+      opacity: .6
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 28 : 36,
+      marginBottom: m ? 8 : 12
+    }
+  }, r.i), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 14 : 17,
+      fontWeight: 700,
+      color: "#fff",
+      marginBottom: 4
+    }
+  }, r.t), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 11 : 13,
+      color: "rgba(255,255,255,.45)"
+    }
+  }, r.d)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr 1fr 1fr",
+      gap: m ? 8 : 10,
+      maxWidth: 540,
+      width: "100%",
+      marginTop: m ? 12 : 16,
+      position: "relative"
+    }
+  }, nav2.map(n => /*#__PURE__*/React.createElement("div", {
+    key: n.s,
+    onClick: () => go(n.s),
+    style: {
+      background: "rgba(255,255,255,.04)",
+      border: "1px solid rgba(255,255,255,.08)",
+      borderRadius: 12,
+      padding: m ? "12px 8px" : "14px 12px",
+      cursor: "pointer",
+      textAlign: "center",
+      transition: "all .2s",
+      position: "relative",
+      overflow: "hidden"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 2,
+      background: `linear-gradient(90deg,transparent,${n.c},transparent)`,
+      opacity: .5
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 16 : 20,
+      marginBottom: 4
+    }
+  }, n.i), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 10 : 11,
+      fontWeight: 600,
+      color: "rgba(255,255,255,.7)"
+    }
+  }, n.t)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: m ? 16 : 24,
+      position: "relative"
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: onStartDemo,
+    style: {
+      padding: "12px 32px",
+      borderRadius: 12,
+      background: `linear-gradient(135deg,${C.accent},${C.accentD})`,
+      color: "#fff",
+      border: "none",
+      fontSize: 14,
+      fontWeight: 700,
+      cursor: "pointer",
+      boxShadow: `0 4px 16px ${C.accentG}`,
+      fontFamily: "inherit"
+    }
+  }, "\u25B6 Start Guided Demo")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: m ? 16 : 24,
+      textAlign: "center",
+      position: "relative"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      gap: m ? 16 : 32,
+      marginBottom: 16
+    }
+  }, [["4", "Patient Records"], ["81%", "Prefer Electronic"], ["< 5 min", "Target Completion"]].map(([n, l], i) => /*#__PURE__*/React.createElement("div", {
+    key: i
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 18 : 22,
+      fontWeight: 800,
+      color: C.accent
+    }
+  }, n), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 9 : 11,
+      color: "rgba(255,255,255,.35)",
+      marginTop: 2
+    }
+  }, l)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: "rgba(255,255,255,.25)"
+    }
+  }, "Prototype demonstration. No real patient data.")));
+};
+const S1 = ({
+  go,
+  m,
+  setPt,
+  patients,
+  onAddPt
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    minHeight: "100vh",
+    background: C.bg
+  }
+}, /*#__PURE__*/React.createElement(TB, {
+  left: /*#__PURE__*/React.createElement(Bk, {
+    go: go,
+    to: 0,
+    label: "Home"
+  }),
+  ctr: m ? "Cascade View" : "Cascade View Assisted Living",
+  m: m
+}), /*#__PURE__*/React.createElement("div", {
+  style: {
+    padding: m ? 14 : 20,
+    maxWidth: 700,
+    margin: "0 auto"
+  }
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "flex",
+    gap: 10,
+    marginBottom: m ? 14 : 20
+  }
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    position: "relative",
+    flex: 1
+  }
+}, /*#__PURE__*/React.createElement("input", {
+  placeholder: "Search patients...",
+  readOnly: true,
+  style: {
+    width: "100%",
+    padding: "12px 16px 12px 40px",
+    borderRadius: 12,
+    border: `1px solid ${C.bdr}`,
+    fontSize: 14,
+    background: "#fff",
+    boxSizing: "border-box",
+    fontFamily: "inherit"
+  }
+}), /*#__PURE__*/React.createElement("svg", {
+  style: {
+    position: "absolute",
+    left: 14,
+    top: 13
+  },
+  width: "16",
+  height: "16",
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: C.dis,
+  strokeWidth: "2"
+}, /*#__PURE__*/React.createElement("circle", {
+  cx: "11",
+  cy: "11",
+  r: "8"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M21 21l-4.35-4.35"
+}))), /*#__PURE__*/React.createElement("button", {
+  onClick: onAddPt,
+  style: {
+    display: "flex",
+    alignItems: "center",
+    gap: 6,
+    padding: "10px 18px",
+    borderRadius: 12,
+    background: C.accent,
+    color: "#fff",
+    border: "none",
+    cursor: "pointer",
+    fontWeight: 600,
+    fontSize: 13,
+    whiteSpace: "nowrap",
+    fontFamily: "inherit"
+  }
+}, /*#__PURE__*/React.createElement(PlusIco, null), m ? "Add" : "Add Patient")), patients.map((p, i) => /*#__PURE__*/React.createElement("div", {
+  key: i,
+  onClick: () => {
+    setPt(p.id);
+    go(2);
+  },
+  style: {
+    background: "#fff",
+    borderRadius: 14,
+    padding: m ? "14px" : "16px 20px",
+    marginBottom: m ? 10 : 12,
+    display: "flex",
+    alignItems: "center",
+    gap: 12,
+    border: `2px solid ${C.accent}20`,
+    cursor: "pointer",
+    boxShadow: "0 2px 8px rgba(0,0,0,.04)",
+    transition: "all .2s"
+  }
+}, /*#__PURE__*/React.createElement(Av, {
+  sz: 40,
+  init: p.init
+}), /*#__PURE__*/React.createElement("div", {
+  style: {
+    flex: 1,
+    minWidth: 0
+  }
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "flex",
+    alignItems: "center",
+    gap: 6
+  }
+}, /*#__PURE__*/React.createElement("span", {
+  style: {
+    fontSize: m ? 14 : 16,
+    fontWeight: 700,
+    color: C.navy
+  }
+}, p.name), /*#__PURE__*/React.createElement("span", null, p.flag)), /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontSize: m ? 12 : 13,
+    color: C.txS,
+    marginTop: 2
+  }
+}, "Room ", p.room, " \xB7 Age ", p.age, " \xB7 ", p.hx.slice(0, 3).join(", "))), /*#__PURE__*/React.createElement(Bg, {
+  ch: p.code,
+  bg: p.codeType === "dnr" ? C.red : C.green,
+  style: {
+    flexShrink: 0
+  }
+})))));
+const S2 = ({
+  go,
+  m,
+  p,
+  patients,
+  ptId,
+  setPt,
+  visited
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    minHeight: "100vh",
+    background: C.bg
+  }
+}, /*#__PURE__*/React.createElement(TB, {
+  m: m,
+  left: /*#__PURE__*/React.createElement(Bk, {
+    go: go,
+    to: 1,
+    label: "Patients"
+  }),
+  ctr: "Patient Record",
+  right: /*#__PURE__*/React.createElement(PtSwitcher, {
+    patients: patients,
+    ptId: ptId,
+    setPt: setPt,
+    m: m
+  })
+}), /*#__PURE__*/React.createElement(Steps, {
+  cur: 0,
+  m: m
+}), /*#__PURE__*/React.createElement("div", {
+  style: {
+    padding: m ? 14 : 20,
+    maxWidth: 700,
+    margin: "0 auto"
+  }
+}, /*#__PURE__*/React.createElement(TransferTracker, {
+  visited: visited,
+  m: m
+}), /*#__PURE__*/React.createElement(PtHd, {
+  p: p,
+  onQR: () => go(5),
+  m: m
+}), /*#__PURE__*/React.createElement(AllergyB, {
+  p: p,
+  m: m
+}), /*#__PURE__*/React.createElement(Sections, {
+  p: p,
+  m: m
+}), /*#__PURE__*/React.createElement("div", {
+  style: {
+    marginTop: 8
+  }
+}, /*#__PURE__*/React.createElement(Bt, {
+  full: true,
+  ch: "Initiate Transfer to ED",
+  onClick: () => go(3),
+  m: m
+}))));
+const S3 = ({
+  go,
+  m,
+  p
+}) => {
+  const allSymp = ["Shortness of Breath", "Chest Pain", "Altered Mental Status", "Fall/Injury", "GI Distress", "Fever", "Pain", "Other"];
+  const [reason, setReason] = useState(p.tx.reason);
+  const [symp, setSymp] = useState([...p.tx.symp]);
+  const [intv, setIntv] = useState(p.tx.intv);
+  const [chg, setChg] = useState(p.tx.chg);
+  const [dest, setDest] = useState(p.tx.dest);
+  const [showDest, setShowDest] = useState(false);
+  const dests = ["Providence Regional Medical Center, Everett", "Swedish Edmonds", "EvergreenHealth Monroe", "Harborview Medical Center, Seattle"];
+  const toggleSymp = s => setSymp(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: "100vh",
+      background: C.bg
+    }
+  }, /*#__PURE__*/React.createElement(TB, {
+    m: m,
+    left: /*#__PURE__*/React.createElement(Bk, {
+      go: go,
+      to: 2,
+      label: "Cancel"
+    }),
+    ctr: "Initiate Transfer"
+  }), /*#__PURE__*/React.createElement(Steps, {
+    cur: 1,
+    m: m
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: m ? 14 : 20,
+      maxWidth: 600,
+      margin: "0 auto"
+    }
+  }, /*#__PURE__*/React.createElement(Cd, {
+    m: m,
+    style: {
+      borderLeft: `4px solid ${C.amber}`
+    },
+    ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        color: C.txS,
+        marginBottom: 16
+      }
+    }, "Transfer: ", p.tx.time || "March 20, 2026", " \xB7 ", p.tx.nurse || "RN Sarah Mitchell"), /*#__PURE__*/React.createElement(SL, {
+      ch: "Reason for Transfer",
+      ic: "\uD83D\uDCDD"
+    }), /*#__PURE__*/React.createElement("textarea", {
+      value: reason,
+      onChange: e => setReason(e.target.value),
+      rows: 3,
+      style: {
+        width: "100%",
+        padding: "10px 14px",
+        borderRadius: 10,
+        border: `1px solid ${C.bdr}`,
+        fontSize: 14,
+        color: C.tx,
+        background: "#F8F9FB",
+        resize: "vertical",
+        fontFamily: "inherit",
+        boxSizing: "border-box",
+        marginBottom: 16
+      }
+    }), /*#__PURE__*/React.createElement(SL, {
+      ch: "Current Symptoms",
+      ic: "\uD83E\uDE7A"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 8,
+        marginBottom: 16
+      }
+    }, allSymp.map((s, i) => {
+      const sel = symp.includes(s);
+      return /*#__PURE__*/React.createElement("span", {
+        key: i,
+        onClick: () => toggleSymp(s),
+        style: {
+          padding: m ? "10px 14px" : "8px 14px",
+          borderRadius: 20,
+          fontSize: 13,
+          fontWeight: 600,
+          background: sel ? C.amber : "#F0F0F0",
+          color: sel ? "#fff" : C.txS,
+          border: sel ? `2px solid ${C.amberD}` : `1px solid ${C.bdr}`,
+          cursor: "pointer",
+          transition: "all .15s"
+        }
+      }, sel ? "✓ " : "", s);
+    })), /*#__PURE__*/React.createElement(SL, {
+      ch: "Interventions Already Taken",
+      ic: "\uD83D\uDC89"
+    }), /*#__PURE__*/React.createElement("textarea", {
+      value: intv,
+      onChange: e => setIntv(e.target.value),
+      rows: 3,
+      style: {
+        width: "100%",
+        padding: "10px 14px",
+        borderRadius: 10,
+        border: `1px solid ${C.bdr}`,
+        fontSize: 14,
+        color: C.tx,
+        background: "#F8F9FB",
+        resize: "vertical",
+        fontFamily: "inherit",
+        boxSizing: "border-box",
+        marginBottom: 16
+      }
+    }), /*#__PURE__*/React.createElement(SL, {
+      ch: "Recent Changes (72h)",
+      ic: "\uD83D\uDCCA"
+    }), /*#__PURE__*/React.createElement("textarea", {
+      value: chg,
+      onChange: e => setChg(e.target.value),
+      rows: 3,
+      style: {
+        width: "100%",
+        padding: "10px 14px",
+        borderRadius: 10,
+        border: `1px solid ${C.bdr}`,
+        fontSize: 14,
+        color: C.tx,
+        background: "#F8F9FB",
+        resize: "vertical",
+        fontFamily: "inherit",
+        boxSizing: "border-box",
+        marginBottom: 16
+      }
+    }), /*#__PURE__*/React.createElement(SL, {
+      ch: "Destination",
+      ic: "\uD83C\uDFE5"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "relative"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      onClick: () => setShowDest(!showDest),
+      style: {
+        background: "#F8F9FB",
+        borderRadius: 10,
+        padding: "12px 16px",
+        fontSize: 14,
+        border: `1px solid ${showDest ? C.accent : C.bdr}`,
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        cursor: "pointer"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontWeight: 600
+      }
+    }, dest), /*#__PURE__*/React.createElement(DnA, null)), showDest && /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        top: "100%",
+        left: 0,
+        right: 0,
+        marginTop: 4,
+        background: "#fff",
+        borderRadius: 12,
+        boxShadow: "0 8px 24px rgba(0,0,0,.15)",
+        border: `1px solid ${C.bdr}`,
+        zIndex: 20,
+        overflow: "hidden"
+      }
+    }, dests.map((d, i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      onClick: () => {
+        setDest(d);
+        setShowDest(false);
+      },
+      style: {
+        padding: "12px 16px",
+        fontSize: 13,
+        cursor: "pointer",
+        background: d === dest ? C.lA : "transparent",
+        borderBottom: `1px solid ${C.bdr}15`,
+        fontWeight: d === dest ? 600 : 400
+      }
+    }, d === dest && "✓ ", d)))))
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 8
+    }
+  }, /*#__PURE__*/React.createElement(Bt, {
+    full: true,
+    ch: "Generate QR Code and Continue",
+    onClick: () => go(4),
+    m: m,
+    disabled: !reason.trim() || symp.length === 0
+  }), (!reason.trim() || symp.length === 0) && /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      fontSize: 12,
+      color: C.amber,
+      marginTop: 8
+    }
+  }, "Please complete reason and select at least one symptom"))));
+};
+const S4 = ({
+  go,
+  m,
+  p,
+  patients,
+  ptId,
+  setPt
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    minHeight: "100vh",
+    background: C.bg
+  }
+}, /*#__PURE__*/React.createElement(TB, {
+  m: m,
+  left: /*#__PURE__*/React.createElement(Bk, {
+    go: go,
+    to: 3,
+    label: "Edit"
+  }),
+  ctr: "Confirm Transfer",
+  right: /*#__PURE__*/React.createElement(PtSwitcher, {
+    patients: patients,
+    ptId: ptId,
+    setPt: setPt,
+    m: m
+  })
+}), /*#__PURE__*/React.createElement(Steps, {
+  cur: 2,
+  m: m
+}), /*#__PURE__*/React.createElement("div", {
+  style: {
+    padding: m ? 14 : 20,
+    maxWidth: 700,
+    margin: "0 auto"
+  }
+}, /*#__PURE__*/React.createElement(PtHd, {
+  p: p,
+  m: m
+}), /*#__PURE__*/React.createElement(AllergyB, {
+  p: p,
+  m: m
+}), /*#__PURE__*/React.createElement(Sections, {
+  p: p,
+  tx: true,
+  m: m
+}), /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "flex",
+    flexDirection: m ? "column" : "row",
+    gap: m ? 8 : 12,
+    marginTop: 8
+  }
+}, /*#__PURE__*/React.createElement(Bt, {
+  full: true,
+  outline: true,
+  bg: C.txS,
+  ch: "Edit Details",
+  onClick: () => go(3),
+  m: m
+}), /*#__PURE__*/React.createElement(Bt, {
+  full: true,
+  ch: "Confirm and Generate QR",
+  onClick: () => go(5),
+  m: m
+}))));
+const S5 = ({
+  go,
+  m,
+  p
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    minHeight: "100vh",
+    background: C.bg
+  }
+}, /*#__PURE__*/React.createElement(TB, {
+  m: m,
+  left: /*#__PURE__*/React.createElement(Bk, {
+    go: go,
+    to: 2,
+    label: "Record"
+  }),
+  ctr: "QR Code Ready"
+}), /*#__PURE__*/React.createElement(Steps, {
+  cur: 3,
+  m: m
+}), /*#__PURE__*/React.createElement("div", {
+  style: {
+    padding: m ? 14 : 20,
+    maxWidth: 520,
+    margin: "0 auto",
+    textAlign: "center"
+  }
+}, /*#__PURE__*/React.createElement(Cd, {
+  m: m,
+  style: {
+    padding: m ? "24px 16px" : "36px 28px"
+  },
+  ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Bg, {
+    ch: "\u26A1 Active Transfer",
+    bg: C.amber,
+    pulse: true,
+    style: {
+      fontSize: 13,
+      padding: "6px 18px",
+      marginBottom: 24
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: 24,
+      position: "relative"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      inset: -20,
+      borderRadius: 999,
+      background: `radial-gradient(circle,${C.accentG},transparent 70%)`,
+      animation: "qp 2s ease infinite"
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#fff",
+      padding: m ? 14 : 18,
+      borderRadius: 20,
+      border: `2px solid ${C.bdr}`,
+      boxShadow: "0 8px 32px rgba(15,29,47,.1)",
+      position: "relative"
+    }
+  }, /*#__PURE__*/React.createElement(QR, {
+    sz: m ? 180 : 220
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 10,
+      marginBottom: 6
+    }
+  }, /*#__PURE__*/React.createElement(Av, {
+    sz: 32,
+    init: p.init
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: m ? 16 : 18,
+      fontWeight: 800,
+      color: C.navy
+    }
+  }, p.short)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      color: C.txS,
+      marginBottom: 16
+    }
+  }, "DOB: ", p.dob, " \xB7 Age ", p.age), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      gap: 8,
+      flexWrap: "wrap",
+      marginBottom: 20
+    }
+  }, /*#__PURE__*/React.createElement(Bg, {
+    ch: p.code,
+    bg: p.codeType === "dnr" ? C.red : C.green,
+    pulse: true,
+    style: {
+      fontSize: m ? 13 : 14,
+      padding: "6px 14px"
+    }
+  }), p.polst && /*#__PURE__*/React.createElement(Bg, {
+    ch: "\u2713 POLST",
+    bg: C.green
+  }), /*#__PURE__*/React.createElement(Bg, {
+    ch: p.flag + " " + p.lang,
+    bg: C.accent
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.lA,
+      borderRadius: 10,
+      padding: 12,
+      fontSize: 13,
+      color: C.txS,
+      lineHeight: 1.7,
+      textAlign: "left"
+    }
+  }, /*#__PURE__*/React.createElement("strong", null, "Transfer to:"), " ", p.tx.dest, /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Initiated:"), " ", p.tx.time, /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "By:"), " ", p.tx.nurse))
+}), /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "flex",
+    flexDirection: m ? "column" : "row",
+    gap: m ? 8 : 12,
+    marginTop: 4
+  }
+}, /*#__PURE__*/React.createElement(Bt, {
+  full: true,
+  outline: true,
+  ch: "Print Summary",
+  onClick: () => go(6),
+  m: m
+}), /*#__PURE__*/React.createElement(Bt, {
+  full: true,
+  ch: "Share Link",
+  onClick: () => alert("Share link copied!"),
+  m: m
+}))));
+const S6 = ({
+  go,
+  m,
+  p
+}) => {
+  const [pr, setPr] = useState(false);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: "100vh",
+      background: "#E0E0E0"
+    }
+  }, /*#__PURE__*/React.createElement(TB, {
+    m: m,
+    left: /*#__PURE__*/React.createElement(Bk, {
+      go: go,
+      to: 5,
+      label: "Back"
+    }),
+    ctr: "Print Preview"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: m ? 10 : 20,
+      maxWidth: 680,
+      margin: "0 auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#fff",
+      borderRadius: 4,
+      padding: m ? "16px 12px" : "28px 24px",
+      boxShadow: "0 4px 24px rgba(0,0,0,.12)",
+      fontFamily: "'Courier New',monospace",
+      fontSize: m ? 11 : 12,
+      lineHeight: 1.7,
+      position: "relative"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      top: m ? 10 : 20,
+      right: m ? 10 : 20
+    }
+  }, /*#__PURE__*/React.createElement(QR, {
+    sz: m ? 48 : 64
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 900,
+      fontSize: m ? 11 : 15,
+      textAlign: "center",
+      borderBottom: "2px solid #000",
+      paddingBottom: 8,
+      marginBottom: 12,
+      paddingRight: m ? 56 : 72
+    }
+  }, "LTC TO ED TRANSFER FORM"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: m ? "1fr" : "1fr 1fr",
+      gap: m ? 3 : 6,
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("b", null, "Resident:"), " ", p.name), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("b", null, "DOB:"), " ", p.dob), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("b", null, "Language:"), " ", p.lang), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("b", null, "Contact:"), " ", p.contact, " ", p.contactPh)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderTop: "1px solid #666",
+      paddingTop: 6,
+      marginBottom: 6
+    }
+  }, /*#__PURE__*/React.createElement("b", null, "Code Status:"), " \u2611 ", p.code, " ", p.polst && /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("b", null, "POLST:"), " \u2611 On File")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("b", null, "Allergies:"), " ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "red"
+    }
+  }, p.allergy.join(", "))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      wordBreak: "break-word"
+    }
+  }, /*#__PURE__*/React.createElement("b", null, "Meds:"), " ", p.meds.map(x => x.n + " " + x.f).join("; ")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("b", null, "Hx:"), " ", p.hx.join(", ")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderTop: "1px solid #666",
+      paddingTop: 6,
+      marginTop: 6
+    }
+  }, /*#__PURE__*/React.createElement("b", null, "Reason:"), " ", p.tx.reason, /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("b", null, "Dest:"), " ", p.tx.dest), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 8,
+      padding: 8,
+      background: "#FFF8E1",
+      borderRadius: 4,
+      border: "1px solid #FFF59D",
+      fontSize: 11
+    }
+  }, /*#__PURE__*/React.createElement("b", null, "Person-Centered Care Notes:"), " ", p.comfort.comm, " ", p.comfort.dist), /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderTop: "2px solid #000",
+      paddingTop: 6,
+      marginTop: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 900
+    }
+  }, "ED RETURN (To be completed by ED)"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "#999"
+    }
+  }, "Diagnosis: ___ BP: ___ P: ___ RR: ___ SPO2: ___"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      marginTop: 16,
+      justifyContent: "center",
+      flexWrap: "wrap"
+    }
+  }, pr ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.green,
+      fontWeight: 600,
+      display: "flex",
+      alignItems: "center",
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement(Chk, {
+    s: 20,
+    c: C.green
+  }), " Sent to printer") : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Bt, {
+    ch: "\uD83D\uDDA8 Print",
+    onClick: () => {
+      setPr(true);
+      setTimeout(() => setPr(false), 2000);
+    },
+    m: m
+  }), /*#__PURE__*/React.createElement(Bt, {
+    ch: "\uD83D\uDCC4 Download PDF",
+    outline: true,
+    onClick: () => alert("PDF downloaded (simulated)"),
+    m: m
+  }), /*#__PURE__*/React.createElement(Bt, {
+    ch: "\uD83D\uDCE0 Send via Fax",
+    outline: true,
+    bg: C.txS,
+    onClick: () => alert("Sent to (425) 555-0312 (simulated)"),
+    m: m
+  })))));
+};
+const S7 = ({
+  go,
+  m
+}) => /*#__PURE__*/React.createElement(Scanner, {
+  label: "TransferLink | EMS Scan",
+  onDone: () => go(8),
+  m: m
+});
+const S9 = ({
+  go,
+  m
+}) => /*#__PURE__*/React.createElement(Scanner, {
+  label: "TransferLink | ED Scan",
+  onDone: () => go(10),
+  m: m
+});
+const S8 = ({
+  go,
+  m,
+  p,
+  patients,
+  ptId,
+  setPt
+}) => {
+  const [pol, setPol] = useState(false);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: "100vh",
+      background: C.bg
+    }
+  }, pol && p.polst && /*#__PURE__*/React.createElement(POLST, {
+    p: p,
+    onClose: () => setPol(false),
+    m: m
+  }), /*#__PURE__*/React.createElement(TB, {
+    m: m,
+    left: /*#__PURE__*/React.createElement(Bk, {
+      go: go,
+      to: 0,
+      label: "Home"
+    }),
+    ctr: m ? "EMS View" : "TransferLink | EMS",
+    accent: C.amber,
+    right: /*#__PURE__*/React.createElement(PtSwitcher, {
+      patients: patients,
+      ptId: ptId,
+      setPt: setPt,
+      m: m
+    })
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: m ? 14 : 20,
+      maxWidth: 700,
+      margin: "0 auto"
+    }
+  }, /*#__PURE__*/React.createElement(CodeBanner, {
+    p: p,
+    lg: true,
+    m: m
+  }), /*#__PURE__*/React.createElement(AllergyB, {
+    p: p,
+    m: m
+  }), /*#__PURE__*/React.createElement(PtHd, {
+    p: p,
+    m: m
+  }), /*#__PURE__*/React.createElement(Sections, {
+    p: p,
+    tx: true,
+    m: m,
+    comfortOpen: true
+  }), p.polst && /*#__PURE__*/React.createElement(Bt, {
+    full: true,
+    bg: C.red,
+    ch: "View POLST",
+    onClick: () => setPol(true),
+    m: m
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      fontSize: 12,
+      color: C.dis,
+      marginTop: 16
+    }
+  }, "\uD83D\uDCE1 QR scan access \xB7 Read-only")));
+};
+const S10 = ({
+  go,
+  m,
+  p,
+  patients,
+  ptId,
+  setPt
+}) => {
+  const [pol, setPol] = useState(false);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: "100vh",
+      background: C.bg
+    }
+  }, pol && p.polst && /*#__PURE__*/React.createElement(POLST, {
+    p: p,
+    onClose: () => setPol(false),
+    m: m
+  }), /*#__PURE__*/React.createElement(TB, {
+    m: m,
+    left: /*#__PURE__*/React.createElement(Bk, {
+      go: go,
+      to: 0,
+      label: "Home"
+    }),
+    ctr: m ? "ED View" : "TransferLink | ED",
+    accent: C.green,
+    right: /*#__PURE__*/React.createElement(PtSwitcher, {
+      patients: patients,
+      ptId: ptId,
+      setPt: setPt,
+      m: m
+    })
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: m ? 14 : 20,
+      maxWidth: 700,
+      margin: "0 auto"
+    }
+  }, /*#__PURE__*/React.createElement(CodeBanner, {
+    p: p,
+    lg: true,
+    m: m
+  }), /*#__PURE__*/React.createElement(AllergyB, {
+    p: p,
+    m: m
+  }), /*#__PURE__*/React.createElement(PtHd, {
+    p: p,
+    m: m
+  }), /*#__PURE__*/React.createElement(Sections, {
+    p: p,
+    tx: true,
+    m: m,
+    comfortOpen: true
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: m ? "column" : "row",
+      gap: m ? 8 : 12,
+      marginTop: 8
+    }
+  }, p.polst && /*#__PURE__*/React.createElement(Bt, {
+    full: true,
+    outline: true,
+    bg: C.red,
+    ch: "View POLST",
+    onClick: () => setPol(true),
+    m: m
+  }), /*#__PURE__*/React.createElement(Bt, {
+    full: true,
+    ch: "Complete ED Return Info",
+    onClick: () => go(11),
+    m: m
+  }))));
+};
+const S11 = ({
+  go,
+  m,
+  p
+}) => {
+  const [dx, setDx] = useState(p.er.dx || "");
+  const [bp, setBp] = useState(p.er.bp || "");
+  const [hr, setHr] = useState(p.er.hr || "");
+  const [rr, setRr] = useState(p.er.rr || "");
+  const [sp, setSp] = useState(p.er.sp || "");
+  const [rxOn, setRxOn] = useState(true);
+  const [rxText, setRxText] = useState(p.er.rx || "");
+  const [rptOn, setRptOn] = useState(true);
+  const [ins, setIns] = useState(p.er.ins || "");
+  const [provider, setProvider] = useState(p.er.dr || "Dr. James Park, MD");
+  const [showProv, setShowProv] = useState(false);
+  const providers = ["Dr. James Park, MD", "Dr. Anika Patel, MD", "Dr. Maria Santos, MD", "Dr. Lisa Chen, MD"];
+  const isComplete = dx.trim() && bp.trim() && hr.trim();
+  const Toggle = ({
+    on,
+    setOn
+  }) => /*#__PURE__*/React.createElement("div", {
+    onClick: () => setOn(!on),
+    style: {
+      width: 44,
+      height: 24,
+      borderRadius: 12,
+      background: on ? C.green : "#CCC",
+      display: "flex",
+      alignItems: "center",
+      padding: "0 2px",
+      cursor: "pointer",
+      transition: "background .2s",
+      justifyContent: on ? "flex-end" : "flex-start"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 20,
+      height: 20,
+      borderRadius: 10,
+      background: "#fff",
+      boxShadow: "0 1px 3px rgba(0,0,0,.2)",
+      transition: "all .2s"
+    }
+  }));
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: "100vh",
+      background: C.bg
+    }
+  }, /*#__PURE__*/React.createElement(TB, {
+    m: m,
+    left: /*#__PURE__*/React.createElement(Bk, {
+      go: go,
+      to: 10,
+      label: "Back"
+    }),
+    ctr: "ED Return Info"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: m ? 14 : 20,
+      maxWidth: 600,
+      margin: "0 auto"
+    }
+  }, /*#__PURE__*/React.createElement(Cd, {
+    m: m,
+    style: {
+      borderLeft: `4px solid ${C.green}`
+    },
+    ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 16
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        color: C.txS
+      }
+    }, p.er.time || "March 20, 2026"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "relative"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      onClick: () => setShowProv(!showProv),
+      style: {
+        fontSize: 12,
+        color: C.accent,
+        fontWeight: 600,
+        cursor: "pointer"
+      }
+    }, provider, " \u25BE"), showProv && /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        top: "100%",
+        right: 0,
+        marginTop: 4,
+        background: "#fff",
+        borderRadius: 10,
+        boxShadow: "0 4px 16px rgba(0,0,0,.15)",
+        border: `1px solid ${C.bdr}`,
+        zIndex: 20,
+        minWidth: 200
+      }
+    }, providers.map((pr, i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      onClick: () => {
+        setProvider(pr);
+        setShowProv(false);
+      },
+      style: {
+        padding: "10px 14px",
+        fontSize: 12,
+        cursor: "pointer",
+        background: pr === provider ? C.lA : "transparent",
+        fontWeight: pr === provider ? 600 : 400
+      }
+    }, pr))))), /*#__PURE__*/React.createElement(SL, {
+      ch: "Diagnosis",
+      ic: "\uD83D\uDD0D"
+    }), /*#__PURE__*/React.createElement("textarea", {
+      value: dx,
+      onChange: e => setDx(e.target.value),
+      rows: 2,
+      style: {
+        width: "100%",
+        padding: "10px 14px",
+        borderRadius: 10,
+        border: `1px solid ${C.bdr}`,
+        fontSize: 14,
+        fontWeight: 600,
+        color: C.tx,
+        background: "#F8F9FB",
+        fontFamily: "inherit",
+        boxSizing: "border-box",
+        marginBottom: 16,
+        resize: "vertical"
+      }
+    }), /*#__PURE__*/React.createElement(SL, {
+      ch: "Last Vitals",
+      ic: "\uD83D\uDCCA"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "grid",
+        gridTemplateColumns: m ? "1fr 1fr" : "1fr 1fr 1fr 1fr",
+        gap: 8,
+        marginBottom: 16
+      }
+    }, [["BP", bp, setBp, C.accent], ["Pulse", hr, setHr, C.amber], ["RR", rr, setRr, C.green], ["SPO2", sp, setSp, C.purple]].map(([l, v, fn, clr], i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        background: "#F8F9FB",
+        borderRadius: 10,
+        padding: "8px 10px",
+        border: `1px solid ${C.bdr}`,
+        textAlign: "center",
+        borderTop: `3px solid ${clr}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        fontWeight: 700,
+        color: C.txS,
+        textTransform: "uppercase",
+        marginBottom: 4
+      }
+    }, l), /*#__PURE__*/React.createElement("input", {
+      value: v,
+      onChange: e => fn(e.target.value),
+      style: {
+        width: "100%",
+        textAlign: "center",
+        fontSize: 18,
+        fontWeight: 800,
+        color: C.navy,
+        border: "none",
+        background: "transparent",
+        outline: "none",
+        boxSizing: "border-box",
+        fontFamily: "inherit"
+      }
+    })))), /*#__PURE__*/React.createElement(SL, {
+      ch: "Prescription Sent",
+      ic: "\uD83D\uDC8A"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        marginBottom: 8
+      }
+    }, /*#__PURE__*/React.createElement(Toggle, {
+      on: rxOn,
+      setOn: setRxOn
+    }), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 14,
+        fontWeight: 600,
+        color: rxOn ? C.green : C.txS
+      }
+    }, rxOn ? "Yes" : "No")), rxOn && /*#__PURE__*/React.createElement("textarea", {
+      value: rxText,
+      onChange: e => setRxText(e.target.value),
+      rows: 2,
+      style: {
+        width: "100%",
+        padding: "10px 14px",
+        borderRadius: 10,
+        border: `1px solid ${C.bdr}`,
+        fontSize: 14,
+        color: C.tx,
+        background: "#F8F9FB",
+        fontFamily: "inherit",
+        boxSizing: "border-box",
+        marginBottom: 16,
+        resize: "vertical"
+      }
+    }), /*#__PURE__*/React.createElement(SL, {
+      ch: "Report Called to Facility",
+      ic: "\uD83D\uDCDE"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        marginBottom: 8
+      }
+    }, /*#__PURE__*/React.createElement(Toggle, {
+      on: rptOn,
+      setOn: setRptOn
+    }), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 14,
+        fontWeight: 600,
+        color: rptOn ? C.green : C.txS
+      }
+    }, rptOn ? "Yes" : "No"), rptOn && /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 11,
+        color: C.txS
+      }
+    }, "Timestamp: 6:12 PM")), /*#__PURE__*/React.createElement(SL, {
+      ch: "Special Instructions",
+      ic: "\uD83D\uDCDD"
+    }), /*#__PURE__*/React.createElement("textarea", {
+      value: ins,
+      onChange: e => setIns(e.target.value),
+      rows: 4,
+      style: {
+        width: "100%",
+        padding: "10px 14px",
+        borderRadius: 10,
+        border: `1px solid ${C.bdr}`,
+        fontSize: 14,
+        color: C.tx,
+        background: C.lG,
+        fontFamily: "inherit",
+        boxSizing: "border-box",
+        lineHeight: 1.6,
+        resize: "vertical"
+      }
+    }))
+  }), /*#__PURE__*/React.createElement(Bt, {
+    full: true,
+    bg: C.green,
+    ch: isComplete ? "Save and Update Record" : "Complete required fields",
+    onClick: () => {
+      if (isComplete) go(12);
+    },
+    disabled: !isComplete,
+    m: m
+  }), !isComplete && /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      fontSize: 12,
+      color: C.amber,
+      marginTop: 8
+    }
+  }, "Diagnosis and vitals are required to save")));
+};
+const S12 = ({
+  go,
+  m,
+  p
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    minHeight: "100vh",
+    background: C.bg,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  }
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    textAlign: "center",
+    maxWidth: 440,
+    padding: m ? 20 : 32,
+    animation: "confirmBounce .5s cubic-bezier(.22,1,.36,1)"
+  }
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    width: 88,
+    height: 88,
+    borderRadius: 44,
+    background: `linear-gradient(135deg,${C.lG},#C8E6C9)`,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: "0 auto 24px"
+  }
+}, /*#__PURE__*/React.createElement(Chk, {
+  s: 48,
+  c: C.green
+})), /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontSize: m ? 22 : 26,
+    fontWeight: 800,
+    color: C.navy,
+    marginBottom: 8
+  }
+}, "Record Updated"), /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontSize: 14,
+    color: C.txS,
+    lineHeight: 1.6,
+    marginBottom: 24
+  }
+}, p.fac, " has been notified that ", p.short, "'s record is updated."), /*#__PURE__*/React.createElement(Cd, {
+  m: m,
+  ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(FR, {
+    l: "Diagnosis",
+    v: /*#__PURE__*/React.createElement("strong", null, p.er.dx)
+  }), /*#__PURE__*/React.createElement(FR, {
+    l: "Prescriptions",
+    v: p.er.rx
+  }), /*#__PURE__*/React.createElement(FR, {
+    l: "Instructions",
+    v: p.er.ins
+  }))
+}), /*#__PURE__*/React.createElement(Bt, {
+  full: true,
+  ch: "Done",
+  onClick: () => go(0),
+  m: m
+})));
+const S13 = ({
+  go,
+  m,
+  p,
+  patients,
+  ptId,
+  setPt
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    minHeight: "100vh",
+    background: C.bg
+  }
+}, /*#__PURE__*/React.createElement(TB, {
+  m: m,
+  left: /*#__PURE__*/React.createElement(Bk, {
+    go: go,
+    to: 0,
+    label: "Home"
+  }),
+  ctr: m ? "Facility Return" : "Patient Record (Return)",
+  accent: C.green,
+  right: /*#__PURE__*/React.createElement(PtSwitcher, {
+    patients: patients,
+    ptId: ptId,
+    setPt: setPt,
+    m: m
+  })
+}), /*#__PURE__*/React.createElement("div", {
+  style: {
+    padding: m ? 14 : 20,
+    maxWidth: 700,
+    margin: "0 auto"
+  }
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    background: `linear-gradient(90deg,${C.lG},#E8F5E9)`,
+    borderRadius: 12,
+    padding: m ? "10px 14px" : "14px 20px",
+    marginBottom: m ? 10 : 14,
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+    border: `1px solid ${C.green}`,
+    borderLeft: `4px solid ${C.green}`
+  }
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    background: C.green,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0
+  }
+}, /*#__PURE__*/React.createElement(Chk, {
+  s: 16
+})), /*#__PURE__*/React.createElement("span", {
+  style: {
+    fontSize: m ? 12 : 14,
+    fontWeight: 600,
+    color: C.greenD
+  }
+}, "ED visit details updated: ", p.er.time)), /*#__PURE__*/React.createElement(PtHd, {
+  p: p,
+  m: m
+}), /*#__PURE__*/React.createElement(AllergyB, {
+  p: p,
+  m: m
+}), /*#__PURE__*/React.createElement(Sections, {
+  p: p,
+  tx: true,
+  er: true,
+  m: m,
+  comfortOpen: true
+}), /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "flex",
+    flexDirection: m ? "column" : "row",
+    gap: m ? 8 : 12,
+    marginTop: 8
+  }
+}, /*#__PURE__*/React.createElement(Bt, {
+  full: true,
+  outline: true,
+  ch: "Transfer Timeline",
+  onClick: () => go(14),
+  m: m
+}), /*#__PURE__*/React.createElement(Bt, {
+  full: true,
+  ch: "Acknowledge and Close",
+  onClick: () => go(0),
+  m: m
+}))));
+const S14 = ({
+  go,
+  m,
+  p
+}) => {
+  const evts = [{
+    t: p.er.time.split("at ")[1] || "6:15 PM",
+    d: p.er.time.split(" at")[0] || "Mar 20",
+    x: `ED return info completed by ${p.er.dr}`,
+    c: C.green,
+    i: "✅"
+  }, {
+    t: "Earlier",
+    d: "Same day",
+    x: "Record accessed by ED staff via QR scan",
+    c: C.accent,
+    i: "🏥"
+  }, {
+    t: "Earlier",
+    d: "Same day",
+    x: "Record accessed by EMS crew via QR scan",
+    c: C.accent,
+    i: "🚑"
+  }, {
+    t: p.tx.time.split("at ")[1] || "2:47 PM",
+    d: p.tx.time.split(" at")[0] || "Mar 20",
+    x: `Transfer initiated by ${p.tx.nurse}`,
+    c: C.amber,
+    i: "🚨"
+  }, {
+    t: "Admission",
+    d: "Nov 15, 2025",
+    x: `Record created at admission to ${p.fac}`,
+    c: C.dis,
+    i: "📋"
+  }];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: "100vh",
+      background: C.bg
+    }
+  }, /*#__PURE__*/React.createElement(TB, {
+    m: m,
+    left: /*#__PURE__*/React.createElement(Bk, {
+      go: go,
+      to: 13,
+      label: "Record"
+    }),
+    ctr: "Timeline"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: m ? 14 : 20,
+      maxWidth: 600,
+      margin: "0 auto"
+    }
+  }, /*#__PURE__*/React.createElement(Cd, {
+    m: m,
+    ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        marginBottom: 4
+      }
+    }, /*#__PURE__*/React.createElement(Av, {
+      sz: 32,
+      init: p.init
+    }), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: m ? 15 : 16,
+        fontWeight: 800,
+        color: C.navy
+      }
+    }, p.short)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        color: C.txS,
+        marginBottom: 20
+      }
+    }, "Audit trail"), evts.map((e, i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        display: "flex",
+        gap: m ? 12 : 16
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        minWidth: 28
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 28,
+        height: 28,
+        borderRadius: 14,
+        background: e.c,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 12,
+        flexShrink: 0
+      }
+    }, e.i), i < evts.length - 1 && /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 2,
+        flex: 1,
+        background: C.bdr,
+        minHeight: 20
+      }
+    })), /*#__PURE__*/React.createElement("div", {
+      style: {
+        paddingBottom: 16
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        fontWeight: 700,
+        color: C.txS
+      }
+    }, e.t, " \xB7 ", e.d), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: m ? 13 : 14,
+        color: C.tx,
+        marginTop: 2
+      }
+    }, e.x)))))
+  }), /*#__PURE__*/React.createElement(Bt, {
+    full: true,
+    ch: "Return Home",
+    onClick: () => go(0),
+    m: m
+  })));
+};
+const S15 = ({
+  go,
+  m,
+  setPersona,
+  setRole: setAppRole
+}) => {
+  const [step, setStep] = useState(0);
+  const [selPersona, setSelPersona] = useState(0);
+  const [selRole, setSelRole] = useState(0);
+  const [selShift, setSelShift] = useState(0);
+  const roles = ["RN / LVN", "Charge Nurse", "Administrator", "MD / NP"];
+  const shifts = ["Day (7a-7p)", "Night (7p-7a)", "Swing"];
+  if (step === 0) return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: "100vh",
+      background: `linear-gradient(160deg,${C.navy},#2A3F6A)`,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: m ? 16 : 32
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 420,
+      width: "100%"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      marginBottom: 36
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 28 : 36,
+      fontWeight: 900,
+      color: "#fff"
+    }
+  }, "Transfer", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: C.accent
+    }
+  }, "Link")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      color: "rgba(255,255,255,.5)",
+      marginTop: 8
+    }
+  }, "Secure facility access")), /*#__PURE__*/React.createElement(Cd, {
+    m: m,
+    style: {
+      padding: m ? "24px 20px" : "32px 28px"
+    },
+    ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SL, {
+      ch: "Facility Login",
+      ic: "\uD83C\uDFE5"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginBottom: 16
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 12,
+        fontWeight: 600,
+        color: C.txS
+      }
+    }, "Facility ID"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: "#F8F9FB",
+        borderRadius: 10,
+        padding: "12px 14px",
+        border: `1px solid ${C.bdr}`,
+        marginTop: 4,
+        fontSize: 14,
+        color: C.tx
+      }
+    }, "CVA-2026-0312")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginBottom: 16
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 12,
+        fontWeight: 600,
+        color: C.txS
+      }
+    }, "Your Name"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 6,
+        marginTop: 6,
+        flexWrap: "wrap"
+      }
+    }, PERSONAS.map((p, i) => /*#__PURE__*/React.createElement("span", {
+      key: i,
+      onClick: () => setSelPersona(i),
+      style: {
+        padding: "8px 14px",
+        borderRadius: 20,
+        fontSize: 12,
+        fontWeight: 600,
+        background: selPersona === i ? C.accent : "#F0F2F5",
+        color: selPersona === i ? "#fff" : C.txS,
+        cursor: "pointer",
+        border: selPersona === i ? "none" : `1px solid ${C.bdr}`
+      }
+    }, p.name)))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginBottom: 16
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 12,
+        fontWeight: 600,
+        color: C.txS
+      }
+    }, "Role"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 8,
+        marginTop: 6,
+        flexWrap: "wrap"
+      }
+    }, roles.map((r, i) => /*#__PURE__*/React.createElement("span", {
+      key: i,
+      onClick: () => setSelRole(i),
+      style: {
+        padding: "8px 14px",
+        borderRadius: 20,
+        fontSize: 12,
+        fontWeight: 600,
+        background: selRole === i ? C.accent : "#F0F2F5",
+        color: selRole === i ? "#fff" : C.txS,
+        cursor: "pointer",
+        border: selRole === i ? "none" : `1px solid ${C.bdr}`
+      }
+    }, r)))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginBottom: 20
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 12,
+        fontWeight: 600,
+        color: C.txS
+      }
+    }, "Shift"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 8,
+        marginTop: 6
+      }
+    }, shifts.map((s, i) => /*#__PURE__*/React.createElement("span", {
+      key: i,
+      onClick: () => setSelShift(i),
+      style: {
+        padding: "8px 14px",
+        borderRadius: 20,
+        fontSize: 12,
+        fontWeight: 600,
+        background: selShift === i ? C.accent : "#F0F2F5",
+        color: selShift === i ? "#fff" : C.txS,
+        cursor: "pointer",
+        border: selShift === i ? "none" : `1px solid ${C.bdr}`
+      }
+    }, s)))), /*#__PURE__*/React.createElement(Bt, {
+      full: true,
+      ch: "Sign In",
+      onClick: () => {
+        setPersona(PERSONAS[selPersona]);
+        setAppRole(roles[selRole]);
+        setStep(1);
+      },
+      m: m
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        textAlign: "center",
+        marginTop: 16,
+        fontSize: 12,
+        color: C.txS
+      }
+    }, "Secured with facility-level authentication."))
+  })));
+  const persona = PERSONAS[selPersona];
+  const obs = [{
+    ic: "📋",
+    t: "Build Patient Records",
+    d: "Enter baseline data once at admission. Medications, code status, comfort preferences travel with the patient."
+  }, {
+    ic: "📱",
+    t: "Generate QR Codes",
+    d: "One scan gives EMS and ED staff the complete picture. No packets, no faxes, no phone tag."
+  }, {
+    ic: "🔄",
+    t: "Close the Loop",
+    d: "ED staff update the record before discharge. Your facility sees exactly what happened, automatically."
+  }, {
+    ic: "📊",
+    t: "Track Everything",
+    d: "Full audit trail of every handoff. Dashboard shows facility-wide transfer patterns and outcomes."
+  }];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: "100vh",
+      background: C.bg
+    }
+  }, /*#__PURE__*/React.createElement(TB, {
+    ctr: "Welcome to TransferLink",
+    m: m
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: m ? 14 : 20,
+      maxWidth: 600,
+      margin: "0 auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      marginBottom: 24
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 20 : 24,
+      fontWeight: 800,
+      color: C.navy,
+      marginBottom: 4
+    }
+  }, "Welcome, ", persona.name.split(" ")[0]), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      color: C.txS
+    }
+  }, "Here's how TransferLink works at Cascade View"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      gap: 8,
+      marginTop: 8
+    }
+  }, /*#__PURE__*/React.createElement(Bg, {
+    ch: roles[selRole],
+    bg: C.accent
+  }), /*#__PURE__*/React.createElement(Bg, {
+    ch: shifts[selShift],
+    bg: C.lA,
+    color: C.accent
+  }))), obs.map((o, i) => /*#__PURE__*/React.createElement(Cd, {
+    key: i,
+    m: m,
+    style: {
+      borderLeft: `4px solid ${C.accent}`
+    },
+    ch: /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 14,
+        alignItems: "flex-start"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 44,
+        height: 44,
+        borderRadius: 12,
+        background: C.lA,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 22,
+        flexShrink: 0
+      }
+    }, o.ic), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 15,
+        fontWeight: 700,
+        color: C.navy,
+        marginBottom: 4
+      }
+    }, o.t), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        color: C.txS,
+        lineHeight: 1.5
+      }
+    }, o.d)))
+  })), /*#__PURE__*/React.createElement(Bt, {
+    full: true,
+    ch: "Go to Dashboard",
+    onClick: () => go(17),
+    m: m,
+    style: {
+      marginTop: 8
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      marginTop: 12
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    onClick: () => go(0),
+    style: {
+      fontSize: 13,
+      color: C.accent,
+      cursor: "pointer",
+      fontWeight: 600
+    }
+  }, "Skip to Role Selector"))));
+};
+const S17 = ({
+  go,
+  m,
+  setPt,
+  patients,
+  persona,
+  role,
+  notifications
+}) => {
+  const [dismissed, setDismissed] = useState(new Set());
+  const [toast, setToast] = useState(true);
+  useEffect(() => {
+    const t = setTimeout(() => setToast(false), 4000);
+    return () => clearTimeout(t);
+  }, []);
+  const stats = [{
+    n: String(patients.length),
+    l: "Total Residents",
+    ic: "👥",
+    c: C.accent
+  }, {
+    n: "1",
+    l: "Active Transfers",
+    ic: "🚨",
+    c: C.amber
+  }, {
+    n: "3",
+    l: "Completed (30d)",
+    ic: "✅",
+    c: C.green
+  }, {
+    n: "0",
+    l: "Pending Returns",
+    ic: "🔄",
+    c: C.purple
+  }];
+  const alerts = [{
+    id: 0,
+    ptId: 0,
+    pt: "Maggie Tanaka",
+    msg: "Active transfer to Providence Regional",
+    t: "2:47 PM",
+    c: C.amber,
+    ic: "🚨",
+    scr: 2
+  }, {
+    id: 1,
+    ptId: 2,
+    pt: "Dorothy Williams",
+    msg: "INR recheck due tomorrow (Warfarin held)",
+    t: "Today",
+    c: C.red,
+    ic: "💊",
+    scr: 2
+  }, {
+    id: 2,
+    ptId: 1,
+    pt: "Robert Chen",
+    msg: "BG monitoring q4h, 36 hours remaining",
+    t: "Today",
+    c: C.accent,
+    ic: "📊",
+    scr: 2
+  }, {
+    id: 3,
+    ptId: 3,
+    pt: "James Martinez",
+    msg: "Weight check due, fluid restriction active",
+    t: "Today",
+    c: C.accent,
+    ic: "⚖️",
+    scr: 2
+  }];
+  const visibleAlerts = alerts.filter(a => !dismissed.has(a.id));
+  const displayName = persona?.name || "Sarah Mitchell";
+  const displayRole = role || "RN";
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: "100vh",
+      background: C.bg
+    }
+  }, /*#__PURE__*/React.createElement(TB, {
+    left: /*#__PURE__*/React.createElement(Bk, {
+      go: go,
+      to: 0,
+      label: "Home"
+    }),
+    ctr: "Facility Dashboard",
+    m: m
+  }), toast && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: `linear-gradient(90deg,${C.amber},${C.amberD})`,
+      padding: "10px 16px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      animation: "fadeIn .3s ease"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      fontWeight: 600,
+      color: "#fff"
+    }
+  }, "\uD83D\uDEA8 1 active transfer in progress"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setToast(false),
+    style: {
+      color: "#fff",
+      background: "rgba(255,255,255,.2)",
+      border: "none",
+      borderRadius: 12,
+      padding: "4px 10px",
+      cursor: "pointer",
+      fontSize: 12
+    }
+  }, "Dismiss")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: m ? 14 : 20,
+      maxWidth: 700,
+      margin: "0 auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 12,
+      marginBottom: 20
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 48,
+      height: 48,
+      borderRadius: 12,
+      background: `linear-gradient(135deg,${C.accent},${C.accentD})`,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 22
+    }
+  }, "\uD83C\uDFE5")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 16 : 18,
+      fontWeight: 800,
+      color: C.navy
+    }
+  }, "Cascade View Assisted Living"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: C.txS
+    }
+  }, "Day Shift \xB7 ", displayName, ", ", displayRole, " \xB7 March 20, 2026"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: m ? "1fr 1fr" : "1fr 1fr 1fr 1fr",
+      gap: m ? 8 : 12,
+      marginBottom: 20
+    }
+  }, stats.map((s, i) => /*#__PURE__*/React.createElement(Cd, {
+    key: i,
+    m: m,
+    style: {
+      textAlign: "center",
+      padding: m ? "14px 8px" : "18px 12px",
+      borderTop: `3px solid ${s.c}`
+    },
+    ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 22,
+        marginBottom: 4
+      }
+    }, s.ic), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: m ? 22 : 28,
+        fontWeight: 900,
+        color: C.navy
+      }
+    }, s.n), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: m ? 10 : 11,
+        color: C.txS,
+        marginTop: 2,
+        fontWeight: 600
+      }
+    }, s.l))
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement(SL, {
+    ch: "Active Alerts & Follow-Ups",
+    ic: "\uD83D\uDD14"
+  }), visibleAlerts.length < alerts.length && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11,
+      color: C.txT
+    }
+  }, alerts.length - visibleAlerts.length, " dismissed")), visibleAlerts.map(a => /*#__PURE__*/React.createElement(Cd, {
+    key: a.id,
+    m: m,
+    style: {
+      borderLeft: `4px solid ${a.c}`,
+      cursor: "pointer"
+    },
+    onClick: () => {
+      setPt(a.ptId);
+      go(a.scr);
+    },
+    ch: /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 12
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 36,
+        height: 36,
+        borderRadius: 10,
+        background: a.c + "18",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 16,
+        flexShrink: 0
+      }
+    }, a.ic), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1,
+        minWidth: 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 14,
+        fontWeight: 700,
+        color: C.navy
+      }
+    }, a.pt), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        color: C.txS,
+        marginTop: 1
+      }
+    }, a.msg)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 8
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 12,
+        color: C.txT,
+        whiteSpace: "nowrap"
+      }
+    }, a.t), /*#__PURE__*/React.createElement("button", {
+      onClick: e => {
+        e.stopPropagation();
+        setDismissed(prev => {
+          const n = new Set(prev);
+          n.add(a.id);
+          return n;
+        });
+      },
+      style: {
+        width: 28,
+        height: 28,
+        borderRadius: 14,
+        border: `1px solid ${C.bdr}`,
+        background: "#F8F8F8",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 12,
+        color: C.txT
+      },
+      title: "Acknowledge"
+    }, "\u2713")))
+  })), visibleAlerts.length === 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      padding: 24,
+      color: C.txT,
+      fontSize: 14
+    }
+  }, "All alerts acknowledged \u2713"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: m ? "column" : "row",
+      gap: m ? 8 : 12,
+      marginTop: 8
+    }
+  }, /*#__PURE__*/React.createElement(Bt, {
+    full: true,
+    ch: "View Patient List",
+    onClick: () => go(1),
+    m: m
+  }), /*#__PURE__*/React.createElement(Bt, {
+    full: true,
+    outline: true,
+    ch: "Transfer History",
+    onClick: () => go(18),
+    m: m
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      marginTop: 12
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    onClick: () => go(19),
+    style: {
+      fontSize: 13,
+      color: C.accent,
+      cursor: "pointer",
+      fontWeight: 600
+    }
+  }, "Generate SBAR Report \u2192"))));
+};
+const S18 = ({
+  go,
+  m,
+  setPt,
+  patients
+}) => {
+  const [filter, setFilter] = useState(0);
+  const history = [{
+    pt: patients[0],
+    date: "Mar 20, 2026",
+    dest: "Providence Regional",
+    dx: patients[0].er.dx,
+    status: "complete",
+    dr: patients[0].er.dr
+  }, {
+    pt: patients[1],
+    date: "Mar 20, 2026",
+    dest: "Providence Regional",
+    dx: patients[1].er.dx,
+    status: "complete",
+    dr: patients[1].er.dr
+  }, {
+    pt: patients[2],
+    date: "Mar 20, 2026",
+    dest: "Providence Regional",
+    dx: patients[2].er.dx,
+    status: "complete",
+    dr: patients[2].er.dr
+  }, {
+    pt: patients[3],
+    date: "Mar 20, 2026",
+    dest: "Providence Regional",
+    dx: patients[3].er.dx,
+    status: "active",
+    dr: ""
+  }, {
+    pt: patients[0],
+    date: "Jan 15, 2026",
+    dest: "Swedish Edmonds",
+    dx: "UTI with sepsis",
+    status: "complete",
+    dr: "Dr. Lin, MD"
+  }, {
+    pt: patients[2],
+    date: "Dec 3, 2025",
+    dest: "Providence Regional",
+    dx: "Aspiration pneumonia",
+    status: "complete",
+    dr: "Dr. Santos, MD"
+  }];
+  const filtered = filter === 0 ? history : filter === 1 ? history.filter(h => h.status === "active") : filter === 2 ? history.filter(h => h.status === "complete") : history.slice(0, 4);
+  const statusBg = {
+    complete: C.green,
+    active: C.amber
+  };
+  const statusLabel = {
+    complete: "Completed",
+    active: "In Progress"
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: "100vh",
+      background: C.bg
+    }
+  }, /*#__PURE__*/React.createElement(TB, {
+    left: /*#__PURE__*/React.createElement(Bk, {
+      go: go,
+      to: 17,
+      label: "Dashboard"
+    }),
+    ctr: "Transfer History",
+    m: m
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: m ? 14 : 20,
+      maxWidth: 700,
+      margin: "0 auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 16 : 18,
+      fontWeight: 800,
+      color: C.navy
+    }
+  }, "All Transfers"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: C.txS
+    }
+  }, "Cascade View Assisted Living")), /*#__PURE__*/React.createElement(Bg, {
+    ch: history.length + " total",
+    bg: C.lA,
+    color: C.accent,
+    style: {
+      fontSize: 12
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      marginBottom: 16
+    }
+  }, ["All", "Active", "Completed", "Last 30d"].map((f, i) => /*#__PURE__*/React.createElement("span", {
+    key: i,
+    onClick: () => setFilter(i),
+    style: {
+      padding: "6px 14px",
+      borderRadius: 20,
+      fontSize: 12,
+      fontWeight: 600,
+      background: i === filter ? C.accent : "#F0F2F5",
+      color: i === filter ? "#fff" : C.txS,
+      cursor: "pointer",
+      border: i === filter ? "none" : `1px solid ${C.bdr}`
+    }
+  }, f))), filtered.map((h, i) => /*#__PURE__*/React.createElement(Cd, {
+    key: i,
+    m: m,
+    style: {
+      borderLeft: `4px solid ${statusBg[h.status]}`,
+      cursor: "pointer"
+    },
+    ch: /*#__PURE__*/React.createElement("div", {
+      onClick: () => {
+        setPt(h.pt.id);
+        go(13);
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: 6
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 8
+      }
+    }, /*#__PURE__*/React.createElement(Av, {
+      sz: 32,
+      init: h.pt.init
+    }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 14,
+        fontWeight: 700,
+        color: C.navy
+      }
+    }, h.pt.short), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        color: C.txS
+      }
+    }, "Room ", h.pt.room, " \xB7 Age ", h.pt.age))), /*#__PURE__*/React.createElement(Bg, {
+      ch: statusLabel[h.status],
+      bg: statusBg[h.status],
+      style: {
+        fontSize: 11
+      }
+    })), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "grid",
+        gridTemplateColumns: m ? "1fr" : "1fr 1fr",
+        gap: 4,
+        marginTop: 8,
+        paddingTop: 8,
+        borderTop: `1px solid ${C.bdr}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: C.txS,
+        fontWeight: 600
+      }
+    }, "Date:"), " ", h.date), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: C.txS,
+        fontWeight: 600
+      }
+    }, "Destination:"), " ", h.dest), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: C.txS,
+        fontWeight: 600
+      }
+    }, "Diagnosis:"), " ", h.dx), h.dr && /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: C.txS,
+        fontWeight: 600
+      }
+    }, "ED Provider:"), " ", h.dr)))
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      marginTop: 16,
+      padding: 16,
+      background: C.lA,
+      borderRadius: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 600,
+      color: C.accent
+    }
+  }, "\uD83D\uDCCA Facility Transfer Summary (30 days)"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      gap: m ? 16 : 32,
+      marginTop: 12
+    }
+  }, [["6", "Total Transfers"], ["4", "Unique Patients"], ["1.5", "Avg per Week"], ["100%", "Records Complete"]].map(([n, l], i) => /*#__PURE__*/React.createElement("div", {
+    key: i
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 18 : 22,
+      fontWeight: 800,
+      color: C.navy
+    }
+  }, n), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: m ? 9 : 10,
+      color: C.txS,
+      marginTop: 2
+    }
+  }, l)))))));
+};
+const S19 = ({
+  go,
+  m,
+  p,
+  setPt,
+  patients
+}) => {
+  const [selPt, setSelPt] = useState(p.id);
+  const sp = patients[selPt] || patients[0];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: "100vh",
+      background: C.bg
+    }
+  }, /*#__PURE__*/React.createElement(TB, {
+    left: /*#__PURE__*/React.createElement(Bk, {
+      go: go,
+      to: 17,
+      label: "Dashboard"
+    }),
+    ctr: "SBAR Handoff Report",
+    m: m
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: m ? 14 : 20,
+      maxWidth: 700,
+      margin: "0 auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600,
+      color: C.txS
+    }
+  }, "Select Patient"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      marginTop: 6,
+      flexWrap: "wrap"
+    }
+  }, patients.map((pt, i) => /*#__PURE__*/React.createElement("span", {
+    key: i,
+    onClick: () => setSelPt(i),
+    style: {
+      padding: "8px 14px",
+      borderRadius: 20,
+      fontSize: 12,
+      fontWeight: 600,
+      background: selPt === i ? C.accent : "#F0F2F5",
+      color: selPt === i ? "#fff" : C.txS,
+      cursor: "pointer",
+      border: selPt === i ? "none" : `1px solid ${C.bdr}`
+    }
+  }, pt.short)))), /*#__PURE__*/React.createElement(Cd, {
+    m: m,
+    style: {
+      borderTop: `4px solid ${C.navy}`,
+      padding: m ? "18px 16px" : "24px 22px"
+    },
+    ch: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 16
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 10
+      }
+    }, /*#__PURE__*/React.createElement(Av, {
+      sz: 36,
+      init: sp.init
+    }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 16,
+        fontWeight: 800,
+        color: C.navy
+      }
+    }, sp.name), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        color: C.txS
+      }
+    }, "Room ", sp.room, " \xB7 DOB: ", sp.dob, " \xB7 Age ", sp.age))), /*#__PURE__*/React.createElement(CodeBanner, {
+      p: sp,
+      m: m
+    })), /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: C.lR,
+        borderRadius: 12,
+        padding: m ? "12px" : "16px 18px",
+        marginBottom: 14,
+        borderLeft: `4px solid ${C.red}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        fontWeight: 800,
+        color: C.red,
+        marginBottom: 6,
+        letterSpacing: 1
+      }
+    }, "S \u2014 SITUATION"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 14,
+        color: C.tx,
+        lineHeight: 1.6
+      }
+    }, sp.short, ", ", sp.age, "-year-old ", sp.lang, "-speaking resident of ", sp.fac, ", Room ", sp.room, ". Code status: ", /*#__PURE__*/React.createElement("strong", null, sp.code), ".", sp.polst ? " POLST on file." : "", " Transferred to ", sp.tx.dest, " on ", sp.tx.time.split(" at")[0], " for: ", /*#__PURE__*/React.createElement("strong", null, sp.tx.reason))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: C.lA,
+        borderRadius: 12,
+        padding: m ? "12px" : "16px 18px",
+        marginBottom: 14,
+        borderLeft: `4px solid ${C.accent}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        fontWeight: 800,
+        color: C.accent,
+        marginBottom: 6,
+        letterSpacing: 1
+      }
+    }, "B \u2014 BACKGROUND"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 14,
+        color: C.tx,
+        lineHeight: 1.6
+      }
+    }, /*#__PURE__*/React.createElement("strong", null, "Medical History:"), " ", sp.hx.join(", "), ".", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Allergies:"), " ", /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: C.red,
+        fontWeight: 600
+      }
+    }, sp.allergy.join(", ")), ".", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Medications:"), " ", sp.meds.map(x => x.n + " " + x.f).join(", "), ".", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Baseline Mentation:"), " Level ", sp.mLvl, "/4 (", ["Alert & Oriented", "Disoriented, Follows Instructions", "Disoriented, Does Not Follow", "Non-Verbal"][sp.mLvl - 1], ").", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Functional:"), " ", ["Independent", "Ambulates with Assistance", "Non-Ambulatory"][sp.fLvl - 1], ".", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Devices:"), " ", sp.dev.join(", "), ". ", /*#__PURE__*/React.createElement("strong", null, "Risks:"), " ", sp.risks.join(", "), ".")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: C.lW,
+        borderRadius: 12,
+        padding: m ? "12px" : "16px 18px",
+        marginBottom: 14,
+        borderLeft: `4px solid ${C.amber}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        fontWeight: 800,
+        color: C.amber,
+        marginBottom: 6,
+        letterSpacing: 1
+      }
+    }, "A \u2014 ASSESSMENT"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 14,
+        color: C.tx,
+        lineHeight: 1.6
+      }
+    }, /*#__PURE__*/React.createElement("strong", null, "Recent Changes (72h):"), " ", sp.tx.chg, ".", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Interventions at Facility:"), " ", sp.tx.intv, ".", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "ED Diagnosis:"), " ", sp.er.dx, ".", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Vitals at ED:"), " BP ", sp.er.bp, ", HR ", sp.er.hr, ", RR ", sp.er.rr, ", SpO2 ", sp.er.sp, ".")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: C.lG,
+        borderRadius: 12,
+        padding: m ? "12px" : "16px 18px",
+        marginBottom: 14,
+        borderLeft: `4px solid ${C.green}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        fontWeight: 800,
+        color: C.green,
+        marginBottom: 6,
+        letterSpacing: 1
+      }
+    }, "R \u2014 RECOMMENDATION"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 14,
+        color: C.tx,
+        lineHeight: 1.6
+      }
+    }, /*#__PURE__*/React.createElement("strong", null, "Prescriptions:"), " ", sp.er.rx, ".", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Follow-Up Instructions:"), " ", sp.er.ins, /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "ED Provider:"), " ", sp.er.dr, ". ", /*#__PURE__*/React.createElement("strong", null, "Report called:"), " ", sp.er.rpt, ".")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        borderTop: `2px solid ${C.bdr}`,
+        paddingTop: 12,
+        marginTop: 4
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        fontWeight: 600,
+        color: C.txS
+      }
+    }, "Cultural/Comfort Considerations for Receiving Staff:"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        color: C.tx,
+        marginTop: 4,
+        lineHeight: 1.5
+      }
+    }, sp.comfort.comm, " ", sp.comfort.cult, " ", sp.comfort.dist)))
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: m ? "column" : "row",
+      gap: m ? 8 : 12
+    }
+  }, /*#__PURE__*/React.createElement(Bt, {
+    full: true,
+    outline: true,
+    ch: "Copy to Clipboard",
+    onClick: () => alert("SBAR copied to clipboard! (simulated)"),
+    m: m
+  }), /*#__PURE__*/React.createElement(Bt, {
+    full: true,
+    ch: "Print SBAR",
+    onClick: () => alert("Sent to printer! (simulated)"),
+    m: m
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      fontSize: 12,
+      color: C.txS,
+      marginTop: 12
+    }
+  }, "Generated from TransferLink on March 20, 2026.")));
+};
+
+// ===== APP =====
+function App() {
+  const [scr, setScr] = useState(0);
+  const [ptId, setPtId] = useState(0);
+  const [patients, setPatients] = useState([...INIT_PATIENTS]);
+  const [w, setW] = useState(typeof window !== "undefined" ? window.innerWidth : 800);
+  const [visited, setVisited] = useState(new Set());
+  const [showIntake, setShowIntake] = useState(false);
+  const [persona, setPersona] = useState(PERSONAS[0]);
+  const [role, setRole] = useState("RN / LVN");
+  const [history, setHistory] = useState([0]);
+  const [demoMode, setDemoMode] = useState(false);
+  const [demoStep, setDemoStep] = useState(0);
+  const [notifications, setNotifications] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [toasts, setToasts] = useState([]);
+  useEffect(() => {
+    const h = () => setW(window.innerWidth);
+    window.addEventListener("resize", h);
+    return () => window.removeEventListener("resize", h);
+  }, []);
+  const m = w < 640;
+  const addToast = useCallback((text, type = "success") => {
+    const id = Date.now();
+    setToasts(prev => [...prev, {
+      id,
+      text,
+      type
+    }]);
+    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 3000);
+  }, []);
+  const addNotification = useCallback((text, pId) => {
+    const now = new Date();
+    const time = now.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    });
+    setNotifications(prev => [{
+      id: Date.now(),
+      text,
+      time,
+      unread: true,
+      patientId: pId || ptId
+    }, ...prev]);
+  }, [ptId]);
+  const go = useCallback(s => {
+    setScr(s);
+    setHistory(prev => [...prev, s]);
+    setVisited(prev => {
+      const n = new Set(prev);
+      n.add(s);
+      return n;
+    });
+    window.scrollTo({
+      top: 0,
+      behavior: "instant"
+    });
+  }, []);
+  const handleAddPt = useCallback(() => setShowIntake(true), []);
+  const handleSavePt = useCallback(newPt => {
+    const id = patients.length;
+    const saved = {
+      ...newPt,
+      id
+    };
+    setPatients(prev => [...prev, saved]);
+    setShowIntake(false);
+    setPtId(id);
+    addToast("Patient " + saved.short + " added successfully");
+    addNotification("New patient " + saved.short + " registered (Room " + saved.room + ")");
+    go(2);
+  }, [patients.length, go, addToast, addNotification]);
+  const onStartDemo = useCallback(() => {
+    setDemoMode(true);
+    setDemoStep(0);
+    setPtId(0);
+    go(0);
+  }, [go]);
+  const p = patients[ptId] || patients[0];
+  const shared = {
+    go,
+    m,
+    p,
+    patients,
+    ptId,
+    setPt: setPtId,
+    visited,
+    persona,
+    role
+  };
+  const screens = {
+    0: /*#__PURE__*/React.createElement(S0, {
+      go: go,
+      m: m,
+      onStartDemo: onStartDemo
+    }),
+    1: /*#__PURE__*/React.createElement(S1, {
+      go: go,
+      m: m,
+      setPt: setPtId,
+      patients: patients,
+      onAddPt: handleAddPt
+    }),
+    2: /*#__PURE__*/React.createElement(S2, shared),
+    3: /*#__PURE__*/React.createElement(S3, {
+      go: go,
+      m: m,
+      p: p
+    }),
+    4: /*#__PURE__*/React.createElement(S4, shared),
+    5: /*#__PURE__*/React.createElement(S5, {
+      go: go,
+      m: m,
+      p: p
+    }),
+    6: /*#__PURE__*/React.createElement(S6, {
+      go: go,
+      m: m,
+      p: p
+    }),
+    7: /*#__PURE__*/React.createElement(S7, {
+      go: go,
+      m: m
+    }),
+    8: /*#__PURE__*/React.createElement(S8, shared),
+    9: /*#__PURE__*/React.createElement(S9, {
+      go: go,
+      m: m
+    }),
+    10: /*#__PURE__*/React.createElement(S10, shared),
+    11: /*#__PURE__*/React.createElement(S11, {
+      go: go,
+      m: m,
+      p: p
+    }),
+    12: /*#__PURE__*/React.createElement(S12, {
+      go: go,
+      m: m,
+      p: p
+    }),
+    13: /*#__PURE__*/React.createElement(S13, shared),
+    14: /*#__PURE__*/React.createElement(S14, {
+      go: go,
+      m: m,
+      p: p
+    }),
+    15: /*#__PURE__*/React.createElement(S15, {
+      go: go,
+      m: m,
+      setPersona: setPersona,
+      setRole: setRole
+    }),
+    17: /*#__PURE__*/React.createElement(S17, {
+      go: go,
+      m: m,
+      setPt: setPtId,
+      patients: patients,
+      persona: persona,
+      role: role,
+      notifications: notifications
+    }),
+    18: /*#__PURE__*/React.createElement(S18, {
+      go: go,
+      m: m,
+      setPt: setPtId,
+      patients: patients
+    }),
+    19: /*#__PURE__*/React.createElement(S19, {
+      go: go,
+      m: m,
+      p: p,
+      setPt: setPtId,
+      patients: patients
+    })
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 768,
+      margin: "0 auto",
+      minHeight: "100vh",
+      background: C.card,
+      boxShadow: "0 0 60px rgba(0,0,0,.06)",
+      position: "relative",
+      overflow: "hidden"
+    }
+  }, /*#__PURE__*/React.createElement(ToastContainer, {
+    toasts: toasts
+  }), showIntake && /*#__PURE__*/React.createElement(IntakeModal, {
+    onClose: () => setShowIntake(false),
+    onSave: handleSavePt,
+    m: m
+  }), showNotifications && /*#__PURE__*/React.createElement(NotificationCenter, {
+    notifications: notifications,
+    onClose: () => setShowNotifications(false),
+    onSelect: n => {
+      setShowNotifications(false);
+      if (n.patientId !== undefined) setPtId(n.patientId);
+      go(2);
+    },
+    m: m
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "page-wrapper",
+    key: scr
+  }, screens[scr] || /*#__PURE__*/React.createElement(S0, {
+    go: go,
+    m: m,
+    onStartDemo: onStartDemo
+  })), demoMode && /*#__PURE__*/React.createElement(GuidedDemo, {
+    onExit: () => setDemoMode(false),
+    demoStep: demoStep,
+    setDemoStep: setDemoStep,
+    navigate: go,
+    selectPatient: id => setPtId(id),
+    m: m
+  }));
+}
+ReactDOM.render(/*#__PURE__*/React.createElement(App, null), document.getElementById("root"));
+</script>
+</body>
+</html>
