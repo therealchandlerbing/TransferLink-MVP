@@ -16,7 +16,7 @@ export const INIT_PATIENTS = [
       { time: "14:00", bp: "138/82", hr: 96, sp: 84 }
     ],
     comfort:{light:"Prefers dim lighting at night",comm:"Responds to calm, slow speech in Japanese",fam:"Son David visits daily, involved in all care decisions",cult:"Buddhist traditions. Prefers rice-based meals",dist:"Agitated in loud environments. Calms with traditional Japanese music"},
-    tx:{reason:"Acute shortness of breath, O2 sat dropped to 84%, not responding to PRN albuterol",symp:["Shortness of Breath"],intv:"Administered PRN albuterol nebulizer, increased O2 to 4 L/min, placed in high Fowler's position",chg:"Increased confusion at night, decreased appetite x2 days, new productive cough",dest:"Providence Regional Medical Center, Everett",time:"March 20, 2026 at 2:47 PM",nurse:"RN Sarah Mitchell", belongingsSent: ["Hearing Aid (Right)", "Glasses"]},
+    tx:{reason:"Acute shortness of breath, O2 sat dropped to 84%, not responding to PRN albuterol",symp:["Shortness of Breath"],intv:"Administered PRN albuterol nebulizer, increased O2 to 4 L/min, placed in high Fowler's position",chg:"Increased confusion at night, decreased appetite x2 days, new productive cough",dest:"Providence Regional Medical Center, Everett",time:"March 20, 2026 at 2:47 AM",nurse:"RN Sarah Mitchell", belongingsSent: ["Hearing Aid (Right)", "Glasses"]},
     er:{dx:"Acute exacerbation of COPD with hypoxemia",bp:"138/82",hr:"96",rr:"22",sp:"93% on 3L",rx:"Prednisone 40mg x5 days, Azithromycin 250mg x5 days",rpt:"Called RN Mitchell at Cascade View, 6:12 PM",ins:"Follow up with pulmonology within 7 days. Continue O2 at 2 L/min. Monitor for worsening cough or fever. Return to ED if O2 sat drops below 90%.",dr:"Dr. James Park, MD",time:"March 20, 2026 at 6:15 PM"},
   },
   {
@@ -34,7 +34,7 @@ export const INIT_PATIENTS = [
       { time: "07:00", bp: "148/86", hr: 98, sp: 98 },
       { time: "09:00", bp: "152/88", hr: 104, sp: 98 }
     ],
-    comfort:{light:"Normal lighting, no preference",comm:"Alert and conversant in English. Hearing aid in right ear.",fam:"Wife Linda visits every evening. Son Kevin calls weekly.",cult:"No specific cultural preferences noted",dist:"Becomes anxious about blood sugar readings. Reassurance helps."},
+    comfort:{light:"Normal lighting, no preference",comm:"Alert and conversant in English. Hearing aid in right ear. Advance care planning conversation has been initiated; wife Linda is actively involved in all care decisions.",fam:"Wife Linda visits every evening. Son Kevin calls weekly.",cult:"No specific cultural preferences noted",dist:"Becomes anxious about blood sugar readings. Reassurance and clear explanations help."},
     tx:{reason:"Blood glucose dropped to 42 mg/dL, diaphoretic, confused, not responsive to oral glucose gel",symp:["Altered Mental Status"],intv:"Administered oral glucose gel x2, juice box, checked glucose q15min. Glucose at 58 after 30 min but patient still confused.",chg:"Reduced appetite x3 days, Glipizide dose increased last week by PCP, one episode of vomiting yesterday",dest:"Providence Regional Medical Center, Everett",time:"March 20, 2026 at 10:15 AM",nurse:"RN Sarah Mitchell", belongingsSent: ["Hearing Aid (Left)"]},
     er:{dx:"Severe hypoglycemia with altered mental status",bp:"152/88",hr:"104",rr:"18",sp:"98% RA",rx:"Glipizide reduced to 5mg BID, D50 administered in ED",rpt:"Called RN Mitchell at Cascade View, 2:30 PM",ins:"Hold Glipizide tonight. Resume at 5mg BID tomorrow. Check BG q4h for 48 hours. Follow up with endocrinology within 5 days. Return if BG < 60 or AMS recurs.",dr:"Dr. Anika Patel, MD",time:"March 20, 2026 at 2:45 PM"},
   },
@@ -98,7 +98,7 @@ export const NEW_PT_TEMPLATE = {
 };
 
 export const PERSONAS = [
-  {name:"Sarah Mitchell", role:"RN / LVN", shift:"Day (7a-7p)"},
+  {name:"Sarah Mitchell", role:"RN / LVN", shift:"Night (7p-7a)"},
   {name:"David Park", role:"RN / LVN", shift:"Night (7p-7a)"},
   {name:"Dr. Angela Kim", role:"MD / NP", shift:"Day (7a-7p)"},
   {name:"Teresa Morales", role:"Charge Nurse", shift:"Day (7a-7p)"},
@@ -106,20 +106,116 @@ export const PERSONAS = [
 ];
 
 export const DEMO_SCREEN_MAP = [
-  {screen:0, title:"Welcome to TransferLink", desc:"Home screen with role-based entry points"},
-  {screen:15, title:"Login & Onboarding", desc:"Facility staff signs in and sees workflow overview"},
-  {screen:17, title:"Facility Dashboard", desc:"Active alerts, transfer stats, and follow-ups"},
-  {screen:1, title:"Patient Roster", desc:"View all residents at Cascade View"},
-  {screen:2, title:"Patient Record", desc:"Full clinical record for Maggie Tanaka"},
-  {screen:3, title:"Initiate Transfer", desc:"Nurse documents reason, symptoms, interventions"},
-  {screen:4, title:"Confirm Transfer", desc:"Review all data before generating QR"},
-  {screen:5, title:"QR Code Ready", desc:"Scannable code for EMS crew"},
-  {screen:7, title:"EMS Scans QR", desc:"EMS crew scans code on arrival"},
-  {screen:8, title:"EMS Transport View", desc:"EMS sees full record with comfort preferences"},
-  {screen:9, title:"ED Scans QR", desc:"ED staff scans code on arrival"},
-  {screen:10, title:"ED Full Record", desc:"ED sees complete transfer data and history"},
-  {screen:11, title:"ED Return Documentation", desc:"ED staff documents diagnosis and discharge plan"},
-  {screen:12, title:"Record Updated", desc:"Confirmation that facility has been notified"},
-  {screen:13, title:"Facility Receives Update", desc:"Nurse sees ED return info on patient record"},
-  {screen:14, title:"Full Timeline", desc:"Complete audit trail of every handoff event"},
+  {
+    screen: 0,
+    title: "Welcome to TransferLink",
+    desc: "A QR code-based transfer system built from WA State research",
+    scene: "47 healthcare professionals across Washington State confirmed what every LTC nurse already knows: the paper-based transfer process is broken, unreliable, and puts patients at real risk. This is what the research said to build instead.",
+    note: "81% of respondents said they were more likely to complete a transfer form if it was electronic. 61% said a QR code linking to POLST documents would be useful."
+  },
+  {
+    screen: 15,
+    title: "Login & Onboarding",
+    desc: "Facility staff signs in — no separate app, no EMR password",
+    scene: "It's March 20, 2026. RN Sarah Mitchell starts her night shift at Cascade View Assisted Living. She logs in with a facility ID — no separate app to install, no EMR portal to navigate.",
+    note: "Zero friction at login means nurses are in the record in seconds, not minutes."
+  },
+  {
+    screen: 17,
+    title: "Facility Dashboard",
+    desc: "Real-time visibility into active transfers and follow-up alerts",
+    scene: "Sarah's dashboard shows one active transfer, three follow-up alerts, and recent activity. Maggie Tanaka's name is at the top — her transfer to Providence Regional is in progress.",
+    note: "Charge nurses currently manage this visibility through whiteboards, sticky notes, and phone calls."
+  },
+  {
+    screen: 1,
+    title: "Patient Roster",
+    desc: "Every resident at Cascade View, searchable at a glance",
+    scene: "Four residents tonight. Maggie Tanaka — Room 204, 87 years old — is showing an active transfer badge. One tap to her full record.",
+    note: "The color bar on each card reflects each resident's documented code status — their own documented wishes, at a glance."
+  },
+  {
+    screen: 2,
+    title: "Patient Record",
+    desc: "Full clinical record, built at admission, always current",
+    scene: "Maggie's complete record: Japanese speaker. DNR/DNI with POLST on file. Penicillin and Sulfa drug allergies. Language is listed first — not alphabetically, but because it was missing at the moment that mattered most.",
+    note: "Code status reflects Maggie's documented wishes and advance directive. The POLST is her voice in a crisis — this system ensures it travels with her."
+  },
+  {
+    screen: 3,
+    title: "Initiate Transfer",
+    desc: "Add only what's new — the baseline is already documented",
+    scene: "2:47 AM. Maggie's O2 sat has dropped to 84% and she isn't responding to albuterol. Sarah adds only what changed tonight: the reason, the symptoms, what's been tried. The baseline data is already here. Under 2 minutes total.",
+    note: "Top barriers in the survey: 'takes too long' (38%) and 'too much information required' (31%). This form only asks for what changed."
+  },
+  {
+    screen: 4,
+    title: "Confirm Transfer",
+    desc: "Final review before the QR code generates",
+    scene: "One last look before the QR is generated: DNR/DNI. POLST on file. Language: Japanese. These aren't checkboxes to rush through — they are the information that determines what happens the moment EMS walks in.",
+    note: "In this research, a patient's language was miscommunicated as Korean instead of Japanese — and no one knew until the wrong interpreter arrived. Language is surfaced first. Always."
+  },
+  {
+    screen: 5,
+    title: "QR Code Ready — The Hero Moment",
+    desc: "One scan replaces the paper packet at every handoff point",
+    scene: "This is the moment everything changes. One QR code — on a wristband, a tablet, a printed sheet — holds Maggie's entire record. The packet that was assembled, handed off, sometimes lost, sometimes separated from the patient: it no longer exists. What exists is this code, and it never goes out of date.",
+    note: "The same code travels with Maggie through every handoff — ambulance, triage bay, ED. Same current record, every time, no duplicate data entry."
+  },
+  {
+    screen: 7,
+    title: "EMS Scans QR",
+    desc: "Crew scans on arrival — no app install, no login required",
+    scene: "3:14 AM. EMS arrives at Cascade View. One scan from their tablet or phone. The record opens in a web browser — no app to install, no credentials to enter for transport teams.",
+    note: "The same QR code works at every handoff point. EMS. ED. The same current record, every time."
+  },
+  {
+    screen: 8,
+    title: "EMS Transport View",
+    desc: "Critical safety info surfaces first — then comfort and preferences",
+    scene: "The first things EMS sees: Japanese speaker. DNR/DNI. POLST on file. Not buried in a packet — the first three things on the screen. Below that: Maggie calms with traditional Japanese music and becomes agitated in loud environments. During a frightening 3 AM ambulance ride, that is not a soft extra. It is the difference between a patient who is terrified and a patient who is cared for.",
+    note: "Person-centered care preferences travel with the patient through every handoff — not just clinical data."
+  },
+  {
+    screen: 9,
+    title: "ED Scans QR",
+    desc: "Code status, allergies, and language visible before the patient reaches the bay",
+    scene: "Providence Regional Emergency Department. The triage nurse scans the same QR code. Same record, updated in real time. Language need is visible immediately — before Maggie is moved from the ambulance bay. One scan. No phone call back to Cascade View asking what language she speaks.",
+    note: "One record. Every handoff. Zero duplicate data entry."
+  },
+  {
+    screen: 10,
+    title: "ED Full Record",
+    desc: "Complete history, POLST on file — all from a single scan",
+    scene: "The treating physician has everything: A-FIB, CHF, COPD, current medications, the POLST. The record that arrived with Maggie is the same one built the day she was admitted to Cascade View.",
+    note: "POLST forms are frequently unavailable at the moment of crisis — a documented risk when paper-based transfer processes fail. The POLST button is always visible, always one tap away."
+  },
+  {
+    screen: 11,
+    title: "ED Return Documentation",
+    desc: "ED closes the loop — diagnosis, vitals, discharge plan",
+    scene: "Maggie is stable. The ED physician takes 90 seconds to document: COPD exacerbation, prednisone and azithromycin prescribed, pulmonology follow-up in 7 days. The moment it's submitted, Cascade View is automatically notified.",
+    note: "Every other transfer tool moves in one direction: facility to ED. TransferLink treats the return as a first-class feature. The ED physician's 90 seconds becomes the morning nurse's complete clinical picture."
+  },
+  {
+    screen: 12,
+    title: "Loop Closed",
+    desc: "Facility notified automatically — no fax, no phone tag",
+    scene: "The physician submits. Instantly, the record updates — diagnosis, new medications, discharge instructions — and Cascade View receives an automatic notification. No phone tree. No fax. The facility knows before Maggie's transport leaves the parking lot.",
+    note: "The word 'automatically' is doing real work here. In the current system, this notification is a manual step that is routinely skipped or delayed."
+  },
+  {
+    screen: 13,
+    title: "Facility Receives Update",
+    desc: "Morning shift sees the complete picture before the patient returns",
+    scene: "7:22 AM. The morning RN opens Maggie's record before handoff. COPD exacerbation. O2 at 2L/min. Prednisone and azithromycin for 5 days. Pulmonology follow-up this week. In the current system, this nurse would be learning this from Maggie herself — or from a fax buried under overnight papers.",
+    note: "In the current system, the patient often arrives before any information does."
+  },
+  {
+    screen: 14,
+    title: "Full Audit Trail",
+    desc: "Every scan, every handoff — timestamped and accountable",
+    scene: "Every moment in Maggie's care is timestamped and permanent. Transfer initiated. QR generated. EMS accessed the record en route. ED received and documented. Facility notified automatically. One patient. One record. Every handoff — auditable and defensible.",
+    note: "This audit trail protects patients, facilities, and care teams. It's built into every transfer — not an add-on."
+  },
 ];

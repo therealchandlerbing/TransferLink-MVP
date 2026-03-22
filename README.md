@@ -13,43 +13,292 @@ Every year, thousands of elderly patients are transferred from assisted living f
 **TransferLink closes that gap.**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                                                                     │
-│   LTC Facility ──► QR Code ──► EMS Transport ──► ED ──► Facility   │
-│        ▲                                              │             │
-│        └──────────────── Return Update ───────────────┘             │
-│                                                                     │
-│          Bi-directional. Real-time. No paper required.              │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
+LTC Facility          EMS Transport         Emergency Dept        LTC Facility
+    │                      │                      │                     │
+    │  Nurse completes      │                      │                     │
+    │  transfer record      │                      │                     │
+    │──── QR Code ─────────►│                      │                     │
+    │                       │  Scan on arrival     │                     │
+    │                       │  (code status,       │                     │
+    │                       │  POLST, language)    │                     │
+    │                       │──── Same QR ────────►│                     │
+    │                       │                      │  Full record on     │
+    │                       │                      │  scan, no re-entry  │
+    │                       │                      │                     │
+    │                       │                      │  ED documents       │
+    │                       │                      │  return info        │
+    │◄─────────────────── Auto-notification ───────┘                     │
+    │                                                                     │
+    └──────────────── Facility receives full return record ──────────────►│
+
+  One record. Every handoff. Bi-directional. No paper required.
 ```
 
 ---
 
-## The Core Innovation
+## Technical Stack
+
+### Architecture
 
 ```
-┌────────────────────┐         ┌──────────────────────┐
-│  BEFORE (Today)    │         │  WITH TRANSFERLINK   │
-├────────────────────┤         ├──────────────────────┤
-│ • Paper face sheet │   ───►  │ • One QR code        │
-│ • Verbal handoff   │         │ • Full digital record │
-│ • Faxed POLST      │         │ • Instant scan access │
-│ • No ED feedback   │         │ • Auto return notify  │
-│ • Phone tag        │         │ • Full audit trail    │
-└────────────────────┘         └──────────────────────┘
+React + Vite SPA (Vercel-ready)
+├── React 19 with client-side state (useState)
+├── Vite 8 build tooling
+├── No backend — frontend-only MVP demo
+├── No app install required for EMS/ED (scan QR → web view)
+└── Deployable to Vercel with zero config
+```
+
+| Layer | Technology | Role in the project |
+|-------|-----------|---------------------|
+| **Framework** | React 19.2 | Builds all UI components; manages screen routing and application state via `useState` |
+| **Build** | Vite 8.0 | Bundles and serves the app; outputs a static `dist/` folder for Vercel deployment |
+| **Styling** | Inline styles + CSS variables | Design token system (`C` object in `components.jsx`) keeps colors, spacing, and radii consistent across all screens |
+| **Fonts** | Inter, Manrope (Google Fonts) | Inter for body and UI text; Manrope (700–900) for display headlines and large stat numbers |
+| **Icons** | Custom inline SVG | Keeps the bundle lean — no icon library dependency |
+| **QR Code** | Procedural SVG (25×25 grid) | Renders a deterministic, scannable-looking QR pattern client-side with no external service |
+| **Responsive** | `m` prop flag | Boolean passed to every screen component; triggers compact layouts below 520px viewport width |
+| **Deployment** | Vercel (static SPA) | Zero-config deployment; auto-detects Vite, runs `npm run build`, serves `dist/` |
+
+### Design Tokens (Color System)
+
+| Token | Hex | Semantic meaning |
+|-------|-----|-----------------|
+| `navy` | `#0F1D2F` | Primary background and headers — the authoritative "clinical" dark base |
+| `accent` | `#1B9AAA` | Primary CTAs, active states, and interactive elements |
+| `amber` | `#F4A261` | Warnings, in-progress transfers, and time-sensitive alerts |
+| `red` | `#E63946` | Allergies, DNR/DNI status, and critical safety flags — always highest visual priority |
+| `green` | `#2A9D8F` | Full Code status, completed transfers, and success confirmations |
+| `purple` | `#7C4DFF` | Return-to-facility flow — visually separates the ED→LTC direction from LTC→ED |
+
+---
+
+## How to Run
+
+### Development
+
+```bash
+npm install
+npm run dev
+# → http://localhost:5173
+```
+
+### Production Build
+
+```bash
+npm run build
+npm run preview
+# → http://localhost:4173
+```
+
+### Deploy to Vercel
+
+```bash
+# Via Vercel CLI
+vercel deploy --prod
+
+# Or connect the GitHub repo to Vercel — it auto-detects Vite
+# Build command: npm run build   (runs vite build internally)
+# Output directory: dist
 ```
 
 ---
 
-## User Roles & Entry Points
+## Repository Structure
 
-| Role | Icon | Entry Point | Primary Action |
-|------|------|-------------|----------------|
-| **LTC Nurse / RN / LVN** | 📋 | Facility Dashboard | Initiate & manage transfers |
-| **EMS Crew** | 🚑 | QR Scan View | Access record during transport |
-| **ED Staff** | 🏥 | ED Intake View | Receive patient, document outcome |
-| **Facility Return** | 🏠 | Return Update View | Receive ED return information |
+```
+TransferLink-MVP/
+│
+├── src/                          # React application source
+│   ├── main.jsx                  # Entry point (StrictMode → App)
+│   ├── App.jsx                   # Root component — state manager & screen router
+│   ├── App.css                   # Component-specific styles & animations
+│   ├── index.css                 # Global styles, CSS variables, keyframes
+│   ├── components.jsx            # Reusable UI primitives & design tokens
+│   ├── clinical.jsx              # Clinical-domain components
+│   ├── modals.jsx                # Modals, overlays, guided demo, intake form
+│   ├── screens1.jsx              # Screens S0–S10 (LTC + EMS + ED intake)
+│   ├── screens2.jsx              # Screens S11–S19 (ED return + facility admin)
+│   ├── data.js                   # Patient data, personas, demo tour config
+│   └── assets/                   # Images (hero.png, favicons)
+│
+├── public/                       # Static assets (favicon.svg, icons.svg)
+├── dist/                         # Production build output — generated by npm run build (gitignored)
+│
+├── stitch_transferlink_prd_v2.0/ # Design reference screens (27 screens)
+│   ├── continuum_clinical/
+│   │   └── DESIGN.md             # Design system specification
+│   └── [screen_name]/
+│       ├── code.html             # Reference HTML for each screen
+│       └── screen.png            # Visual screenshot of each screen
+│
+├── TransferLink_App.html         # Legacy standalone HTML prototype (with guided tour)
+├── TransferLink_Final.html       # Legacy standalone HTML prototype (earlier iteration)
+├── text_document_1.html          # Workflow documentation — screen mapping & user flows
+├── text_document_2.html          # Workflow documentation — continued
+│
+├── index.html                    # Vite entry HTML
+├── package.json                  # Dependencies & scripts
+├── vite.config.js                # Vite configuration
+└── eslint.config.js              # ESLint configuration
+```
+
+---
+
+## Source Code Map
+
+### `App.jsx` — Root Component & State Manager
+
+Central orchestrator. Manages all application state and routes between 16+ screens.
+
+**State:**
+- `screen` — current screen ID (0–19)
+- `ptId` / `patients` — selected patient and full roster (initialized from `INIT_PATIENTS`)
+- `persona` / `role` — logged-in user identity and role
+- `toasts` / `notifs` — notification system
+- `demo` / `demoStep` — guided tour mode
+- `visited` — Set of visited screens (drives transfer progress tracker)
+- `dashAlerts` — facility dashboard alerts
+
+**Key Functions:**
+- `go(screen)` — navigate + track visited screens
+- `update(txData)` — save transfer form data to patient record
+- `updateER(erData)` — save ED return data + auto-notify facility
+- `handleNewPatient(data)` — create patient from intake modal
+- `addToast(msg, type)` / `addNotification(text, ptId)` — notification system
+
+### `components.jsx` — Design System & UI Primitives
+
+Exports the color token object `C` and all reusable components:
+
+| Component | Purpose |
+|-----------|---------|
+| `Bg` | Badge/chip |
+| `Av` | Avatar circle with initials |
+| `Cd` | Card container (memoized) |
+| `Bt` | Button (memoized) |
+| `SL` | Section label (uppercase, with icon) |
+| `TB` | Top bar / header |
+| `Bk` | Back button |
+| `FR` | Field row (label + value) |
+| `Chips` | Tag list renderer |
+| `TxIn` | Text input that updates on blur / Enter (locally buffered) |
+| `QR` | Procedural SVG QR code (memoized) |
+| `BellIco` | Notification bell with unread badge |
+| `Chev`, `Chk`, `DnA`, `WarnIco`, `PlusIco` | Icon components |
+| `getA11yProps` | Accessibility helper for interactive divs |
+
+### `clinical.jsx` — Clinical Domain Components
+
+| Component | Purpose |
+|-----------|---------|
+| `AllergyB` | Red allergy banner or green NKA indicator |
+| `CodeBanner` | Code status display (DNR/Full Code) + POLST badge + language |
+| `PtHd` | Patient header card (avatar, name, DOB, code status) |
+| `Steps` | 4-step transfer progress indicator |
+| `Coll` | Collapsible card section with toggle |
+| `MScale` / `MScaleSelect` | 4-level mentation scale (display/editable) |
+| `FScale` / `FScaleSelect` | Functional status scale (display/editable) |
+| `ComfortSection` | Person-centered care preferences (5 categories) |
+| `TransferTracker` | Visual transfer progress bar (Facility → EMS → ED → Return) |
+| `PtSwitcher` | Patient dropdown selector |
+| `POLST` | POLST document modal overlay |
+| `Scanner` | QR scanner animation (simulated 1.8s scan) |
+| `Sections` | Full clinical record renderer (contacts, meds, history, devices, comfort, ED return) |
+
+### `modals.jsx` — Overlays & System Components
+
+| Component | Purpose |
+|-----------|---------|
+| `Toast` / `ToastContainer` | Notification toasts (3s auto-dismiss) |
+| `NotificationCenter` | Full-screen notification panel |
+| `GuidedDemo` | 16-step guided tour overlay with narration |
+| `IntakeModal` | 5-step new patient admission form |
+| `S15` | Login & onboarding screen (persona + role selection) |
+
+### `screens1.jsx` — Screens S0 through S10
+
+| Screen | Name | Role |
+|--------|------|------|
+| `S0` | Home / Role Selector | All — 4 role cards + secondary nav |
+| `S1` | Patient Roster | LTC — searchable list + add patient |
+| `S2` | Patient Record | LTC — full clinical view + transfer tracker |
+| `S3` | Initiate Transfer | LTC — transfer form (reason, symptoms, destination) |
+| `S4` | Transfer Confirmation | LTC — review before QR generation |
+| `S5` | QR Code Ready | LTC/EMS — hero QR display + print |
+| `S6` | Print Preview | LTC — printable record with QR |
+| `S7` | EMS Scans QR | EMS — scanner animation → auto-transition |
+| `S8` | EMS Transport View | EMS — code status, POLST, comfort preferences |
+| `S9` | ED Scans QR | ED — scanner animation → auto-transition |
+
+### `screens2.jsx` — Screens S11 through S19
+
+| Screen | Name | Role |
+|--------|------|------|
+| `S11` | ED Return Documentation | ED — diagnosis, vitals, discharge form |
+| `S12` | Record Updated | ED — success confirmation with animation |
+| `S13` | Facility Receives Update | LTC — ED return data displayed |
+| `S14` | Full Timeline / Audit Trail | All — timestamped event log |
+| `S17` | Facility Dashboard | LTC — stats, alerts, recent activity |
+| `S18` | Transfer History | LTC — filterable 30-day transfer log |
+| `S19` | SBAR Handoff Report | LTC — auto-generated S-B-A-R report |
+
+### `data.js` — Demo Data & Configuration
+
+- **`INIT_PATIENTS`** — 4 fully-detailed demo patients (see Demo Patients below)
+- **`ALL_BELONGINGS`** — 11 patient belonging items
+- **`NEW_PT_TEMPLATE`** — empty patient object for intake form
+- **`PERSONAS`** — 5 LTC staff personas (name, role, shift)
+- **`DEMO_SCREEN_MAP`** — 16-step guided tour titles and descriptions
+
+---
+
+## Stitch Design Reference (`stitch_transferlink_prd_v2.0/`)
+
+27 screen designs exported from the Stitch collaborative design tool. Each folder contains a `code.html` (reference implementation) and `screen.png` (visual screenshot). These serve as the **design source of truth** for the React build.
+
+### Design System (`DESIGN.md`)
+
+The design system spec defines the visual language — "The Clinical Concierge" aesthetic:
+
+- **No-Line Rule** — no 1px borders; boundaries defined by background shifts only
+- **Surface Hierarchy** — tonal layering (`background` → `surface-container` → `surface-container-lowest`)
+- **Glass & Gradient** — glassmorphism for floating elements; gradient CTAs (135deg)
+- **Typography** — Manrope for headlines (authoritative), Inter/DM Sans for body (functional)
+- **Elevation** — "Whisper Shadows" (`0px 8px 24px rgba(25,28,30,0.06)`), no Material Design shadows
+- **Large Tap Targets** — min 48x48pt for all interactive clinical elements
+- **Rounded Corners** — `lg` (1rem) or `xl` (1.5rem) only, no sharp 90-degree corners
+
+### Screen Index
+
+| Folder | Screen | Workflow |
+|--------|--------|----------|
+| `role_selector_home` | Home / Role Selector | Entry |
+| `login_onboarding_s15_1` | Login Form | Authentication |
+| `login_onboarding_s15_2` | Onboarding Overview | Authentication |
+| `patient_list_ltc_nurse` | Patient Roster | LTC Nurse |
+| `ltc_nurse_patient_record_s2` | Patient Record | LTC Nurse |
+| `initiate_transfer_s3` | Transfer Initiation | LTC Nurse |
+| `transfer_confirmation_s4` | Transfer Review | LTC Nurse |
+| `qr_code_hero_handoff` | QR Code Display | Handoff |
+| `print_preview_s6` | Print Preview | Handoff |
+| `print_preview_fixed` | Print Preview (alt) | Handoff |
+| `qr_scanner_ems_1` | EMS QR Scan | EMS |
+| `ems_patient_record_s8` | EMS Transport View | EMS |
+| `qr_scanner_ems_2` | ED QR Scan | ED |
+| `ed_patient_record_s10` | ED Full Record | ED |
+| `ed_return_form` | ED Return Form | ED |
+| `transfer_complete_s12` | Transfer Complete | ED |
+| `facility_return_record_s13` | Facility Return Record | Facility |
+| `facility_dashboard_v2.0` | Facility Dashboard | Admin |
+| `transfer_history_s18` | Transfer History | Admin |
+| `transfer_timeline` | Audit Trail Timeline | Admin |
+| `sbar_handoff_report_s19` | SBAR Report | Admin |
+| `intake_demographics_step_1` | Intake: Demographics | Admission |
+| `intake_clinical_step_2` | Intake: Clinical | Admission |
+| `intake_contacts_step_3` | Intake: Contacts | Admission |
+| `intake_care_prefs_step_4` | Intake: Care Preferences | Admission |
+| `intake_review_step_5` | Intake: Review & Confirm | Admission |
 
 ---
 
@@ -57,81 +306,58 @@ Every year, thousands of elderly patients are transferred from assisted living f
 
 ```
 PHASE 1: LTC NURSE INITIATES
-────────────────────────────────────────────────────────────────────
+────────────────────────────────────────────────────────────
   [Login] → [Dashboard] → [Patient Roster] → [Patient Record]
        → [Initiate Transfer] → [Confirm] → [QR Code Generated]
 
          4-step wizard: Review ──► Transfer ──► Confirm ──► QR Code
 
 PHASE 2: PHYSICAL HANDOFF (The Hero Moment)
-────────────────────────────────────────────────────────────────────
+────────────────────────────────────────────────────────────
   QR Code printed / displayed on device screen
   ├── EMS scans on arrival → Transport View (code status + comfort)
   └── ED scans on arrival  → Full Clinical Record
 
 PHASE 3: ED INTAKE & TREATMENT
-────────────────────────────────────────────────────────────────────
+────────────────────────────────────────────────────────────
   [ED Full Record] → [Treatment] → [ED Documents Return Plan]
                                            ↓
                               Facility notified automatically
 
 PHASE 4: RETURN TO FACILITY
-────────────────────────────────────────────────────────────────────
+────────────────────────────────────────────────────────────
   [Facility Receives Update] → [Full Timeline / Audit Trail]
 ```
 
 ---
 
-## Screen Map (16 Screens)
+## User Roles & Entry Points
 
-| # | Screen | Phase | Who Uses It |
-|---|--------|-------|-------------|
-| 0 | **Home — Role Selector** | Overview | All roles |
-| 15 | **Login & Onboarding** | LTC Nurse Flow | LTC Staff |
-| 17 | **Facility Dashboard** | LTC Nurse Flow | LTC Staff |
-| 18 | **Transfer History** | LTC Nurse Flow | LTC Staff |
-| 19 | **SBAR Handoff Report** | LTC Nurse Flow | LTC Staff |
-| 1 | **Patient Roster** | LTC Nurse Flow | LTC Nurse |
-| 2 | **Patient Record** | LTC Nurse Flow | LTC Nurse |
-| 3 | **Initiate Transfer** | LTC Nurse Flow | LTC Nurse |
-| 4 | **Confirm Transfer** | LTC Nurse Flow | LTC Nurse |
-| 5 | **QR Code Ready** | Physical Handoff | LTC Nurse / EMS |
-| 7 | **EMS Scans QR** | EMS Transport | EMS Crew |
-| 8 | **EMS Transport View** | EMS Transport | EMS Crew |
-| 9 | **ED Scans QR** | ED Intake | ED Staff |
-| 10 | **ED Full Record** | ED Intake | ED Staff |
-| 11 | **ED Return Documentation** | ED Intake | ED Staff |
-| 12 | **Record Updated** | ED Intake | ED Staff |
-| 13 | **Facility Receives Update** | Return to Facility | LTC Nurse |
-| 14 | **Full Timeline / Audit Trail** | Return to Facility | All roles |
+| Role | Entry Point | Primary Action |
+|------|-------------|----------------|
+| **LTC Nurse / RN / LVN** | Facility Dashboard | Initiate & manage transfers |
+| **EMS Crew** | QR Scan View | Access record during transport |
+| **ED Staff** | ED Intake View | Receive patient, document outcome |
+| **Facility Return** | Return Update View | Receive ED return information |
 
 ---
 
 ## Patient Data Model
 
-Each patient record carries the following information through the entire care chain:
+Each patient record carries the following through the entire care chain:
 
 ### Demographics & Identity
-```
-┌──────────────────────────────────────────────────────┐
-│  Name · DOB · Age · Room · Language · Flag           │
-│  Emergency Contact · Relationship · Phone            │
-│  Facility Name · Address · Facility Phone            │
-└──────────────────────────────────────────────────────┘
-```
+- Name, DOB, Age, Room, Language (with flag), Initials
+- Emergency contact (name, relationship, phone)
+- Facility (name, address, phone)
 
 ### Critical Safety Information *(surfaced immediately on QR scan)*
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  ⚠ ALLERGIES  [highlighted in red, always first]               │
-│  CODE STATUS  DNR / DNI  ●  Full Code  ●  DNR                  │
-│  ✓ POLST  (if applicable)                                       │
-│  🌐 Language  (flag + language name)                            │
-└─────────────────────────────────────────────────────────────────┘
-```
+- Allergies (highlighted in red, always first)
+- Code Status: DNR/DNI, Full Code, or DNR
+- POLST (if applicable)
+- Language (flag + language name)
 
 ### Clinical Record
-
 | Section | Data Points |
 |---------|-------------|
 | **Medical History** | Diagnoses (A-FIB, CHF, COPD, DM, etc.) |
@@ -140,176 +366,49 @@ Each patient record carries the following information through the entire care ch
 | **Safety Risks** | Falls, aspiration, elopement, skin breakdown, hypoglycemia |
 | **Isolation Status** | Contact, droplet, airborne, or none |
 | **Mental Status** | 4-level scale: Alert & Oriented → Non-Verbal |
-| **Functional Level** | 4-level scale matching mental status |
+| **Functional Level** | 4-level scale: Independent → Non-Ambulatory |
 
-### Transfer Event Data
-
-| Field | Description |
-|-------|-------------|
-| Reason for Transfer | Chief complaint narrative |
-| Active Symptoms | Multi-select (Chest Pain, SOB, AMS, Fall/Injury, etc.) |
-| Interventions Attempted | What the facility already tried |
-| Changes from Baseline | What is new or different |
-| Destination | Receiving hospital |
-| Transfer Time | Timestamp |
-| Initiating Nurse | Name and credentials |
-
-### ED Return Data
-
-| Field | Description |
-|-------|-------------|
-| Diagnosis | Final ED diagnosis |
-| Vitals | BP, HR, RR, SpO2 |
-| Treatment | Medications given, procedures |
-| Discharge Instructions | Follow-up plan for facility |
-| Attending Physician | Name and credentials |
-| Return Report Time | When facility was notified |
-
----
-
-## Person-Centered Care — A Key Differentiator
-
-TransferLink stores **comfort and communication preferences** that travel with the patient through every handoff. This data helps EMS manage distress during transport and helps ED staff provide culturally sensitive, individualized care.
-
+### Person-Centered Care Preferences
 | Category | Example |
 |----------|---------|
-| **Lighting** | "Prefers dim lighting at night" / "Nightlight required, afraid of the dark" |
-| **Communication** | "Responds to calm, slow speech in Japanese" / "Hearing aid in right ear" |
+| **Lighting** | "Prefers dim lighting at night" |
+| **Communication** | "Responds to calm, slow speech in Japanese" |
 | **Family** | "Son David visits daily, involved in all care decisions" |
-| **Cultural / Religious** | "Buddhist traditions. Prefers rice-based meals." / "Catholic. Rosary at bedside." |
-| **De-escalation** | "Calms with traditional Japanese music" / "Singing hymns during care helps significantly" |
+| **Cultural / Religious** | "Buddhist traditions. Prefers rice-based meals." |
+| **De-escalation** | "Calms with traditional Japanese music" |
 
----
+### Transfer Event Data
+- Reason for transfer, active symptoms (multi-select), interventions attempted
+- Changes from baseline, destination hospital, transfer time, initiating nurse
 
-## Facility Dashboard
-
-The dashboard gives nurses and charge staff real-time operational awareness:
-
-```
-┌──────────────────────────────────────────────────────────┐
-│  FACILITY DASHBOARD  ·  Cascade View Assisted Living     │
-├──────────┬────────────────┬──────────────┬───────────────┤
-│  👥 5    │  🚨 1          │  ✅ 3        │  🔄 0         │
-│ Residents│ Active Transfer│ Completed 30d│ Pending Return│
-├──────────┴────────────────┴──────────────┴───────────────┤
-│  ACTIVE ALERTS                                           │
-│  🚨 Maggie Tanaka  — Active transfer to Providence       │
-│  💊 Dorothy Williams — INR recheck due tomorrow         │
-│  📊 Robert Chen    — BG monitoring q4h, 36h remaining   │
-│  ⚖️  James Martinez — Weight check due, fluid restrict  │
-└──────────────────────────────────────────────────────────┘
-```
-
----
-
-## Transfer History & SBAR
-
-**Transfer History** (S18) provides a filterable log of all transfers:
-- Filter by: All · Active · Completed · Last 30 Days
-- Each entry shows: patient, date, destination, diagnosis, status, attending physician
-
-**SBAR Handoff Report** (S19) auto-generates a structured communication report:
-
-```
-S — Situation    What is happening right now
-B — Background   Medical history, medications, baseline
-A — Assessment   Current vitals, mental status, risk flags
-R — Recommendation  Transfer destination, interventions, follow-up plan
-```
+### ED Return Data
+- Diagnosis, vitals (BP, HR, RR, SpO2), treatment, discharge instructions
+- Attending physician, return report time
 
 ---
 
 ## Demo Patients (Cascade View Assisted Living)
 
-| Patient | Age | Language | Code Status | POLST | Condition Transferred For |
-|---------|-----|----------|-------------|-------|---------------------------|
-| **Maggie Tanaka** | 87 | 🇯🇵 Japanese | DNR / DNI | ✓ | Acute COPD exacerbation, O2 sat 84% |
-| **Robert Chen** | 79 | 🇺🇸 English | Full Code | — | Severe hypoglycemia, glucose 42, AMS |
-| **Dorothy Williams** | 91 | 🇺🇸 English | DNR | ✓ | Mechanical fall, forehead laceration, INR 4.8 |
-| **James Martinez** | 84 | 🇲🇽 Spanish/English | Full Code | — | Acute CHF exacerbation, chest pain, +6 lbs |
-
----
-
-## Technical Overview
-
-### Architecture
-
-```
-Single-file HTML Application
-├── No build step
-├── No backend
-├── No app install required for EMS/ED (scan QR → web view)
-└── All state managed client-side (React useState)
-```
-
-### Stack
-
-| Layer | Technology |
-|-------|-----------|
-| UI Framework | React 18 (loaded via CDN/UMD) |
-| Styling | Inline styles with JS design token system |
-| Fonts | Inter (Google Fonts) |
-| Icons | Custom inline SVG |
-| QR Code | SVG-rendered mock QR pattern |
-| Responsive | Breakpoint at 640px (`m` flag) |
-
-### Design Tokens (Color System)
-
-| Token | Hex | Used For |
-|-------|-----|----------|
-| `navy` | `#0F1D2F` | Primary background, headers |
-| `accent` | `#1B9AAA` | Primary actions, active states |
-| `amber` | `#F4A261` | Warnings, active transfers |
-| `red` | `#E63946` | Allergies, DNR status, alerts |
-| `green` | `#2A9D8F` | Full code, completed states |
-| `purple` | `#7C4DFF` | Return-to-facility flow |
-
----
-
-## Files in This Repository
-
-| File | Description |
-|------|-------------|
-| `TransferLink_App.html` | **Primary prototype** — full interactive app with guided tour, splash screen, 16+ screens, all four user flows, patient intake wizard, notifications, and demo mode |
-| `TransferLink_Final.html` | **Alternate version** — earlier iteration of the same prototype, same patient data and core screens |
-
----
-
-## How to Run
-
-No installation. No build. Open either file directly in a browser:
-
-```bash
-# Option A — double-click the file in your file manager
-open TransferLink_App.html
-
-# Option B — serve locally (avoids any browser file:// restrictions)
-npx serve .
-# then visit http://localhost:3000/TransferLink_App.html
-```
-
-**Recommended entry:** `TransferLink_App.html` — it includes the guided demo tour and splash screen.
+| Patient | Age | Language | Code Status | POLST | Condition |
+|---------|-----|----------|-------------|-------|-----------|
+| **Maggie Tanaka** | 87 | Japanese | DNR / DNI | Yes | Acute COPD exacerbation, O2 sat 84% |
+| **Robert Chen** | 79 | English | Full Code | No | Severe hypoglycemia, glucose 42, AMS |
+| **Dorothy Williams** | 91 | English | DNR | Yes | Mechanical fall, forehead laceration, INR 4.8 |
+| **James Martinez** | 84 | Spanish/English | Full Code | No | Acute CHF exacerbation, chest pain, +6 lbs |
 
 ---
 
 ## Guided Demo Tour
 
-The app includes a built-in **~2 minute guided tour** that walks through the full transfer lifecycle:
+The app includes a built-in **16-step guided tour** that walks through the full transfer lifecycle with contextual narration:
 
 ```
-Start Guided Tour
-      │
-      ▼
-  Welcome → Login → Dashboard → Patient Roster
-      → Patient Record → Initiate Transfer
-      → Confirm → QR Code Ready
-      → EMS Scans → EMS Transport View
-      → ED Scans → ED Full Record
-      → ED Documents Return → Record Updated
-      → Facility Receives Update → Full Timeline
+Start Guided Tour → Welcome → Login → Dashboard → Patient Roster
+  → Patient Record → Initiate Transfer → Confirm → QR Code Ready
+  → EMS Scans → EMS Transport View → ED Scans → ED Full Record
+  → ED Documents Return → Record Updated → Facility Receives Update
+  → Full Timeline
 ```
-
-Each step shows **contextual narration** explaining what is happening and why it matters clinically.
 
 Alternatively, select **"Explore Freely"** to navigate any screen in any order.
 
@@ -323,6 +422,19 @@ Alternatively, select **"Explore Freely"** to navigate any screen in any order.
 4. **Under 2 minutes to initiate a transfer.** Structured documentation replaces handwritten notes without adding burden.
 5. **Person-centered.** Comfort preferences and cultural context travel with the patient, not just clinical data.
 6. **Full audit trail.** Every scan, update, and handoff is timestamped and logged.
+
+---
+
+## Legacy Files
+
+| File | Description |
+|------|-------------|
+| `TransferLink_App.html` | Standalone HTML prototype with guided tour and splash screen (pre-React) |
+| `TransferLink_Final.html` | Earlier standalone HTML iteration |
+| `text_document_1.html` | Workflow documentation — 5 user flows and screen mapping |
+| `text_document_2.html` | Workflow documentation — continued |
+
+These files document the evolution from single-file HTML prototype to the current React+Vite application.
 
 ---
 
