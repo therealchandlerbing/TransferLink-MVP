@@ -13,11 +13,25 @@ Every year, thousands of elderly patients are transferred from assisted living f
 **TransferLink closes that gap.**
 
 ```
-LTC Facility ──► QR Code ──► EMS Transport ──► ED ──► Facility
-     ^                                          |
-     └──────────────── Return Update ───────────┘
+LTC Facility          EMS Transport         Emergency Dept        LTC Facility
+    │                      │                      │                     │
+    │  Nurse completes      │                      │                     │
+    │  transfer record      │                      │                     │
+    │──── QR Code ─────────►│                      │                     │
+    │                       │  Scan on arrival     │                     │
+    │                       │  (code status,       │                     │
+    │                       │  POLST, language)    │                     │
+    │                       │──── Same QR ────────►│                     │
+    │                       │                      │  Full record on     │
+    │                       │                      │  scan, no re-entry  │
+    │                       │                      │                     │
+    │                       │                      │  ED documents       │
+    │                       │                      │  return info        │
+    │◄─────────────────── Auto-notification ───────┘                     │
+    │                                                                     │
+    └──────────────── Facility receives full return record ──────────────►│
 
-       Bi-directional. Real-time. No paper required.
+  One record. Every handoff. Bi-directional. No paper required.
 ```
 
 ---
@@ -35,27 +49,27 @@ React + Vite SPA (Vercel-ready)
 └── Deployable to Vercel with zero config
 ```
 
-| Layer | Technology |
-|-------|-----------|
-| **Framework** | React 19.2 |
-| **Build** | Vite 8.0 |
-| **Styling** | Inline styles + CSS variables (design token system) |
-| **Fonts** | Inter, Manrope (Google Fonts) |
-| **Icons** | Custom inline SVG |
-| **QR Code** | SVG-rendered procedural QR pattern (25x25 grid) |
-| **Responsive** | Breakpoint at 640px (`m` prop flag) |
-| **Deployment** | Vercel (static SPA) |
+| Layer | Technology | Role in the project |
+|-------|-----------|---------------------|
+| **Framework** | React 19.2 | Builds all UI components; manages screen routing and application state via `useState` |
+| **Build** | Vite 8.0 | Bundles and serves the app; outputs a static `dist/` folder for Vercel deployment |
+| **Styling** | Inline styles + CSS variables | Design token system (`C` object in `components.jsx`) keeps colors, spacing, and radii consistent across all screens |
+| **Fonts** | Inter, Manrope (Google Fonts) | Inter for body and UI text; Manrope (700–900) for display headlines and large stat numbers |
+| **Icons** | Custom inline SVG | Keeps the bundle lean — no icon library dependency |
+| **QR Code** | Procedural SVG (25×25 grid) | Renders a deterministic, scannable-looking QR pattern client-side with no external service |
+| **Responsive** | `m` prop flag | Boolean passed to every screen component; triggers compact layouts below 520px viewport width |
+| **Deployment** | Vercel (static SPA) | Zero-config deployment; auto-detects Vite, runs `npm run build`, serves `dist/` |
 
 ### Design Tokens (Color System)
 
-| Token | Hex | Used For |
-|-------|-----|----------|
-| `navy` | `#0F1D2F` | Primary background, headers |
-| `accent` | `#1B9AAA` | Primary actions, active states |
-| `amber` | `#F4A261` | Warnings, active transfers |
-| `red` | `#E63946` | Allergies, DNR status, alerts |
-| `green` | `#2A9D8F` | Full code, completed states |
-| `purple` | `#7C4DFF` | Return-to-facility flow |
+| Token | Hex | Semantic meaning |
+|-------|-----|-----------------|
+| `navy` | `#0F1D2F` | Primary background and headers — the authoritative "clinical" dark base |
+| `accent` | `#1B9AAA` | Primary CTAs, active states, and interactive elements |
+| `amber` | `#F4A261` | Warnings, in-progress transfers, and time-sensitive alerts |
+| `red` | `#E63946` | Allergies, DNR/DNI status, and critical safety flags — always highest visual priority |
+| `green` | `#2A9D8F` | Full Code status, completed transfers, and success confirmations |
+| `purple` | `#7C4DFF` | Return-to-facility flow — visually separates the ED→LTC direction from LTC→ED |
 
 ---
 
