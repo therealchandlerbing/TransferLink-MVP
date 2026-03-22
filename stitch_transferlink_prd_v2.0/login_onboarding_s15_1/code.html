@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TransferLink - Login &amp; Onboarding</title>
+<script type='text/javascript' nonce='fsi5WKDCTIKrPPDL1eIwmA==' src='https://contribution.usercontent.google.com/SGdZXEACniTKC0ZWruFo07gNSk1VgAudh34nWKxj4mPcbQdYEUqCaNJY9ZppuIiqCvyL9iZPlZlc43Nq3-tIR1zMYHhjKnF80zTVNl86LEMpnTw25ZC4QOaZp5KIRn7vL4dgvYMROVNjAWQIVGCYPryAHzdQxVK5oWNQ-FFf2Qgu0puJFI8f2xy2odQpxT16UKcu5Sej2rsozrQN6PZd_dCpu4rw7GozgydNH2c5UxRUY4eYaQU5mryWF-km8aVeBXqnmGscEYwGd9bGjT6LwkqvqmXowJ1TWvmNycYSodjTJnzGQIqhtZxabm3MwX96FGj51zfVIssNUxDXrXQ6QL3VuJsyMf0BYRtENtC9mRcyAPnoByNx55MBLmnloIexqWKKVQSShvCvmlUhYJdihpiG1ESj4f1LtxFotsBiTew54Erg1Qb4Irilvf8ZjjPg8Bb5z-hI3q3Oaqvr86uVfiAPB722ivxlxozWX9Aq33zGt_yPylS_oqmswe0avT0SZPNcCMTZRPGifnOECgUIrKCdZg0KcEDYE612OLDs81o5_QI3l9ypoL1EAzPFoSLwwzdZ2DqSLhMR0AwPE2lOSZzi9jaj8dN_7LK1p4qbFa-UOv2rR3EBMdkZ8kFWvUc4XRgAiGlQqlfDDzluNMuGfjVYSsKe8xH9TgrHbFoJaLgNbLoFsHeu1cKoRPRnmYlxBCkcfMewROj4-sKN__tdsC_Garo-VHllwAULKt99kq36I-QbRBCvNfhTIcSU_gEatoNv5IIXchFyRS6TiBZz2HxhPrQ2pGsgUYxfK5FP'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#005c9b",
+              "secondary": "#4f5e81",
+              "surface-tint": "#0b61a1",
+              "secondary-fixed-dim": "#b7c6ee",
+              "inverse-primary": "#9ecaff",
+              "outline": "#717781",
+              "secondary-fixed": "#d9e2ff",
+              "on-primary-fixed-variant": "#00497c",
+              "outline-variant": "#c1c7d2",
+              "on-secondary-fixed-variant": "#384668",
+              "inverse-on-surface": "#eff1f4",
+              "surface-bright": "#f7f9fc",
+              "on-tertiary-fixed": "#2b1700",
+              "surface-dim": "#d8dadd",
+              "primary-fixed-dim": "#9ecaff",
+              "on-secondary": "#ffffff",
+              "surface-variant": "#e0e3e6",
+              "on-surface": "#191c1e",
+              "on-surface-variant": "#414750",
+              "tertiary-fixed": "#ffddb9",
+              "on-secondary-fixed": "#0a1a3a",
+              "primary-container": "#2e75b6",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed": "#d1e4ff",
+              "surface": "#f7f9fc",
+              "on-tertiary-container": "#fff6ef",
+              "surface-container-low": "#f2f4f7",
+              "on-error": "#ffffff",
+              "surface-container-highest": "#e0e3e6",
+              "tertiary-fixed-dim": "#ffb962",
+              "surface-container": "#eceef1",
+              "on-secondary-container": "#4d5b7e",
+              "on-primary": "#ffffff",
+              "error-container": "#ffdad6",
+              "inverse-surface": "#2d3133",
+              "on-background": "#191c1e",
+              "error": "#ba1a1a",
+              "on-tertiary": "#ffffff",
+              "on-error-container": "#93000a",
+              "surface-container-high": "#e6e8eb",
+              "on-primary-container": "#f5f8ff",
+              "tertiary": "#7f4e00",
+              "on-tertiary-fixed-variant": "#663e00",
+              "on-primary-fixed": "#001d36",
+              "tertiary-container": "#a06400",
+              "secondary-container": "#c5d4fd",
+              "background": "#f7f9fc"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .dot-grid {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .persona-active {
+            box-shadow: 0 0 0 2px #9ecaff, 0 8px 24px rgba(0, 92, 155, 0.3);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body text-on-surface bg-[#001d36] selection:bg-primary-container selection:text-white overflow-x-hidden">
+<!-- Hero Login Section -->
+<section class="relative min-h-screen flex flex-col items-center justify-center px-6 py-20 bg-gradient-to-br from-[#001d36] via-[#00335c] to-[#0b61a1]">
+<!-- Dot Grid Overlay -->
+<div class="absolute inset-0 dot-grid pointer-events-none"></div>
+<!-- Branding -->
+<div class="relative z-10 mb-12 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white">
+<span class="material-symbols-outlined" style="font-variation-settings: &#39;FILL&#39; 1;">sync_alt</span>
+</div>
+<h1 class="font-headline font-extrabold text-3xl tracking-tighter text-white">TransferLink</h1>
+</div>
+<!-- Main Login Card -->
+<main class="relative z-10 w-full max-w-xl glass-panel p-8 md:p-12 rounded-[2rem] shadow-2xl">
+<header class="mb-10 text-center">
+<h2 class="font-headline text-2xl font-bold text-white mb-2">Clinical Access</h2>
+<p class="text-secondary-fixed-dim/80 text-sm">Select your profile to continue</p>
+</header>
+<form class="space-y-10">
+<!-- Persona Selector -->
+<div class="space-y-4">
+<label class="font-headline text-[11px] font-bold uppercase tracking-[0.1em] text-secondary-fixed-dim/60 ml-1">Persona Selector</label>
+<div class="grid grid-cols-3 md:grid-cols-4 gap-4">
+<!-- Persona 1 -->
+<button class="flex flex-col items-center gap-2 group" type="button">
+<div class="w-16 h-16 rounded-2xl overflow-hidden persona-active ring-offset-4 ring-offset-[#00335c] transition-all duration-300">
+<img alt="Sarah RN" class="w-full h-full object-cover" data-alt="Portrait of a female nurse professional" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXzahSKoOZSdeTK6iXVIIwkspVqP0AV69Cw1_JvA0iLXfgiaKxrVD_IEA1HZKdQIsL3_CMq08rsaI2QeqPLCgtUig8UDq-IcmizW-n6EEFwUGpXhro7MQ-Zhi3bjy--KBNLA7cQlZBlyngcHNGB6E6QYyvsTYCKEVIcL3nUh8CUv3Sx_7iIoZEJgPi-BQnPwgKDc_u22jwn1zIZOlZrd7SUsgGJtoCI5pvuM7Voz9FSO5-fITNYz_DRnqq624af38iWSvWkqt4GIi6"/>
+</div>
+<span class="text-white text-xs font-semibold">Sarah</span>
+</button>
+<!-- Persona 2 -->
+<button class="flex flex-col items-center gap-2 group opacity-60 hover:opacity-100 transition-opacity" type="button">
+<div class="w-16 h-16 rounded-2xl overflow-hidden transition-all duration-300">
+<img alt="David MD" class="w-full h-full object-cover" data-alt="Portrait of a male doctor in clinical setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgSQ3j5bzvUxjyRghSggLupFn4I0nQUv9dWdrR2FDcT7pg-8x5r1CuAQjjgaQR6PrZWPSX4v7rzHEolrtxx0gGN0JRbOGkai1ABNzLFo2H9oxM0qVdA_8SIB0wSZj8ybmJ8L5jEmWqHUTWixwmPr_Wh69Qk8e5SDBAryEykskw0XP93Cuqvwl8BkBlmMMFm7Sw-rRwGLw7PKekM8xAzVDs1KulNe6XVe3NQ1xYBzQ00twHNVpNbKQjIFO7XEakdzUBkv8MHJgnv03y"/>
+</div>
+<span class="text-white/80 text-xs font-semibold">David</span>
+</button>
+<!-- Persona 3 -->
+<button class="flex flex-col items-center gap-2 group opacity-60 hover:opacity-100 transition-opacity" type="button">
+<div class="w-16 h-16 rounded-2xl overflow-hidden transition-all duration-300">
+<img alt="Dr. Kim" class="w-full h-full object-cover" data-alt="Portrait of an Asian female healthcare leader" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC__eHWomQ7DDHpFHo_NZK1xzm1Rj5EL78-GCBssQ92bb0qXhHxnBQggJLbNNuaT98I3MKgZohQ20SMR2RXvnmFEE9XjCstorrwrc4t6_eAawRnqz-07K5Pr2Sq8u85ZB8u7aLggoquZPcjoOxpm-LuEk70JtSKDHdlDGj8-TWi6ovpTUa_TZoF8WSZ4jYh4crpJEQkBVTiUQGxek2OJ8h0d-5Jng45QsbUiUZhr3dQXB8IhBvgsSwE8fHFW7cEYBGAhB4n8oNIKJGn"/>
+</div>
+<span class="text-white/80 text-xs font-semibold">Dr. Kim</span>
+</button>
+<!-- Persona 4 -->
+<button class="flex flex-col items-center gap-2 group opacity-60 hover:opacity-100 transition-opacity" type="button">
+<div class="w-16 h-16 rounded-2xl overflow-hidden transition-all duration-300">
+<img alt="Admin" class="w-full h-full object-cover" data-alt="Portrait of a male clinical administrator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7pU6w_iGQGIKePd5J9gj85Ud06Gd0Bd432P-bFyHDn56Iy_Dg1qpR37p2vIWWqmyNNEBqvygB0CJh5RDzuqVPVFv19Vtuc7t98kWkgJbwYNSDiV5DC-hzc--ty7iWVgQ4YVbKrzSsypIJyqlaFWfXCSWl3ZSTKa7sL9KsSZXFbmaa3wPelCZiaLF4f9uwici3Sbfpro04WqCgw850v7ow1UlaTsQIFsr6NDUY8nTlkhA0mnfenNpwrfNBOpBBwvbMV_GLjQfPL2KY"/>
+</div>
+<span class="text-white/80 text-xs font-semibold">Marcus</span>
+</button>
+</div>
+</div>
+<!-- Role Selector -->
+<div class="space-y-4">
+<label class="font-headline text-[11px] font-bold uppercase tracking-[0.1em] text-secondary-fixed-dim/60 ml-1">Role Assignment</label>
+<div class="flex flex-wrap gap-2">
+<button class="px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-semibold border border-white/10 shadow-lg" type="button">RN</button>
+<button class="px-5 py-2.5 rounded-xl bg-white/5 text-white/70 text-sm font-semibold border border-white/5 hover:bg-white/10 transition-colors" type="button">Charge Nurse</button>
+<button class="px-5 py-2.5 rounded-xl bg-white/5 text-white/70 text-sm font-semibold border border-white/5 hover:bg-white/10 transition-colors" type="button">Admin</button>
+<button class="px-5 py-2.5 rounded-xl bg-white/5 text-white/70 text-sm font-semibold border border-white/5 hover:bg-white/10 transition-colors" type="button">MD/NP</button>
+</div>
+</div>
+<!-- Shift Selector -->
+<div class="space-y-4">
+<label class="font-headline text-[11px] font-bold uppercase tracking-[0.1em] text-secondary-fixed-dim/60 ml-1">Current Shift</label>
+<div class="grid grid-cols-3 gap-3">
+<button class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 text-white/70 text-sm font-semibold border border-white/5 hover:bg-white/10 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">light_mode</span>
+                            Day
+                        </button>
+<button class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-primary-container text-white text-sm font-semibold border border-white/10 shadow-lg" type="button">
+<span class="material-symbols-outlined text-[18px]">nights_stay</span>
+                            Night
+                        </button>
+<button class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 text-white/70 text-sm font-semibold border border-white/5 hover:bg-white/10 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">wb_twilight</span>
+                            Swing
+                        </button>
+</div>
+</div>
+<!-- Sign In Button -->
+<button class="w-full h-16 rounded-2xl bg-gradient-to-r from-primary to-primary-container text-white font-headline font-extrabold text-lg tracking-wide shadow-[0_20px_40px_rgba(0,92,155,0.4)] hover:scale-[1.02] active:scale-95 transition-all duration-200 uppercase" type="submit">
+                    Sign In
+                </button>
+</form>
+<footer class="mt-8 text-center">
+<p class="text-white/40 text-xs">HIPAA Compliant Environment • Terminal ID: TL-4992-PX</p>
+</footer>
+</main>
+<!-- Onboarding Grid -->
+<div class="relative z-10 w-full max-w-6xl mt-24">
+<div class="text-center mb-12">
+<h3 class="font-headline text-2xl font-bold text-white mb-2">Platform Capabilities</h3>
+<div class="w-12 h-1 bg-primary mx-auto rounded-full"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Card 1 -->
+<div class="glass-panel p-6 rounded-3xl group hover:bg-white/5 transition-all duration-300">
+<div class="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center text-primary-fixed-dim mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">clinical_notes</span>
+</div>
+<h4 class="font-headline text-lg font-bold text-white mb-3">Build Records</h4>
+<p class="text-secondary-fixed-dim/70 text-sm leading-relaxed">Instantly compile comprehensive SBAR patient transfer documentation from EHR data.</p>
+</div>
+<!-- Card 2 -->
+<div class="glass-panel p-6 rounded-3xl group hover:bg-white/5 transition-all duration-300">
+<div class="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center text-primary-fixed-dim mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">qr_code_2</span>
+</div>
+<h4 class="font-headline text-lg font-bold text-white mb-3">Generate QR</h4>
+<p class="text-secondary-fixed-dim/70 text-sm leading-relaxed">Secure, encrypted hand-off codes for rapid EMS and receiving facility intake.</p>
+</div>
+<!-- Card 3 -->
+<div class="glass-panel p-6 rounded-3xl group hover:bg-white/5 transition-all duration-300">
+<div class="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center text-primary-fixed-dim mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">verified</span>
+</div>
+<h4 class="font-headline text-lg font-bold text-white mb-3">Close the Loop</h4>
+<p class="text-secondary-fixed-dim/70 text-sm leading-relaxed">Real-time status tracking and confirmation receipts from emergency departments.</p>
+</div>
+<!-- Card 4 -->
+<div class="glass-panel p-6 rounded-3xl group hover:bg-white/5 transition-all duration-300">
+<div class="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center text-primary-fixed-dim mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">monitoring</span>
+</div>
+<h4 class="font-headline text-lg font-bold text-white mb-3">Track Everything</h4>
+<p class="text-secondary-fixed-dim/70 text-sm leading-relaxed">Full audit trails and analytics for LTC performance and transfer outcomes.</p>
+</div>
+</div>
+</div>
+<!-- Decorative Elements -->
+<div class="absolute top-1/4 -left-20 w-64 h-64 bg-primary/20 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-primary-container/10 blur-[150px] rounded-full"></div>
+</section>
+<!-- Bottom Action Area (Optional Onboarding Navigation) -->
+<div class="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 px-6 py-3 glass-panel rounded-full shadow-lg">
+<button class="text-white/40 hover:text-white transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="w-[1px] h-4 bg-white/10"></div>
+<span class="text-white/60 text-xs font-semibold uppercase tracking-widest">Onboarding v2.4</span>
+</div>
+</body></html>

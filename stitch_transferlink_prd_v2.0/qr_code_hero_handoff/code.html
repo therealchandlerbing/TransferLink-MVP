@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TransferLink - Active Transfer QR</title>
+<script type='text/javascript' nonce='yKRIa3LV9SE+RFxaNBVk5A==' src='https://contribution.usercontent.google.com/UmfXMImWAIMTi8Rd7TgqZniA67fpgzePR1iF4HeugfxeUcCSe7_ukosEazmLg85qs5fYAuMVGWW_hoPKCRFpKxpGXk_wb3Mc0gR6QhIYBPPM4PsUlbyIE66TZR5YHykNvJg5AD6E4F1jJ1Wu8vEYLS9xQsuo-AQbCr5nK4Nh7TVDWefANuHkUBoRwv9SqGVaQEw_cWjH2owYcVSfW-WUa_YjBNWTgsmovkm6Jg89sdnIeoq2i5SELowtVQghuU1Df8bk48XjiVkIU7hpFSUMCFhZKgCVL2Msj1qLfj-9EeU81R_mIsxYgtLt5yYCKisgG9YQxb4HrRBKe9U314ZV5heW2mixfQULCu7LUz0Ep39KvX6N_0YnwBSShhNG7Mwz7AhaVYsFJfIOjTDMVX0bHBGU6nFpC9pob337FZvxFoacCsx9_kYX70BbUCiWXWycIphiGHowTrhJSjv6GAnJJj41Da0iAQZ156-5_LlAegNzipF7LFHZ3Osnl7bB0akK_29GnshIF8lhSCGZP-PNS5EsDyylyftut4J4DKEB03yVKSHp7fwcGPAZe4jNIF_N_boPpGs6YpKu4jwBoC4W8WhluEomcT0mzvzpsV8ND-IBF9uRfphwaGo9lxEt0YISAwKOBTmnisDIK60T21ewQj-saOHdAR9v2DgWUr8eGJQ2BblcKZ-gHBu42kxGtJZAfkbP8Dy2fz1PkjM7xhkT1zJsezbd75Yrl9yqkSIb90VEv9O3Gy4cdXPqo-QaJ3g2nxUOmaWCGDRBox-x1IqnC2USsezlC53fcEknDHFf'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=DM+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-fixed": "#2b1700",
+              "error-container": "#ffdad6",
+              "surface-container-lowest": "#ffffff",
+              "tertiary": "#7f4e00",
+              "primary-fixed-dim": "#9ecaff",
+              "on-tertiary-fixed-variant": "#663e00",
+              "outline": "#717781",
+              "surface-container-high": "#e6e8eb",
+              "surface": "#f7f9fc",
+              "inverse-primary": "#9ecaff",
+              "primary-fixed": "#d1e4ff",
+              "on-primary-fixed-variant": "#00497c",
+              "secondary-container": "#c5d4fd",
+              "tertiary-container": "#a06400",
+              "on-background": "#191c1e",
+              "surface-container-low": "#f2f4f7",
+              "surface-container-highest": "#e0e3e6",
+              "tertiary-fixed-dim": "#ffb962",
+              "on-surface": "#191c1e",
+              "inverse-surface": "#2d3133",
+              "outline-variant": "#c1c7d2",
+              "on-tertiary": "#ffffff",
+              "on-secondary-fixed": "#0a1a3a",
+              "surface-dim": "#d8dadd",
+              "on-secondary": "#ffffff",
+              "secondary-fixed-dim": "#b7c6ee",
+              "surface-bright": "#f7f9fc",
+              "error": "#ba1a1a",
+              "surface-tint": "#0b61a1",
+              "on-surface-variant": "#414750",
+              "background": "#f7f9fc",
+              "inverse-on-surface": "#eff1f4",
+              "primary": "#005c9b",
+              "surface-variant": "#e0e3e6",
+              "on-primary-fixed": "#001d36",
+              "on-primary-container": "#f5f8ff",
+              "on-tertiary-container": "#fff6ef",
+              "primary-container": "#2e75b6",
+              "secondary": "#4f5e81",
+              "surface-container": "#eceef1",
+              "secondary-fixed": "#d9e2ff",
+              "on-secondary-container": "#4d5b7e",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed-variant": "#384668",
+              "tertiary-fixed": "#ffddb9",
+              "on-error": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .qr-glow {
+            box-shadow: 0 0 0 0 rgba(245, 124, 0, 0.4);
+            animation: pulse-orange 2s infinite;
+        }
+        @keyframes pulse-orange {
+            0% { box-shadow: 0 0 0 0 rgba(245, 124, 0, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(245, 124, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 124, 0, 0); }
+        }
+        .pulse-red {
+            animation: pulse-red-bg 2s infinite;
+        }
+        @keyframes pulse-red-bg {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-[#f7f9fc] dark:bg-slate-900 docked full-width top-0 z-50">
+<div class="flex justify-between items-center w-full px-6 py-4">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform text-[#005c9b] dark:text-blue-400">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="text-xl font-black text-[#005c9b] dark:text-blue-400 font-headline tracking-tight">TransferLink</h1>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-bold text-sm">
+                    SM
+                </div>
+</div>
+</div>
+</header>
+<main class="max-w-xl mx-auto px-6 pt-8 space-y-8">
+<!-- Status Badge -->
+<div class="flex justify-center">
+<div class="inline-flex items-center gap-2 bg-on-tertiary-container text-tertiary-container px-4 py-2 rounded-full border border-tertiary/20">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#F57C00] opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-[#F57C00]"></span>
+</span>
+<span class="font-label text-xs font-bold tracking-widest uppercase">ACTIVE TRANSFER</span>
+</div>
+</div>
+<!-- QR Hero Section -->
+<div class="flex flex-col items-center">
+<div class="bg-surface-container-lowest p-8 rounded-[2.5rem] qr-glow relative group transition-all duration-300">
+<div class="bg-white p-4 rounded-2xl">
+<img alt="QR Code for Patient Transfer" class="w-[200px] h-[200px]" data-alt="A 200px QR code for digital handoff scan" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4wNb5Y-4jQtbiZxVnR6-xTA4GLva8xdGSrUpBmFd9Ny9pbtWA7qDpHLSKAdFbwznygkwSxplUOvq0yPMA4wAUTVhIxvCKEnUK060L4CqOEa596Wz41XWEpDoBNLkM37FaqennOGZ_Oc09qu7QR8vra4hhIxFT90q5cuYRV0D3ufV2nWeKiv_Eym54qVCIkK7Kjcm4sXfEOJ88hpaY0irYPOgBWnp2nVwa6sSqQZZcYdNd62tO9XoXqW9RaHGiemwDp1LiaVQ8WRET"/>
+</div>
+<div class="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-tighter whitespace-nowrap shadow-sm">
+                    Scan for Handoff
+                </div>
+</div>
+<p class="mt-8 text-on-surface-variant text-sm font-medium text-center max-w-[280px]">
+                Present this code to the arriving EMS team or receiving facility staff to initiate the digital SBAR link.
+            </p>
+</div>
+<!-- Patient Info Card -->
+<div class="bg-surface-container-lowest rounded-3xl p-6 shadow-[0px_8px_24px_rgba(25,28,30,0.06)] space-y-6">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white text-xl font-bold">
+                    MT
+                </div>
+<div class="flex-1">
+<h2 class="font-headline text-2xl font-extrabold text-on-surface leading-tight">Margaret "Maggie" Tanaka</h2>
+<div class="flex flex-wrap items-center gap-2 mt-2">
+<span class="text-on-surface-variant text-sm font-medium">DOB 5/14/1939</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<div class="flex items-center gap-1 bg-surface-container-high px-2 py-0.5 rounded text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">
+<span class="material-symbols-outlined text-[14px]" data-icon="language">language</span>
+                            Japanese
+                        </div>
+</div>
+</div>
+</div>
+<!-- Critical Alerts Row -->
+<div class="flex gap-2">
+<div class="pulse-red bg-error text-on-error px-3 py-1.5 rounded-xl flex items-center gap-2 font-bold text-xs tracking-wide">
+<span class="material-symbols-outlined text-[18px]" data-icon="warning" style="font-variation-settings: &#39;FILL&#39; 1;">warning</span>
+                    DNR / DNI
+                </div>
+<div class="bg-surface-container-highest text-on-surface-variant px-3 py-1.5 rounded-xl flex items-center gap-2 font-bold text-xs tracking-wide">
+<span class="material-symbols-outlined text-[18px]" data-icon="medication" style="font-variation-settings: &#39;FILL&#39; 1;">medication</span>
+                    FALL RISK
+                </div>
+</div>
+</div>
+<!-- Transfer Logistics Box -->
+<div class="bg-primary-fixed/30 rounded-3xl p-6 space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined" data-icon="local_hospital">local_hospital</span>
+</div>
+<div>
+<p class="text-[10px] font-bold text-primary uppercase tracking-widest">Destination</p>
+<p class="font-bold text-on-primary-fixed-variant leading-tight">Providence Regional Medical Center</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined" data-icon="assignment_ind">assignment_ind</span>
+</div>
+<div>
+<p class="text-[10px] font-bold text-primary uppercase tracking-widest">Initiated</p>
+<p class="font-medium text-on-primary-fixed-variant leading-tight">2:45 PM by <span class="font-bold">Sarah Mitchell, RN</span></p>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-2 h-14 rounded-2xl border-2 border-outline-variant text-on-surface-variant font-bold active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="print">print</span>
+                Print Summary
+            </button>
+<button class="flex items-center justify-center gap-2 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary-container text-white font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="ios_share">ios_share</span>
+                Share Link
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-t border-[#f2f4f7]/15 dark:border-slate-800 shadow-[0px_-8px_24px_rgba(25,28,30,0.06)] z-50 rounded-t-[1.5rem]">
+<a class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-400 px-6 py-2 hover:text-[#005c9b] dark:hover:text-blue-300 active:scale-90 duration-200 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-[&#39;Manrope&#39;] text-[12px] font-semibold uppercase tracking-wider mt-1">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-400 px-6 py-2 hover:text-[#005c9b] dark:hover:text-blue-300 active:scale-90 duration-200 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-[&#39;Manrope&#39;] text-[12px] font-semibold uppercase tracking-wider mt-1">History</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-gradient-to-br from-[#005c9b] to-[#2e75b6] text-white rounded-2xl px-6 py-2 active:scale-90 duration-200 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="description" style="font-variation-settings: &#39;FILL&#39; 1;">description</span>
+<span class="font-[&#39;Manrope&#39;] text-[12px] font-semibold uppercase tracking-wider mt-1">SBAR</span>
+</a>
+</nav>
+</body></html>

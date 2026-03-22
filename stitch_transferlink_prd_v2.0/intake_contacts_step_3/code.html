@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Continuum Clinical - Step 3: Contacts &amp; Facility</title>
+<script type='text/javascript' nonce='XpMTxMGgJTak4njtVmcRzA==' src='https://contribution.usercontent.google.com/zNeNO9XZSxS_hLUO992HS-OJNcWfc5K6EEb6hFmlFM3OHK91Q1MUc0WhcPEY9mUFEXTd6QwJcb_I24HnCS_bxehNa5OTSOHpNs282rOR3czlze84hfRlXpOyeSs3HIewdDP0Om2P5xc_uhWitf0oikQtahEI4J0uCJrFVIOKdTzDGHd7Y56Mlm2Somi0s5wZO4SLMG0EBOQtKs45Pqg0djY15JX4rVAvXYVQ12W-QLaJNcuvnOmAovH1NLrrfbCM5ChyKZ6ulrm-O6lbOaEmRt8oWP_lL6UljqKvqEgzCkzqewFFIdiSmCSMSxdYbJiSJJI3pmH5EoweET-bzWyrlib8ncvCmH81l_dc02uh8mPdV6tueFPd7LeT6BghIHKkC4GMB8RMi55ReDwRSh_1glm6MWysU7GFgA0DlsID0y3Of86_lqY-UB223MRynpA83xwBMSbtuVsjVTLbMcH-0AegNnWY1tinJPVKI3RhRQMzGp_L73Rp2SPVA-txaAfpS-_d8fFwxw5cfI612DiZsExEuRkyQrWpP5P8t5eodcBgIssyevqVMsVDCtSm_rSEWT4j9MtDQ_I3-31bwEM2P1TXVhtC69sLwBW69vij6KMWggu_fnrsDA4sxe45ec3AzSyuVLB5HvaRFi0EjsHp1ACrLs7tdV6xwdPhzjzQogdP2kybWjj9uMqtaa-tYcL_623NGL0WddCXYqCxaLc8EoJ61hvGL5lPQWa73qhmVDFexrwrEIkRy7f9aqWVi8cCkEyGDX_StcX-OFjSa0Z0O2xVU6DDzkWh98_IWcnl'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-container": "#a06400",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#e0e3e6",
+                        "secondary-fixed-dim": "#b7c6ee",
+                        "surface-dim": "#d8dadd",
+                        "error-container": "#ffdad6",
+                        "secondary": "#4f5e81",
+                        "on-surface-variant": "#414750",
+                        "primary-fixed": "#d1e4ff",
+                        "on-primary-container": "#f5f8ff",
+                        "tertiary": "#7f4e00",
+                        "on-tertiary-fixed": "#2b1700",
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#191c1e",
+                        "inverse-primary": "#9ecaff",
+                        "surface-bright": "#f7f9fc",
+                        "on-surface": "#191c1e",
+                        "surface-container-highest": "#e0e3e6",
+                        "outline": "#717781",
+                        "tertiary-fixed-dim": "#ffb962",
+                        "surface-container-low": "#f2f4f7",
+                        "primary-container": "#2e75b6",
+                        "on-primary-fixed": "#001d36",
+                        "on-secondary-fixed-variant": "#384668",
+                        "surface-container": "#eceef1",
+                        "tertiary-fixed": "#ffddb9",
+                        "surface-tint": "#0b61a1",
+                        "primary-fixed-dim": "#9ecaff",
+                        "outline-variant": "#c1c7d2",
+                        "inverse-surface": "#2d3133",
+                        "on-tertiary-fixed-variant": "#663e00",
+                        "on-tertiary-container": "#fff6ef",
+                        "on-error": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "surface": "#f7f9fc",
+                        "secondary-container": "#c5d4fd",
+                        "inverse-on-surface": "#eff1f4",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#4d5b7e",
+                        "surface-container-high": "#e6e8eb",
+                        "secondary-fixed": "#d9e2ff",
+                        "on-secondary-fixed": "#0a1a3a",
+                        "background": "#f7f9fc",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#00497c",
+                        "primary": "#005c9b"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pulse-ring {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .1; transform: scale(1.5); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface">
+<div class="fixed inset-0 bg-surface z-50 flex flex-col overflow-hidden">
+<header class="bg-surface-bright flex items-center justify-between w-full px-10 h-20 shrink-0">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="clinical_notes">clinical_notes</span>
+<h1 class="font-headline font-bold text-xl tracking-tight text-primary">Continuum Clinical</h1>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold">3</div>
+<div class="ml-3">
+<p class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Step 3 of 5</p>
+<p class="font-headline font-bold text-on-surface">Contacts &amp; Facility</p>
+</div>
+</div>
+</div>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="close">close</span>
+</button>
+</header>
+<div class="w-full bg-surface-container-high h-1.5 overflow-hidden">
+<div class="bg-primary h-full w-[60%] transition-all duration-500"></div>
+</div>
+<main class="flex-1 overflow-y-auto px-6 py-10 md:px-20 lg:px-40">
+<div class="max-w-4xl mx-auto space-y-12">
+<section>
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-tertiary" data-icon="contact_phone">contact_phone</span>
+<h2 class="font-headline font-bold text-2xl text-on-surface">Emergency Contact</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="block text-sm font-bold uppercase tracking-wider text-on-surface-variant ml-1">Full Name</label>
+<input class="w-full h-14 px-5 rounded-xl bg-surface-container-lowest border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary transition-all font-medium text-on-surface" placeholder="e.g. Sarah Jenkins" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="block text-sm font-bold uppercase tracking-wider text-on-surface-variant ml-1">Relationship</label>
+<select class="w-full h-14 px-5 rounded-xl bg-surface-container-lowest border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary transition-all font-medium text-on-surface">
+<option>Select relationship...</option>
+<option>Spouse</option>
+<option>Child</option>
+<option>Sibling</option>
+<option>Legal Guardian</option>
+<option>Other</option>
+</select>
+</div>
+<div class="md:col-span-2 space-y-2">
+<label class="block text-sm font-bold uppercase tracking-wider text-on-surface-variant ml-1">Phone Number</label>
+<input class="w-full h-14 px-5 rounded-xl bg-surface-container-lowest border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary transition-all font-medium text-on-surface" placeholder="(555) 000-0000" type="tel"/>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary" data-icon="location_on">location_on</span>
+<h2 class="font-headline font-bold text-2xl text-on-surface">Facility Information</h2>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl space-y-6">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<p class="text-sm font-bold uppercase tracking-wider text-on-surface-variant mb-1">Originating Facility</p>
+<p class="font-headline font-extrabold text-xl text-primary">Oakwood Long-Term Care Center</p>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 bg-primary-container/10 rounded-full border border-primary-container/20">
+<span class="relative flex h-3 w-3">
+<span class="pulse-ring absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+</span>
+<span class="text-sm font-bold text-primary">Verified Facility</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-outline-variant/20">
+<div>
+<p class="text-sm font-bold uppercase tracking-wider text-on-surface-variant mb-1">Address</p>
+<p class="font-medium text-on-surface">1290 Medical Park Drive, Suite 400<br/>North Hamilton, NY 10292</p>
+</div>
+<div>
+<p class="text-sm font-bold uppercase tracking-wider text-on-surface-variant mb-1">Transfer Nurse</p>
+<p class="font-medium text-on-surface">R. Martinez, RN</p>
+<p class="text-sm text-on-surface-variant">Ext. 4402</p>
+</div>
+</div>
+</div>
+</section>
+<section class="pb-20">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+<h2 class="font-headline font-bold text-2xl text-on-surface">Isolation Precautions</h2>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<button class="group flex flex-col items-center justify-center p-6 rounded-xl bg-surface-container-lowest ring-2 ring-primary transition-all text-center">
+<span class="material-symbols-outlined text-primary mb-3 text-3xl" data-icon="check_circle" style="font-variation-settings: &#39;FILL&#39; 1;">check_circle</span>
+<span class="font-bold text-on-surface">None</span>
+</button>
+<button class="group flex flex-col items-center justify-center p-6 rounded-xl bg-surface-container-lowest ring-1 ring-outline-variant/30 hover:ring-error transition-all text-center">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-error mb-3 text-3xl" data-icon="microbe">microbiology</span>
+<span class="font-bold text-on-surface">MRSA</span>
+</button>
+<button class="group flex flex-col items-center justify-center p-6 rounded-xl bg-surface-container-lowest ring-1 ring-outline-variant/30 hover:ring-error transition-all text-center">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-error mb-3 text-3xl" data-icon="coronavirus">coronavirus</span>
+<span class="font-bold text-on-surface">VRE</span>
+</button>
+<button class="group flex flex-col items-center justify-center p-6 rounded-xl bg-surface-container-lowest ring-1 ring-outline-variant/30 hover:ring-error transition-all text-center">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-error mb-3 text-3xl" data-icon="mask">masks</span>
+<span class="font-bold text-on-surface">C-Diff</span>
+</button>
+</div>
+</section>
+</div>
+</main>
+<footer class="bg-surface-bright/80 backdrop-blur-md px-10 py-6 flex items-center justify-between shrink-0 shadow-[0px_-8px_24px_rgba(25,28,30,0.06)]">
+<button class="h-14 px-8 rounded-xl font-bold text-on-surface-variant bg-surface-container-highest hover:bg-surface-dim transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-xl" data-icon="arrow_back">arrow_back</span>
+                Back
+            </button>
+<div class="hidden md:block">
+<p class="text-xs text-on-surface-variant font-medium text-center italic">Patient ID: #C-1928-8839 • DOB: 05/12/1948</p>
+</div>
+<button class="h-14 px-10 rounded-xl font-bold text-white bg-gradient-to-br from-primary to-primary-container hover:shadow-lg transition-all flex items-center gap-2">
+                Continue to Care Plan
+                <span class="material-symbols-outlined text-xl" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</footer>
+</div>
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-6 pt-3 bg-white/70 backdrop-blur-md border-t border-[#f2f4f7] shadow-[0px_-8px_24px_rgba(25,28,30,0.06)] rounded-t-[1.5rem] md:hidden">
+<div class="flex flex-col items-center justify-center text-[#414750] px-5 py-2">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-manrope text-[11px] font-semibold uppercase tracking-wider">Demographics</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] px-5 py-2">
+<span class="material-symbols-outlined" data-icon="vitals">vitals</span>
+<span class="font-manrope text-[11px] font-semibold uppercase tracking-wider">Baseline</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-[#2e75b6] text-white rounded-[1.5rem] px-5 py-2">
+<span class="material-symbols-outlined" data-icon="contact_phone">contact_phone</span>
+<span class="font-manrope text-[11px] font-semibold uppercase tracking-wider">Contacts</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] px-5 py-2">
+<span class="material-symbols-outlined" data-icon="volunteer_activism">volunteer_activism</span>
+<span class="font-manrope text-[11px] font-semibold uppercase tracking-wider">Care</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] px-5 py-2">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="font-manrope text-[11px] font-semibold uppercase tracking-wider">Review</span>
+</div>
+</nav>
+</body></html>

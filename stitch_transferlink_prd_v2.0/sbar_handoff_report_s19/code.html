@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SBAR Handoff Report - TransferLink</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script type='text/javascript' nonce='XgFm3z4lrYcp1bOy5SnLnA==' src='https://contribution.usercontent.google.com/qIbjSXgWi1mPta2cFk-zUb9KWGy05zdVqBDnyyQ0cAUsFxIqeG9qKcAJ_QhFBv3jv6jy1ep9DV8CyFFmgIQEXCFuegAjJlxV50uUsigzo4jh5EFkzxXc5wMMyUIov-Zepxj-jmpwT2I1JOu60K1tsHRMYsr0v2ebn88OqZ_hTBGqnPJ7AlDqIufleMzvNeGt1t8bcpyYh7dvYM4dtCSLyqst0wt5P9IEUKRPZ25kGwq81AHjX1XsFWcMjdrgiNasLLvrFmx9HuCe7kKAzu4TXBuN_tu6fAByLIbSl9DCTR9wMDOGaSYf2t0UxUGbqRUKTUgtgjyDnsJta0DKtgZEuYwkbw9MQLt13hkQLQZFKnSe3_R6euTnMTOOAivjLdWFRZnE1biAuCbMlRhAie7Y3ZjearJfzqRrrcaE2D6Ybd-dMrmXjQ1y2tICYGWruu_onU-EmIAjRXyiOEKCUXoruEY-dI-wwuM4Akxhh0cxzMzyKx1TRtbsk2zMweowZakUurlsxsfJUVezGyGZTDAuHcp71upCriaHlk-s61hMljsPZBKCGE9UAiWk4Dbykmeen9W9LIVAWncVre4WakbaogSvy8G7SnSZcEIGU6LSJBT-Rjl_AsRO1GBOFR9tyUNA080kVqX6pqQaAg60yq0-xwRI9tZRsNWBrLWJyCtUO7z9gg_D8ajFP4ZI03y5K2yK9rWmG5JDxexl4lBiTrRuqyJaN6_Jm6TveJFQUrn7FBTjVFqNate0EpAnt_nFuiZpHgNR2-VGXKlf2qpzQSDgQm0UucnPPSHyOtwjzODn'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-container": "#fff6ef",
+              "tertiary": "#7f4e00",
+              "inverse-primary": "#9ecaff",
+              "surface": "#f7f9fc",
+              "tertiary-container": "#a06400",
+              "on-surface-variant": "#414750",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed": "#2b1700",
+              "on-error-container": "#93000a",
+              "surface-container-highest": "#e0e3e6",
+              "error-container": "#ffdad6",
+              "tertiary-fixed-dim": "#ffb962",
+              "surface-container-high": "#e6e8eb",
+              "surface-container": "#eceef1",
+              "error": "#ba1a1a",
+              "on-tertiary-fixed-variant": "#663e00",
+              "on-primary-fixed-variant": "#00497c",
+              "outline-variant": "#c1c7d2",
+              "on-secondary-fixed": "#0a1a3a",
+              "surface-tint": "#0b61a1",
+              "on-tertiary": "#ffffff",
+              "on-secondary-container": "#4d5b7e",
+              "inverse-surface": "#2d3133",
+              "secondary-container": "#c5d4fd",
+              "surface-variant": "#e0e3e6",
+              "on-primary": "#ffffff",
+              "surface-container-low": "#f2f4f7",
+              "surface-bright": "#f7f9fc",
+              "primary-fixed-dim": "#9ecaff",
+              "secondary": "#4f5e81",
+              "primary-fixed": "#d1e4ff",
+              "on-surface": "#191c1e",
+              "surface-dim": "#d8dadd",
+              "outline": "#717781",
+              "on-primary-fixed": "#001d36",
+              "on-primary-container": "#f5f8ff",
+              "on-background": "#191c1e",
+              "primary-container": "#2e75b6",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#eff1f4",
+              "background": "#f7f9fc",
+              "surface-container-lowest": "#ffffff",
+              "secondary-fixed-dim": "#b7c6ee",
+              "secondary-fixed": "#d9e2ff",
+              "primary": "#005c9b",
+              "on-secondary-fixed-variant": "#384668",
+              "tertiary-fixed": "#ffddb9"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-surface">
+<!-- TopAppBar -->
+<header class="bg-[#f7f9fc] dark:bg-slate-900 sticky top-0 z-50">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#005c9b] dark:text-blue-400" data-icon="clinical_notes">clinical_notes</span>
+<h1 class="text-xl font-bold tracking-tight text-[#005c9b] dark:text-blue-400">TransferLink</h1>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-[#414750] dark:text-slate-400 hover:bg-[#eceef1] dark:hover:bg-slate-800 transition-colors px-3 py-1 rounded-lg" href="#">Dashboard</a>
+<a class="text-[#414750] dark:text-slate-400 hover:bg-[#eceef1] dark:hover:bg-slate-800 transition-colors px-3 py-1 rounded-lg" href="#">History</a>
+<a class="text-[#005c9b] dark:text-blue-300 font-bold" href="#">SBAR</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-white font-bold text-xs">JD</div>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 pt-6 pb-32">
+<!-- Patient Selector Chips -->
+<section class="mb-8 overflow-x-auto no-scrollbar">
+<div class="flex gap-3 pb-2">
+<button class="flex-shrink-0 px-6 py-2.5 rounded-full bg-primary text-white font-bold text-sm shadow-md transition-transform active:scale-95">Maggie</button>
+<button class="flex-shrink-0 px-6 py-2.5 rounded-full bg-surface-container-lowest text-on-surface-variant font-medium text-sm hover:bg-surface-container transition-colors active:scale-95">Robert</button>
+<button class="flex-shrink-0 px-6 py-2.5 rounded-full bg-surface-container-lowest text-on-surface-variant font-medium text-sm hover:bg-surface-container transition-colors active:scale-95">Dorothy</button>
+<button class="flex-shrink-0 px-6 py-2.5 rounded-full bg-surface-container-lowest text-on-surface-variant font-medium text-sm hover:bg-surface-container transition-colors active:scale-95">James</button>
+</div>
+</section>
+<div class="space-y-6">
+<!-- S: Situation (Red/Coral) -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_8px_24px_rgba(25,28,30,0.06)] border-l-8 border-error">
+<div class="p-6">
+<div class="flex items-center gap-2 mb-4">
+<span class="text-error font-extrabold text-2xl font-headline">S</span>
+<h2 class="text-on-surface font-headline font-bold text-lg tracking-tight">SITUATION</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+<div>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1">Patient Identity</p>
+<p class="text-on-surface font-semibold">Maggie Thompson, 78F</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1">Language</p>
+<p class="text-on-surface font-semibold">English (Primary)</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1">Facility / Room</p>
+<p class="text-on-surface font-semibold">Green Valley LTC / Room 402-B</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1">Status (DNR/POLST)</p>
+<div class="flex gap-2">
+<span class="bg-error-container text-on-error-container px-2 py-0.5 rounded text-xs font-bold">DNR</span>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded text-xs font-bold">POLST ON FILE</span>
+</div>
+</div>
+<div class="md:col-span-2">
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1">Reason for Transfer</p>
+<p class="text-on-surface font-medium bg-surface-container-low p-3 rounded-lg border border-outline-variant/10 italic">"Acute shortness of breath and decreased oxygen saturation (84% on RA). Suspicion of COPD exacerbation vs. pneumonia."</p>
+</div>
+</div>
+</div>
+</div>
+<!-- B: Background (Blue) -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_8px_24px_rgba(25,28,30,0.06)] border-l-8 border-primary">
+<div class="p-6">
+<div class="flex items-center gap-2 mb-4">
+<span class="text-primary font-extrabold text-2xl font-headline">B</span>
+<h2 class="text-on-surface font-headline font-bold text-lg tracking-tight">BACKGROUND</h2>
+</div>
+<div class="space-y-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+<div>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1">Medical History</p>
+<p class="text-on-surface font-semibold">COPD, Hypertension, Type 2 Diabetes</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1">Allergies</p>
+<p class="text-error font-extrabold">NKA</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1">Functional Status</p>
+<p class="text-on-surface font-semibold">Ambulatory with walker, Assist x1 for ADLs</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1">Baseline Mentation</p>
+<p class="text-on-surface font-semibold">Alert &amp; Oriented x3</p>
+</div>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1">Active Devices / Risks</p>
+<div class="flex flex-wrap gap-2 mt-1">
+<span class="bg-surface-container text-on-surface px-3 py-1 rounded-full text-xs font-medium">Foley Catheter</span>
+<span class="bg-surface-container text-on-surface px-3 py-1 rounded-full text-xs font-medium">Fall Risk (High)</span>
+<span class="bg-surface-container text-on-surface px-3 py-1 rounded-full text-xs font-medium">Skin Integrity Risk</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- A: Assessment (Orange) -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_8px_24px_rgba(25,28,30,0.06)] border-l-8 border-tertiary">
+<div class="p-6">
+<div class="flex items-center gap-2 mb-4">
+<span class="text-tertiary font-extrabold text-2xl font-headline">A</span>
+<h2 class="text-on-surface font-headline font-bold text-lg tracking-tight">ASSESSMENT</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="md:col-span-2">
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1">Recent Changes (72h)</p>
+<p class="text-on-surface text-sm leading-relaxed mb-4">Productive cough noted yesterday morning. Refused dinner last night due to fatigue. Onset of tachypnea at 04:30 today.</p>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1">Facility Interventions</p>
+<p class="text-on-surface text-sm leading-relaxed">Administered Albuterol nebulizer at 04:45. Started O2 via NC at 2L/min. No significant improvement in SpO2.</p>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl">
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-3 text-center">Current Vitals</p>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-xs text-on-surface-variant">BP</span>
+<span class="font-bold text-on-surface">142/88</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-on-surface-variant">HR</span>
+<span class="font-bold text-on-surface text-error">112 <span class="text-[10px] font-normal">bpm</span></span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-on-surface-variant">RR</span>
+<span class="font-bold text-on-surface text-error">28 <span class="text-[10px] font-normal">rpm</span></span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-on-surface-variant">Temp</span>
+<span class="font-bold text-on-surface">100.4°F</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-on-surface-variant">SpO2</span>
+<span class="font-bold text-on-surface text-error">88% <span class="text-[10px] font-normal text-on-surface-variant">(2L NC)</span></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- R: Recommendation (Green) -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_8px_24px_rgba(24,28,30,0.06)] border-l-8 border-[#2e7d32]">
+<div class="p-6">
+<div class="flex items-center gap-2 mb-4">
+<span class="text-[#2e7d32] font-extrabold text-2xl font-headline">R</span>
+<h2 class="text-on-surface font-headline font-bold text-lg tracking-tight">RECOMMENDATION</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+<div>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1">Transfer Destination</p>
+<p class="text-on-surface font-semibold">St. Jude Medical Center ED</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1">ED Provider Notification</p>
+<div class="flex items-center gap-2">
+<p class="text-on-surface font-semibold">Dr. Aris Thorne (On-Call)</p>
+<span class="bg-[#e8f5e9] text-[#2e7d32] px-2 py-0.5 rounded text-[10px] font-bold">REPORT CALLED</span>
+</div>
+</div>
+<div class="md:col-span-2">
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1">Required Follow-up / Instructions</p>
+<ul class="list-disc list-inside text-sm text-on-surface space-y-1 font-medium">
+<li>Monitor for increased work of breathing during transport</li>
+<li>Last dose of Prednisone given at 08:00 yesterday</li>
+<li>Daughter (POA) is meeting the patient at the ED</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<!-- Cultural Footer -->
+<div class="bg-surface-container rounded-xl p-6 mt-8">
+<h3 class="text-[11px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="settings_accessibility">settings_accessibility</span>
+                    Cultural &amp; Comfort Considerations
+                </h3>
+<div class="grid grid-cols-3 md:grid-cols-5 gap-4">
+<div class="flex flex-col items-center gap-2 bg-surface-container-lowest p-3 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="light_mode">light_mode</span>
+<span class="text-[10px] font-bold text-on-surface-variant">Lighting</span>
+</div>
+<div class="flex flex-col items-center gap-2 bg-surface-container-lowest p-3 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="forum">forum</span>
+<span class="text-[10px] font-bold text-on-surface-variant">Communication</span>
+</div>
+<div class="flex flex-col items-center gap-2 bg-surface-container-lowest p-3 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="family_restroom">family_restroom</span>
+<span class="text-[10px] font-bold text-on-surface-variant">Family</span>
+</div>
+<div class="flex flex-col items-center gap-2 bg-surface-container-lowest p-3 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="language">language</span>
+<span class="text-[10px] font-bold text-on-surface-variant">Cultural</span>
+</div>
+<div class="flex flex-col items-center gap-2 bg-surface-container-lowest p-3 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="psychology">psychology</span>
+<span class="text-[10px] font-bold text-on-surface-variant">Distress</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col md:flex-row gap-4 pt-4">
+<button class="flex-1 border-2 border-primary text-primary font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="content_copy">content_copy</span>
+                    Copy to Clipboard
+                </button>
+<button class="flex-1 bg-gradient-to-br from-primary to-primary-container text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="print">print</span>
+                    Print SBAR Report
+                </button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-t border-[#f2f4f7]/15 dark:border-slate-800 shadow-[0px_-8px_24px_rgba(25,28,30,0.06)] z-50 rounded-t-[1.5rem] md:hidden">
+<div class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-400 px-4 py-1.5 transition-transform duration-200 ease-out active:scale-90">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-manrope font-medium uppercase tracking-wider mt-1">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-400 px-4 py-1.5 transition-transform duration-200 ease-out active:scale-90">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="text-[10px] font-manrope font-medium uppercase tracking-wider mt-1">History</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-[#2e75b6] text-white rounded-2xl px-6 py-1.5 transition-transform duration-200 ease-out active:scale-90">
+<span class="material-symbols-outlined" data-icon="Assignment">assignment</span>
+<span class="text-[10px] font-manrope font-medium uppercase tracking-wider mt-1">SBAR</span>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Initiate Transfer - Clinical Concierge</title>
+<script type='text/javascript' nonce='k78gbO1nFcfNwkw6Xt+Msg==' src='https://contribution.usercontent.google.com/t0HhPH-IrvBzCaBvNmTP6CsyWRN9pZH5OUt3IM2obeTXR4w0IsVXs7EOhtnWnZK-DxOp4pCzfb79a2hk8cJnas83UvFTomHONDA9oUqzoKRJvcgi8cJ4ADFl67VXrcKcEK2R6ykxJiefqHqXkTrkS7p9rvEnr3X616FinZo_4pu203q5Oi5qY7Zdj1XzppZi5bEC_sSvuoN-C3teZj6rhLOxOrhmKUxJWm7abuG5GUgKeTmh-GhFfXW5t7X05UVl-4riG9UadmhdDtrc8XGtDI80ce1kmUXNc49FmXkEfMUFnlHSZhSXybc7SPxnLcvscLwpvFIx55wXinady_u3L93j-SruJR9PZASc4C0n9MtLbEVdhHXCYbExmBrrOEYu88gOtVPA7JVm6zWUId94LRf9n6STBO9e76cR2op-vdCdVmtP3nghd5ZwIPMixXMGvzuVwPvMHML-RKJNCwq-cfO9WIEOePs4B4rwyr9-mLFoUMC94IYEXTIDOkrJo37gWuwiLj-qIUU-6MlUWPuUBs5hLdzEHBfFtkv0DsAEMwziUgay7DVJTIQ-QmOjH09mbKXzs_eBQs3BWo5wzQZqVibHDpZRtS2wam4ou-g8xpJwmBM0ZI81cIa5znwQJXIaUbcTmGl_Pkn2XZwx1kTw552LbRVgp52SdlWnk2wDIk-Dk37swL2xE5FZ4Kr3XyDrTo4tiutM31XFODWPGt3tdudyaPPDjMthskECsEN_GeRYIPXuCgKOGLQHnb0F_GOFJf7YIvarawCbTJlhQKTRgFrcpSjp4_PWQvLk0NrH'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-error-container": "#93000a",
+              "outline": "#717781",
+              "on-primary-fixed": "#001d36",
+              "surface": "#f7f9fc",
+              "primary-fixed": "#d1e4ff",
+              "primary": "#005c9b",
+              "tertiary-fixed-dim": "#ffb962",
+              "surface-container-lowest": "#ffffff",
+              "error": "#ba1a1a",
+              "surface-tint": "#0b61a1",
+              "secondary-fixed-dim": "#b7c6ee",
+              "surface-container-high": "#e6e8eb",
+              "on-secondary-container": "#4d5b7e",
+              "on-primary-fixed-variant": "#00497c",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffddb9",
+              "tertiary": "#7f4e00",
+              "on-tertiary-fixed-variant": "#663e00",
+              "background": "#f7f9fc",
+              "surface-container-highest": "#e0e3e6",
+              "on-surface-variant": "#414750",
+              "surface-container": "#eceef1",
+              "secondary": "#4f5e81",
+              "surface-bright": "#f7f9fc",
+              "on-tertiary-container": "#fff6ef",
+              "inverse-surface": "#2d3133",
+              "primary-container": "#2e75b6",
+              "secondary-fixed": "#d9e2ff",
+              "tertiary-container": "#a06400",
+              "on-primary-container": "#f5f8ff",
+              "inverse-on-surface": "#eff1f4",
+              "on-error": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "primary-fixed-dim": "#9ecaff",
+              "secondary-container": "#c5d4fd",
+              "on-tertiary-fixed": "#2b1700",
+              "on-secondary-fixed-variant": "#384668",
+              "outline-variant": "#c1c7d2",
+              "error-container": "#ffdad6",
+              "surface-variant": "#e0e3e6",
+              "surface-container-low": "#f2f4f7",
+              "on-secondary-fixed": "#0a1a3a",
+              "inverse-primary": "#9ecaff",
+              "on-surface": "#191c1e",
+              "on-background": "#191c1e",
+              "surface-dim": "#d8dadd",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(193, 199, 210, 0.2);
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body selection:bg-primary-fixed min-h-screen">
+<!-- Top Navigation Anchor -->
+<header class="bg-[#f7f9fc] dark:bg-slate-900 flex justify-between items-center w-full px-6 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-3">
+<button class="text-on-surface-variant hover:bg-[#eceef1] transition-colors p-2 rounded-full active:scale-95 duration-150">
+<span class="material-symbols-outlined text-2xl">close</span>
+</button>
+<h1 class="font-manrope font-bold text-lg tracking-tight text-[#005c9b] dark:text-blue-400">Initiate Transfer</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex flex-col items-end">
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant opacity-60">Session Active</span>
+<span class="text-sm font-medium">Nurse Sarah Jenkins</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden">
+<img alt="Medical Professional" class="w-full h-full object-cover" data-alt="Headshot of a female nurse in blue scrubs" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu3y3Sw_ha1uh9e6N9rYKFJqjgB6RZ8fkYg-IkTQEtRm4Pvn9y5DCrI8gKYP9jXpdCIMD66efs9kuQmcour1-LH2P8_CRoHINehtsGjyx0z6bp559HXncixCY_BhHrNkJIpBC0JvHVh_DhxAN2Bqa3NwEu_v6rz9zQVXn-w3XhmLFkereEFKKv4yIIISNVym5sW0zlhNMapGdkFv-L2icwHYM9-Df36oMTB5DW8LLAnNgObTR4MVytxv2qKh6iaS0M3GSFEfpjQonq"/>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-6 pt-10 pb-32">
+<!-- Step Indicator & Header Info -->
+<div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="px-3 py-1 bg-primary text-white text-[10px] font-bold uppercase tracking-widest rounded-full">Step 2 of 4</span>
+<span class="text-on-surface-variant text-sm font-medium">Clinical Documentation</span>
+</div>
+<h2 class="font-headline font-extrabold text-3xl text-on-surface tracking-tight">Patient Acuity Record</h2>
+</div>
+<div class="glass-card px-5 py-3 rounded-xl flex items-center gap-4">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Timestamp</span>
+<span class="text-sm font-semibold">Oct 24, 2023 • 14:42:08</span>
+</div>
+<div class="h-8 w-px bg-outline-variant/30"></div>
+<div class="flex flex-col">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Status</span>
+<div class="flex items-center gap-2">
+<div class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+</div>
+<span class="text-sm font-semibold text-orange-700">Awaiting Dispatch</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Transfer Form Canvas -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Left Column: Reason & Symptoms -->
+<div class="md:col-span-7 space-y-8">
+<!-- Section: Reason for Transfer -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-[0px_8px_24px_rgba(25,28,30,0.06)] border-none">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">clinical_notes</span>
+<h3 class="font-bold text-sm uppercase tracking-wider text-on-surface-variant">Reason for Transfer</h3>
+</div>
+<div class="relative">
+<textarea class="w-full min-h-[120px] bg-surface-container-low border-none rounded-xl p-4 text-on-surface focus:ring-2 focus:ring-primary/20 resize-none font-medium leading-relaxed" placeholder="Enter acute diagnosis or primary reason...">Acute shortness of breath, O2 sat 84% on room air. Persistent chest heaviness and productive cough.</textarea>
+</div>
+</section>
+<!-- Section: Current Symptoms (Bento Style Chips) -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-[0px_8px_24px_rgba(25,28,30,0.06)] border-none">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">vital_signs</span>
+<h3 class="font-bold text-sm uppercase tracking-wider text-on-surface-variant">Current Symptoms</h3>
+</div>
+<div class="flex flex-wrap gap-3">
+<!-- Active Chips -->
+<button class="px-5 py-3 rounded-full bg-primary-container text-on-primary-container font-semibold text-sm flex items-center gap-2 transition-all active:scale-95">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: &#39;FILL&#39; 1;">check_circle</span>
+                            Shortness of Breath
+                        </button>
+<button class="px-5 py-3 rounded-full bg-primary-container text-on-primary-container font-semibold text-sm flex items-center gap-2 transition-all active:scale-95">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: &#39;FILL&#39; 1;">check_circle</span>
+                            Chest Pain
+                        </button>
+<!-- Inactive Chips -->
+<button class="px-5 py-3 rounded-full bg-surface-container-highest text-on-surface-variant font-medium text-sm flex items-center gap-2 hover:bg-surface-dim transition-all active:scale-95">
+                            Altered Mental Status
+                        </button>
+<button class="px-5 py-3 rounded-full bg-surface-container-highest text-on-surface-variant font-medium text-sm flex items-center gap-2 hover:bg-surface-dim transition-all active:scale-95">
+                            Tachycardia
+                        </button>
+<button class="px-5 py-3 rounded-full bg-surface-container-highest text-on-surface-variant font-medium text-sm flex items-center gap-2 hover:bg-surface-dim transition-all active:scale-95">
+                            Fever/Chills
+                        </button>
+<button class="px-5 py-3 rounded-full bg-surface-container-highest text-on-surface-variant font-medium text-sm flex items-center gap-2 hover:bg-surface-dim transition-all active:scale-95">
+                            Nausea/Vomiting
+                        </button>
+<button class="px-5 py-3 rounded-full bg-surface-container-highest text-on-surface-variant font-medium text-sm flex items-center gap-2 hover:bg-surface-dim transition-all active:scale-95">
+                            Dizziness
+                        </button>
+<button class="px-5 py-3 rounded-full bg-surface-container-highest text-on-surface-variant font-medium text-sm flex items-center gap-2 hover:bg-surface-dim transition-all active:scale-95">
+                            Lethargy
+                        </button>
+</div>
+</section>
+</div>
+<!-- Right Column: Interventions & Recent Changes -->
+<div class="md:col-span-5 space-y-8">
+<!-- Section: Interventions Taken -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-[0px_8px_24px_rgba(25,28,30,0.06)] border-none">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">medical_services</span>
+<h3 class="font-bold text-sm uppercase tracking-wider text-on-surface-variant">Interventions Taken</h3>
+</div>
+<textarea class="w-full min-h-[100px] bg-surface-container-low border-none rounded-xl p-4 text-on-surface focus:ring-2 focus:ring-primary/20 resize-none font-medium leading-relaxed" placeholder="List medications, O2, IV, etc...">Administered 2L O2 via nasal cannula. Albuterol nebulizer treatment completed. Nitro given x1 sublingual.</textarea>
+</section>
+<!-- Section: Recent Changes (72h) -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-[0px_8px_24px_rgba(25,28,30,0.06)] border-none">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">history</span>
+<h3 class="font-bold text-sm uppercase tracking-wider text-on-surface-variant">Recent Changes (72h)</h3>
+</div>
+<textarea class="w-full min-h-[100px] bg-surface-container-low border-none rounded-xl p-4 text-on-surface focus:ring-2 focus:ring-primary/20 resize-none font-medium leading-relaxed" placeholder="Note new medications or decline...">Increased lethargy noted since Sunday evening. Reduced appetite. New antibiotic (Rocephin) started yesterday.</textarea>
+</section>
+<!-- Section: Destination -->
+<section class="bg-primary/5 p-8 rounded-xl border border-primary/10">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<h3 class="font-bold text-sm uppercase tracking-wider text-on-surface-variant">Target Facility</h3>
+</div>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest border-none rounded-xl px-4 py-4 pr-10 font-bold text-primary appearance-none focus:ring-2 focus:ring-primary/20">
+<option selected="">St. Jude Medical Center</option>
+<option>Westside Community Hospital</option>
+<option>Central Valley Medical Group</option>
+</select>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+<span class="material-symbols-outlined text-primary">expand_more</span>
+</div>
+</div>
+<p class="mt-4 text-[11px] text-on-surface-variant font-medium leading-tight opacity-70">
+                        * Routing priority established by EMS protocol for respiratory distress.
+                    </p>
+</section>
+</div>
+</div>
+</main>
+<!-- Bottom Action Bar / Shell -->
+<div class="fixed bottom-0 left-0 w-full bg-white/70 backdrop-blur-xl px-6 pb-8 pt-4 z-50 shadow-[0px_-8px_24px_rgba(25,28,30,0.06)]">
+<div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="hidden md:flex items-center gap-4 text-on-surface-variant">
+<span class="material-symbols-outlined opacity-50">security</span>
+<span class="text-xs font-medium max-w-[200px]">HIPAA Compliant End-to-End Encryption Active</span>
+</div>
+<button class="w-full md:w-auto px-10 py-5 bg-gradient-to-r from-primary to-primary-container text-white font-bold rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform active:scale-95">
+<span>Generate QR Code and Continue</span>
+<span class="material-symbols-outlined">qr_code_2</span>
+</button>
+</div>
+</div>
+</body></html>

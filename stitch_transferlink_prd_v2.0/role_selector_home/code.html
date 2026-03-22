@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TransferLink Role Selector</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script type='text/javascript' nonce='VybhnDNIeoKV0oNIzyy7Bg==' src='https://contribution.usercontent.google.com/rzLrtR2q3ph3hnAWoiL6e4d52UCo9ZDRhNgabRnbO-S9lm_BnX7puhCFWVLc42JrE8a3qfHrl6cBYqgIi9xMvCo3IICYNDt6rBRknrzQ7dGVVpEtG0uu6wFiQa05ytyPIgcf2_jI33Mob_yyUIPGRhDJooHWJWUSp6ldYeEQF4elaT_aIUFCYewMOZY1VxJ7-CspmwGz4dh2zGVy7ugk9YNFFgkTJ60MHs4zaPbDiICEi16f4Ko6eCO1HPtnmGZikYkTALRlzZMpSAIRGg6ECfDREUKmAjNGTZBxXa4Q9m8MFfHXc9uSrYiq8Um8zJJblioLlS4wi-i4_8aKEIwzfccTBaC-baq84R5C_StZR-4RHsO5px9rHWYc9tQpfryu6sQv_SxUdIRrbaXq4FrcivENljksvWRXs7PxxFmvAcEhaPkanKq6aKJKUkw6vSZGc7aNry_PbkWqVRVHbxkLxOQvrr_Ngw6BcyZock81F7bSv0_drR1JQMdTuQXXgswDrcbs8SqoJ671fgMXwHCx7v7RJXY8aZEr4bkGfxuSISjl-WNNbKvG5cCe6p2w2_exadhV7JLvpscDnjHdDuzo2XhPNROpLYGPNVvY2pgRDGiBmU_qR3oazHKsJ_gBh709kJHTp1q2MIng-67AXSxVZ1U8hvinBhmK3y5aY4a22DSz-iH_dGVYu31bn2y7MdWAd3i2iEVvKXCqe6fcOUzxWMMkGOMSjexQhfT2-oH0F6IEKeeY0HDU7Q7B1knB2mxF5aB_49FPTqy6ozRLAYbWVwSK68hCXyY6RmKti0EB'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-fixed": "#2b1700",
+              "error-container": "#ffdad6",
+              "surface-container-lowest": "#ffffff",
+              "tertiary": "#7f4e00",
+              "primary-fixed-dim": "#9ecaff",
+              "on-tertiary-fixed-variant": "#663e00",
+              "outline": "#717781",
+              "surface-container-high": "#e6e8eb",
+              "surface": "#f7f9fc",
+              "inverse-primary": "#9ecaff",
+              "primary-fixed": "#d1e4ff",
+              "on-primary-fixed-variant": "#00497c",
+              "secondary-container": "#c5d4fd",
+              "tertiary-container": "#a06400",
+              "on-background": "#191c1e",
+              "surface-container-low": "#f2f4f7",
+              "surface-container-highest": "#e0e3e6",
+              "tertiary-fixed-dim": "#ffb962",
+              "on-surface": "#191c1e",
+              "inverse-surface": "#2d3133",
+              "outline-variant": "#c1c7d2",
+              "on-tertiary": "#ffffff",
+              "on-secondary-fixed": "#0a1a3a",
+              "surface-dim": "#d8dadd",
+              "on-secondary": "#ffffff",
+              "secondary-fixed-dim": "#b7c6ee",
+              "surface-bright": "#f7f9fc",
+              "error": "#ba1a1a",
+              "surface-tint": "#0b61a1",
+              "on-surface-variant": "#414750",
+              "background": "#f7f9fc",
+              "inverse-on-surface": "#eff1f4",
+              "primary": "#005c9b",
+              "surface-variant": "#e0e3e6",
+              "on-primary-fixed": "#001d36",
+              "on-primary-container": "#f5f8ff",
+              "on-tertiary-container": "#fff6ef",
+              "primary-container": "#2e75b6",
+              "secondary": "#4f5e81",
+              "surface-container": "#eceef1",
+              "secondary-fixed": "#d9e2ff",
+              "on-secondary-container": "#4d5b7e",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed-variant": "#384668",
+              "tertiary-fixed": "#ffddb9",
+              "on-error": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .dot-grid {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#0a1a3a] text-white min-h-screen font-body selection:bg-primary-container selection:text-white overflow-x-hidden">
+<!-- Hero Background Layer -->
+<div class="fixed inset-0 bg-gradient-to-br from-[#1B2A4A] via-[#0a1a3a] to-[#050c1d] -z-10"></div>
+<div class="fixed inset-0 dot-grid -z-10 opacity-40"></div>
+<!-- Header / TopAppBar Mockup per Design System Hierarchy -->
+<header class="w-full px-6 py-8 flex justify-between items-center max-w-7xl mx-auto">
+<div class="flex flex-col">
+<span class="text-primary-fixed-dim font-headline font-bold text-xs tracking-widest uppercase mb-1">Prototype Preview</span>
+<h1 class="font-headline font-black text-3xl tracking-tight">
+<span class="text-white">Transfer</span><span class="text-primary-fixed-dim">Link</span>
+</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="glass-card px-4 py-2 rounded-xl text-sm font-semibold border border-white/10 hover:bg-white/10 transition-colors">
+                Support
+            </button>
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center font-bold text-xs border border-primary">
+                AD
+            </div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 pb-24">
+<!-- Main Section Title -->
+<div class="mb-12">
+<h2 class="font-headline text-4xl font-extrabold mb-2 tracking-tight">Select your role</h2>
+<p class="text-on-surface-variant/80 text-lg max-w-xl">Precision-built handoff tools for every stage of the clinical journey.</p>
+</div>
+<!-- Primary 2x2 Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+<!-- LTC Nurse -->
+<div class="glass-card p-8 rounded-[2rem] border-2 border-primary-container/30 group hover:border-primary-container transition-all cursor-pointer relative overflow-hidden active:scale-95 duration-200">
+<div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-9xl">assignment</span>
+</div>
+<div class="relative z-10">
+<div class="w-14 h-14 bg-primary-container rounded-2xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-white text-3xl" data-icon="assignment">assignment</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">LTC Nurse</h3>
+<p class="text-white/60 mb-8 font-medium">Start a transfer</p>
+<div class="flex items-center text-primary-fixed-dim font-bold gap-2">
+                        Get Started <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- EMS Crew -->
+<div class="glass-card p-8 rounded-[2rem] border-2 border-[#F57C00]/30 group hover:border-[#F57C00] transition-all cursor-pointer relative overflow-hidden active:scale-95 duration-200">
+<div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-9xl">ambulance</span>
+</div>
+<div class="relative z-10">
+<div class="w-14 h-14 bg-[#F57C00] rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(245,124,0,0.4)]">
+<span class="material-symbols-outlined text-white text-3xl" data-icon="ambulance">ambulance</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">EMS Crew</h3>
+<p class="text-white/60 mb-8 font-medium">Scan on transport</p>
+<div class="flex items-center text-[#F57C00] font-bold gap-2">
+                        Scan QR <span class="material-symbols-outlined text-sm">qr_code_scanner</span>
+</div>
+</div>
+</div>
+<!-- ED Staff -->
+<div class="glass-card p-8 rounded-[2rem] border-2 border-emerald-500/30 group hover:border-emerald-500 transition-all cursor-pointer relative overflow-hidden active:scale-95 duration-200">
+<div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-9xl">local_hospital</span>
+</div>
+<div class="relative z-10">
+<div class="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-white text-3xl" data-icon="hospital">local_hospital</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">ED Staff</h3>
+<p class="text-white/60 mb-8 font-medium">Receive a patient</p>
+<div class="flex items-center text-emerald-400 font-bold gap-2">
+                        View Intake <span class="material-symbols-outlined text-sm">login</span>
+</div>
+</div>
+</div>
+<!-- Facility Return -->
+<div class="glass-card p-8 rounded-[2rem] border-2 border-purple-500/30 group hover:border-purple-500 transition-all cursor-pointer relative overflow-hidden active:scale-95 duration-200">
+<div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-9xl">home</span>
+</div>
+<div class="relative z-10">
+<div class="w-14 h-14 bg-purple-500 rounded-2xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-white text-3xl" data-icon="home">home</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">Facility Return</h3>
+<p class="text-white/60 mb-8 font-medium">Patient is back</p>
+<div class="flex items-center text-purple-400 font-bold gap-2">
+                        Confirm Return <span class="material-symbols-outlined text-sm">history_edu</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Secondary Navigation Section -->
+<div class="mb-8">
+<h4 class="font-headline text-xs font-bold uppercase tracking-[0.2em] text-white/40 mb-6">Core Modules</h4>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Login/Onboarding -->
+<button class="flex flex-col items-center justify-center p-6 glass-card rounded-2xl border border-white/5 hover:bg-white/10 transition-all active:scale-95">
+<span class="material-symbols-outlined text-primary-fixed-dim mb-3">person_add</span>
+<span class="font-label text-sm font-semibold">Onboarding</span>
+</button>
+<!-- Facility Dashboard -->
+<button class="flex flex-col items-center justify-center p-6 glass-card rounded-2xl border border-white/5 hover:bg-white/10 transition-all active:scale-95">
+<span class="material-symbols-outlined text-primary-fixed-dim mb-3">dashboard</span>
+<span class="font-label text-sm font-semibold">Dashboard</span>
+</button>
+<!-- Transfer History -->
+<button class="flex flex-col items-center justify-center p-6 glass-card rounded-2xl border border-white/5 hover:bg-white/10 transition-all active:scale-95">
+<span class="material-symbols-outlined text-primary-fixed-dim mb-3">history</span>
+<span class="font-label text-sm font-semibold">History</span>
+</button>
+<!-- SBAR Report -->
+<button class="flex flex-col items-center justify-center p-6 glass-card rounded-2xl border border-white/5 hover:bg-white/10 transition-all active:scale-95">
+<span class="material-symbols-outlined text-primary-fixed-dim mb-3">description</span>
+<span class="font-label text-sm font-semibold">SBAR Report</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Footer Stats Overlay -->
+<footer class="fixed bottom-0 w-full glass-card border-t border-white/10 py-6 px-8 z-50">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-12">
+<div class="flex flex-col">
+<span class="text-white font-headline text-xl font-bold">4</span>
+<span class="text-white/40 text-[10px] uppercase tracking-wider font-bold">Patient Records</span>
+</div>
+<div class="flex flex-col">
+<span class="text-white font-headline text-xl font-bold">81%</span>
+<span class="text-white/40 text-[10px] uppercase tracking-wider font-bold">Prefer Electronic</span>
+</div>
+<div class="flex flex-col">
+<span class="text-primary-fixed-dim font-headline text-xl font-bold">&lt; 5 min</span>
+<span class="text-white/40 text-[10px] uppercase tracking-wider font-bold">Target Completion</span>
+</div>
+</div>
+<div class="hidden md:flex items-center gap-3 bg-white/5 rounded-full px-4 py-2">
+<div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+<span class="text-xs font-semibold text-white/60">System Online: HL7 Interface Connected</span>
+</div>
+</div>
+</footer>
+<!-- Background Decoration for Human Connection feel -->
+<div class="fixed top-1/4 -right-20 w-96 h-96 bg-primary-container/20 blur-[120px] rounded-full pointer-events-none -z-10"></div>
+<div class="fixed bottom-1/4 -left-20 w-96 h-96 bg-purple-900/20 blur-[120px] rounded-full pointer-events-none -z-10"></div>
+</body></html>

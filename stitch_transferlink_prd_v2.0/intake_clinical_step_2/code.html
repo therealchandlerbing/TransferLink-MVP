@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Clinical Baseline - Continuum Clinical</title>
+<script type='text/javascript' nonce='OKg+oLdpllSiH0UzSf+lLw==' src='https://contribution.usercontent.google.com/6Lcd8rbwtMMUNACBq6YzVUPUMfQbgdf4GlBEoI4Px4FSdhg8qiq1Hn0kORYKvFbgs2PR--BKpQRG2R3nc1RUmaJLClMvOGrqC1QYvR8ADKOFghN0b6loRdWeMgvHPLum5NyyZjmIuNT33FmrZHJeq6vqAo5bZNWVRiLjPi8TvBkMSMEtd57OSBkmEhcz-tWHynZIAe17ktj7U_lOQCLPMh7E5RFyuqakkMrb5XbnZuQml60GikeLaAxFB8QXBKD4hE1zDlb55tlqIPdsXUahSK9c73R5XOAvXC2hNEi0sV_QSfMQs83szdtk3B8faznOd-sXoXtaX0Jn0jsXkJcHv_s9d_lPK-jZhlk20mp7RjmQrxHqdg6oxOLWCiclHqsDqAQFZOmr5NOpjKl87r0ahSyNev6PulcupHa_r07wpKqkZNOUFNZV44u1XWOW7plNpHsvVvjqD6-AoSGlJlM2T1f-9BavUhWamV6BzhsEM_Lztx_RlgeV83wK-unH770eEXeob0Jsw5k1FuFL8bK_ZRsaZXEWpQfa6tGIGQ5KBt6wLpUPQUPQO1SlyAuG-xvGY4MT-13Il8kUkDO8cDljNd0QpmtG8R0akrW-pzsWRLZZmmBeqHJjlH46uO-6K69TrpkItk1KjlUyPpiufyfvkzCwjtVylDa5WGiX0MJt679b_eM38NnNtCl1MujLB2lOt4I5WBgB0yxRE0tThAFmpf30eAjZoF5ixSmGjyU51xUAe4oj6H3swCID2Dj3gxC1_vspNr-NJvghrNnRnGXj74g6-n7lnrJbsfaCGck2'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-container": "#a06400",
+              "on-error-container": "#93000a",
+              "surface-variant": "#e0e3e6",
+              "secondary-fixed-dim": "#b7c6ee",
+              "surface-dim": "#d8dadd",
+              "error-container": "#ffdad6",
+              "secondary": "#4f5e81",
+              "on-surface-variant": "#414750",
+              "primary-fixed": "#d1e4ff",
+              "on-primary-container": "#f5f8ff",
+              "tertiary": "#7f4e00",
+              "on-tertiary-fixed": "#2b1700",
+              "surface-container-lowest": "#ffffff",
+              "on-background": "#191c1e",
+              "inverse-primary": "#9ecaff",
+              "surface-bright": "#f7f9fc",
+              "on-surface": "#191c1e",
+              "surface-container-highest": "#e0e3e6",
+              "outline": "#717781",
+              "tertiary-fixed-dim": "#ffb962",
+              "surface-container-low": "#f2f4f7",
+              "primary-container": "#2e75b6",
+              "on-primary-fixed": "#001d36",
+              "on-secondary-fixed-variant": "#384668",
+              "surface-container": "#eceef1",
+              "tertiary-fixed": "#ffddb9",
+              "surface-tint": "#0b61a1",
+              "primary-fixed-dim": "#9ecaff",
+              "outline-variant": "#c1c7d2",
+              "inverse-surface": "#2d3133",
+              "on-tertiary-fixed-variant": "#663e00",
+              "on-tertiary-container": "#fff6ef",
+              "on-error": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "surface": "#f7f9fc",
+              "secondary-container": "#c5d4fd",
+              "inverse-on-surface": "#eff1f4",
+              "error": "#ba1a1a",
+              "on-secondary-container": "#4d5b7e",
+              "surface-container-high": "#e6e8eb",
+              "secondary-fixed": "#d9e2ff",
+              "on-secondary-fixed": "#0a1a3a",
+              "background": "#f7f9fc",
+              "on-secondary": "#ffffff",
+              "on-primary-fixed-variant": "#00497c",
+              "primary": "#005c9b"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .scale-98:active { transform: scale(0.98); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-background antialiased overflow-hidden">
+<!-- Full Screen Modal Overlay Shell -->
+<div class="fixed inset-0 z-[100] bg-surface flex flex-col h-full">
+<!-- Sticky Header (Shared Component: TopAppBar logic) -->
+<header class="flex items-center justify-between w-full px-6 md:px-10 h-20 bg-[#f7f9fc] shrink-0">
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined">close</span>
+</button>
+<div class="flex flex-col">
+<span class="text-xl font-bold tracking-tight text-[#005c9b] font-headline">Continuum Clinical</span>
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Intake Workflow</span>
+</div>
+</div>
+<!-- Step Progress Indicator -->
+<div class="hidden md:flex items-center gap-2">
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-semibold text-xs">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                    Demographics
+                </div>
+<div class="h-[2px] w-6 bg-surface-container-high"></div>
+<div class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-white font-bold text-xs shadow-md">
+<span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                    Baseline
+                </div>
+<div class="h-[2px] w-6 bg-surface-container-high"></div>
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-semibold text-xs">
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+                    Contacts
+                </div>
+</div>
+<div class="flex items-center gap-3">
+<span class="hidden md:block text-xs font-bold text-on-surface-variant">STEP 2 OF 5</span>
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold text-sm">
+                    JD
+                </div>
+</div>
+</header>
+<!-- Main Content Scroll Area -->
+<main class="flex-1 overflow-y-auto px-6 py-10 md:px-0">
+<div class="max-w-3xl mx-auto space-y-12">
+<!-- Section Header -->
+<section>
+<h1 class="text-3xl md:text-4xl font-extrabold font-headline tracking-tight text-on-surface mb-2">Clinical Baseline</h1>
+<p class="text-on-surface-variant text-lg">Establish the patient's normal physiological and cognitive state prior to the current incident.</p>
+</section>
+<!-- Bento Grid Layout for Intake Fields -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Allergies (Full Width) -->
+<div class="md:col-span-2 p-8 rounded-xl bg-surface-container-lowest shadow-[0px_8px_24px_rgba(25,28,30,0.06)]">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-4">Known Allergies</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-error">warning</span>
+<input class="w-full pl-12 pr-4 py-4 rounded-xl border-none bg-surface-container focus:ring-2 focus:ring-primary transition-all text-on-surface font-medium" placeholder="Search allergies (e.g., Penicillin, Latex...)" type="text"/>
+</div>
+</div>
+<!-- Medical History (Asymmetric Height) -->
+<div class="p-8 rounded-xl bg-surface-container-lowest shadow-[0px_8px_24px_rgba(25,28,30,0.06)] flex flex-col">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-6">Medical History</label>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 rounded-full bg-primary-container text-on-primary-container font-semibold text-sm transition-all hover:brightness-95">COPD</button>
+<button class="px-4 py-2 rounded-full bg-primary-container text-on-primary-container font-semibold text-sm transition-all hover:brightness-95">HTN</button>
+<button class="px-4 py-2 rounded-full bg-surface-container text-on-surface-variant font-semibold text-sm transition-all hover:bg-outline-variant/20">Diabetes</button>
+<button class="px-4 py-2 rounded-full bg-primary-container text-on-primary-container font-semibold text-sm transition-all hover:brightness-95">CHF</button>
+<button class="px-4 py-2 rounded-full bg-surface-container text-on-surface-variant font-semibold text-sm transition-all hover:bg-outline-variant/20">CKD</button>
+<button class="px-4 py-2 rounded-full bg-surface-container text-on-surface-variant font-semibold text-sm transition-all hover:bg-outline-variant/20">Dementia</button>
+<button class="px-4 py-2 rounded-full border-2 border-dashed border-outline-variant text-outline flex items-center gap-1 px-3 py-1.5 hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm">add</span> Add Other
+                            </button>
+</div>
+</div>
+<!-- Risk Alerts -->
+<div class="p-8 rounded-xl bg-surface-container-lowest shadow-[0px_8px_24px_rgba(25,28,30,0.06)]">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-6">Risk Alerts</label>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-4 rounded-xl bg-error-container/30 border border-error/10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error">priority_high</span>
+<span class="font-bold text-on-error-container">Fall Risk</span>
+</div>
+<div class="w-6 h-6 rounded-full bg-error flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xs" style="font-variation-settings: &#39;wght&#39; 700">check</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 rounded-xl bg-surface-container">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">back_hand</span>
+<span class="font-semibold text-on-surface-variant">Skin Integrity</span>
+</div>
+<div class="w-6 h-6 rounded-full bg-outline-variant/30"></div>
+</div>
+</div>
+</div>
+<!-- Baseline Mentation (Interactive Scale) -->
+<div class="md:col-span-2 p-8 rounded-xl bg-surface-container-lowest shadow-[0px_8px_24px_rgba(25,28,30,0.06)]">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-8">Baseline Mentation</label>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<button class="group p-4 rounded-2xl border-2 border-primary bg-primary-container/10 flex flex-col items-center text-center gap-2 transition-all">
+<span class="material-symbols-outlined text-primary scale-110">psychology</span>
+<span class="text-sm font-bold text-primary">Alert &amp; Oriented</span>
+</button>
+<button class="group p-4 rounded-2xl border-2 border-transparent bg-surface-container-low flex flex-col items-center text-center gap-2 hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">question_mark</span>
+<span class="text-sm font-semibold text-on-surface-variant">Forgetful</span>
+</button>
+<button class="group p-4 rounded-2xl border-2 border-transparent bg-surface-container-low flex flex-col items-center text-center gap-2 hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">visibility_off</span>
+<span class="text-sm font-semibold text-on-surface-variant">Disoriented</span>
+</button>
+<button class="group p-4 rounded-2xl border-2 border-transparent bg-surface-container-low flex flex-col items-center text-center gap-2 hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">bedtime</span>
+<span class="text-sm font-semibold text-on-surface-variant">Unresponsive</span>
+</button>
+</div>
+</div>
+<!-- Functional Status (3-level interactive) -->
+<div class="p-8 rounded-xl bg-surface-container-lowest shadow-[0px_8px_24px_rgba(25,28,30,0.06)]">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-6">Functional Status</label>
+<div class="flex flex-col gap-3">
+<button class="flex items-center gap-4 p-4 rounded-xl bg-surface-container hover:bg-secondary-container/30 transition-all text-left">
+<span class="material-symbols-outlined p-2 rounded-lg bg-white shadow-sm">directions_walk</span>
+<div>
+<p class="font-bold text-sm">Independent</p>
+<p class="text-[11px] text-on-surface-variant">Walks without assistance</p>
+</div>
+</button>
+<button class="flex items-center gap-4 p-4 rounded-xl bg-primary-container text-white shadow-md text-left">
+<span class="material-symbols-outlined p-2 rounded-lg bg-white/20">blind</span>
+<div>
+<p class="font-bold text-sm">Assistive Device</p>
+<p class="text-[11px] opacity-80">Requires walker or cane</p>
+</div>
+</button>
+<button class="flex items-center gap-4 p-4 rounded-xl bg-surface-container hover:bg-secondary-container/30 transition-all text-left">
+<span class="material-symbols-outlined p-2 rounded-lg bg-white shadow-sm">accessible</span>
+<div>
+<p class="font-bold text-sm">Dependent</p>
+<p class="text-[11px] text-on-surface-variant">Total care or wheelchair</p>
+</div>
+</button>
+</div>
+</div>
+<!-- Medical Devices -->
+<div class="p-8 rounded-xl bg-surface-container-lowest shadow-[0px_8px_24px_rgba(25,28,30,0.06)]">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-6">Current Devices</label>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex items-center gap-2 p-3 rounded-xl bg-surface-container text-on-surface-variant font-semibold text-xs border border-transparent hover:border-primary/20 transition-all">
+<span class="material-symbols-outlined text-sm">air</span> O2 Support
+                            </button>
+<button class="flex items-center gap-2 p-3 rounded-xl bg-primary-container text-white font-semibold text-xs transition-all">
+<span class="material-symbols-outlined text-sm">water_drop</span> Catheter
+                            </button>
+<button class="flex items-center gap-2 p-3 rounded-xl bg-surface-container text-on-surface-variant font-semibold text-xs transition-all">
+<span class="material-symbols-outlined text-sm">medical_services</span> IV Access
+                            </button>
+<button class="flex items-center gap-2 p-3 rounded-xl bg-surface-container text-on-surface-variant font-semibold text-xs transition-all">
+<span class="material-symbols-outlined text-sm">monitor_heart</span> Pacemaker
+                            </button>
+</div>
+</div>
+</div>
+<!-- Padding for sticky footer -->
+<div class="h-10"></div>
+</div>
+</main>
+<!-- Sticky Footer (Step Navigation) -->
+<footer class="bg-white/70 backdrop-blur-md border-t border-surface-container-high px-6 py-6 flex items-center justify-between shrink-0">
+<button class="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-on-surface-variant hover:bg-surface-container transition-all scale-98 active:opacity-80">
+<span class="material-symbols-outlined">arrow_back</span>
+                Back
+            </button>
+<div class="flex items-center gap-6">
+<div class="hidden md:block text-right">
+<p class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Next Up</p>
+<p class="text-sm font-bold text-on-surface">Emergency Contacts</p>
+</div>
+<button class="flex items-center gap-2 px-10 py-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-white font-bold shadow-lg shadow-primary/20 hover:brightness-105 transition-all scale-98 active:opacity-80">
+                    Next Section
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</footer>
+</div>
+<!-- Hidden Navigation Shell (Suppressed for focused intake flow) -->
+<!-- The BottomNavBar and SideNav are hidden to prioritize the multi-step guided intake canvas per instructions -->
+</body></html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Transfer Timeline | TransferLink</title>
+<script type='text/javascript' nonce='zjuid1Bwcr5a3+FSmXFbdQ==' src='https://contribution.usercontent.google.com/Ox-NmYEw3kkCpOgM7tH9LSwXJM2EZ1zF4DY_LtgjgCtADz2SYTKsLsRfCz2PdaOTTmtiEiXqa41_A61iKY_4hyM8lUI-GrPboRfQk1I-fbOftuItKgGFI3LulXoKK57AslUMZxgpk5UqAAJdqG3am7_w6U4Ifiw4lagAy84X61C-3kZcHbaaSn370bDPwgCNVUZes9uQOQ7km0hA98XjAwaWHoM1ZtmvJeajCh1z1Zdi3EEvo3ZAYv82x4qpYm9Lsq1JE-JB_YL2RRL3ulD1m8qABd49k-NPUFzJ4YSaWGgK-b7c_bfuK1VWsFKcNep7060S7JekUkQkAg9e-uDyBy_u7rU32LZxtzYdvoOep6GN0GtoZ5vIT1T2wOTJfCkHyLzioFTkMmkkOou5Y-nsTyhdrmWiuWpPIYDBUu1tbgcZY4opC2DQhGnHUVoYmdJe4NbcoqQUMJEM105XlIop9GMoVN9FrIuWBoxvHHKVJNLbiNxLBtDSL16JOr-IcsI5pUSuN3fv0rOH3nfjZ1TeOt6dr8b8Nahrvx-G632DBrYGyNyu4VbUfybIyvxKxbIyvViJZGOO-pJc2qDQuBbT24HskLAZ2pTwd-opRv5YPFMLCG4xBbtVFa_k8Y3YNspek0z82skq226hrAdUM2U304ob-_w_hlp4zhRSaKi_RJlqtGt8vj_RCS6Tec6Jlnhj25hfLUQeQJnZrv-AJID02K-K8riYriIV5GPrtgSg1LHj7rwFamVg2opqxzT4JUK-ZiuuicE0FKo1VT8m--8TtvuEQASMui0AiCWt8-_c'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#f2f4f7",
+              "on-tertiary-fixed": "#2b1700",
+              "on-tertiary-container": "#fff6ef",
+              "inverse-primary": "#9ecaff",
+              "surface-container": "#eceef1",
+              "on-primary": "#ffffff",
+              "tertiary-container": "#a06400",
+              "on-secondary-fixed": "#0a1a3a",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#00497c",
+              "on-primary-container": "#f5f8ff",
+              "primary-fixed-dim": "#9ecaff",
+              "error-container": "#ffdad6",
+              "tertiary-fixed-dim": "#ffb962",
+              "surface": "#f7f9fc",
+              "secondary": "#4f5e81",
+              "on-error-container": "#93000a",
+              "on-surface-variant": "#414750",
+              "on-primary-fixed": "#001d36",
+              "surface-variant": "#e0e3e6",
+              "on-secondary": "#ffffff",
+              "outline-variant": "#c1c7d2",
+              "secondary-fixed": "#d9e2ff",
+              "on-secondary-container": "#4d5b7e",
+              "on-surface": "#191c1e",
+              "background": "#f7f9fc",
+              "on-tertiary-fixed-variant": "#663e00",
+              "surface-container-high": "#e6e8eb",
+              "on-secondary-fixed-variant": "#384668",
+              "primary": "#005c9b",
+              "error": "#ba1a1a",
+              "surface-tint": "#0b61a1",
+              "secondary-fixed-dim": "#b7c6ee",
+              "on-background": "#191c1e",
+              "surface-bright": "#f7f9fc",
+              "inverse-on-surface": "#eff1f4",
+              "primary-container": "#2e75b6",
+              "on-error": "#ffffff",
+              "primary-fixed": "#d1e4ff",
+              "tertiary-fixed": "#ffddb9",
+              "surface-container-lowest": "#ffffff",
+              "outline": "#717781",
+              "inverse-surface": "#2d3133",
+              "surface-dim": "#d8dadd",
+              "surface-container-highest": "#e0e3e6",
+              "secondary-container": "#c5d4fd",
+              "tertiary": "#7f4e00"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f7f9fc;
+        color: #191c1e;
+      }
+      .timeline-gradient-line {
+        background: linear-gradient(to bottom, #eceef1 0%, #eceef1 100%);
+      }
+      .pulse-ring {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: .5; transform: scale(1.1); }
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="flex items-center justify-between px-6 py-4 w-full sticky top-0 z-40 bg-[#f7f9fc] dark:bg-slate-950">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center overflow-hidden">
+<img alt="Clinical Staff Profile" class="w-full h-full object-cover" data-alt="Clinical professional avatar portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6hADJgayXZPsmKpm9dNa31W17Ke7sM1dirCPhlNQ7HqwFjqb6S9f6xS5vmVuLsw_d2JAGMFYc3cSreQHGs1kWc19F_EGoyj1TOvH2a5mE-CIEfiwj3tVhrkhlowiGBYvTMRmDx_vW3ewj_DEVp2pLa3vohTyakMFLmKT1kAUfLqd36NC0aWYaTMusmm9tjVT2iVjwLtbeQ18A7m5Txk0gRW9UXoFDnCUE-7WN1FuzMd0fh8LcCuu3qEe_c0-GKGx8OcMdNDJKuiYU"/>
+</div>
+<span class="text-2xl font-black text-[#005c9b] dark:text-blue-400 font-[&#39;Manrope&#39;] tracking-tight">TransferLink</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#eceef1]/50 dark:hover:bg-slate-800 transition-all text-[#005c9b] dark:text-blue-400">
+<span class="material-symbols-outlined">swap_horiz</span>
+</button>
+</div>
+</header>
+<main class="max-w-3xl mx-auto px-6 pt-10">
+<!-- Patient Summary Mini-Card -->
+<div class="mb-10 bg-surface-container-lowest rounded-xl p-6 shadow-[0px_8px_24px_rgba(25,28,30,0.06)] flex items-center justify-between">
+<div>
+<h1 class="font-headline font-extrabold text-2xl text-on-surface tracking-tight">Jameson, Robert</h1>
+<p class="font-label text-sm text-on-surface-variant font-medium mt-1">DOB: 05/12/1948 • ID: #TL-8821</p>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 bg-on-tertiary-container text-tertiary rounded-full">
+<div class="w-2.5 h-2.5 rounded-full bg-tertiary pulse-ring"></div>
+<span class="text-xs font-bold uppercase tracking-wider">Active Transfer</span>
+</div>
+</div>
+<div class="flex items-center justify-between mb-8">
+<h2 class="font-headline font-bold text-xl text-on-surface">Transfer Timeline</h2>
+<button class="text-primary font-semibold text-sm flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-sm">print</span>
+                Export Audit Trail
+            </button>
+</div>
+<!-- Vertical Timeline Audit Trail -->
+<div class="relative">
+<!-- Continuous Line -->
+<div class="absolute left-[19px] top-4 bottom-4 w-0.5 bg-surface-variant"></div>
+<!-- Event: ED return completed -->
+<div class="relative flex gap-6 mb-12">
+<div class="relative z-10">
+<div class="w-10 h-10 rounded-full bg-white flex items-center justify-center border-4 border-[#4CAF50]">
+<span class="material-symbols-outlined text-[#4CAF50] text-lg font-bold">check</span>
+</div>
+</div>
+<div class="flex-1 pt-1">
+<div class="flex justify-between items-start">
+<h3 class="font-headline font-bold text-on-surface text-lg">ED return completed</h3>
+<span class="text-xs font-bold font-label text-on-surface-variant bg-surface-container px-2 py-1 rounded">14:45 PM</span>
+</div>
+<p class="text-on-surface-variant text-sm mt-1 leading-relaxed">Patient successfully reintegrated into facility record. Discharge summary from St. Jude Medical Center uploaded.</p>
+<div class="mt-3 flex items-center gap-2 text-xs font-semibold text-primary">
+<span class="material-symbols-outlined text-sm">description</span>
+                        View Discharge Report
+                    </div>
+</div>
+</div>
+<!-- Event: ED scan -->
+<div class="relative flex gap-6 mb-12">
+<div class="relative z-10">
+<div class="w-10 h-10 rounded-full bg-white flex items-center justify-center border-4 border-[#2196F3]">
+<span class="material-symbols-outlined text-[#2196F3] text-lg">qr_code_scanner</span>
+</div>
+</div>
+<div class="flex-1 pt-1">
+<div class="flex justify-between items-start">
+<h3 class="font-headline font-bold text-on-surface text-lg">ED scan</h3>
+<span class="text-xs font-bold font-label text-on-surface-variant bg-surface-container px-2 py-1 rounded">13:12 PM</span>
+</div>
+<p class="text-on-surface-variant text-sm mt-1 leading-relaxed">Arrival confirmation at Emergency Department. Intake Nurse: Sarah Miller, RN.</p>
+</div>
+</div>
+<!-- Event: EMS scan -->
+<div class="relative flex gap-6 mb-12">
+<div class="relative z-10">
+<div class="w-10 h-10 rounded-full bg-white flex items-center justify-center border-4 border-[#2196F3]">
+<span class="material-symbols-outlined text-[#2196F3] text-lg">ambulance</span>
+</div>
+</div>
+<div class="flex-1 pt-1">
+<div class="flex justify-between items-start">
+<h3 class="font-headline font-bold text-on-surface text-lg">EMS scan</h3>
+<span class="text-xs font-bold font-label text-on-surface-variant bg-surface-container px-2 py-1 rounded">12:40 PM</span>
+</div>
+<p class="text-on-surface-variant text-sm mt-1 leading-relaxed">Patient picked up by Metro EMS Crew #402. Vitals stable upon departure.</p>
+</div>
+</div>
+<!-- Event: Transfer initiated -->
+<div class="relative flex gap-6 mb-12">
+<div class="relative z-10">
+<div class="w-10 h-10 rounded-full bg-white flex items-center justify-center border-4 border-[#F57C00]">
+<span class="material-symbols-outlined text-[#F57C00] text-lg">sensors</span>
+</div>
+</div>
+<div class="flex-1 pt-1">
+<div class="flex justify-between items-start">
+<h3 class="font-headline font-bold text-on-surface text-lg">Transfer initiated</h3>
+<span class="text-xs font-bold font-label text-on-surface-variant bg-surface-container px-2 py-1 rounded">12:15 PM</span>
+</div>
+<p class="text-on-surface-variant text-sm mt-1 leading-relaxed">Transfer protocol activated due to respiratory distress. Destination: St. Jude Medical Center.</p>
+<div class="mt-3 bg-surface-container-low rounded-lg p-3 border-l-4 border-[#F57C00]">
+<p class="text-xs font-bold text-on-tertiary-fixed-variant uppercase tracking-tighter">Nurse Note</p>
+<p class="text-sm italic text-on-surface-variant">"Patient O2 saturation dropped to 88% on room air. Not responding to increased flow."</p>
+</div>
+</div>
+</div>
+<!-- Event: Record created -->
+<div class="relative flex gap-6">
+<div class="relative z-10">
+<div class="w-10 h-10 rounded-full bg-white flex items-center justify-center border-4 border-outline">
+<span class="material-symbols-outlined text-outline text-lg">edit_note</span>
+</div>
+</div>
+<div class="flex-1 pt-1">
+<div class="flex justify-between items-start">
+<h3 class="font-headline font-bold text-on-surface text-lg">Record created</h3>
+<span class="text-xs font-bold font-label text-on-surface-variant bg-surface-container px-2 py-1 rounded">08:00 AM</span>
+</div>
+<p class="text-on-surface-variant text-sm mt-1 leading-relaxed">Daily observation record opened. Standard morning assessment complete.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-t border-[#eceef1]/20 dark:border-slate-800 shadow-[0px_-8px_24px_rgba(25,28,30,0.06)] rounded-t-[1.5rem]">
+<div class="flex flex-col items-center justify-center bg-gradient-to-br from-[#005c9b] to-[#2e75b6] text-white rounded-[1.25rem] px-5 py-2 scale-105">
+<span class="material-symbols-outlined">low_priority</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider mt-1">Transfers</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-500 px-4 py-2 hover:text-[#005c9b] dark:hover:text-blue-300 transition-transform active:scale-95 duration-150">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider mt-1">Patients</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-500 px-4 py-2 hover:text-[#005c9b] dark:hover:text-blue-300 transition-transform active:scale-95 duration-150 relative">
+<span class="material-symbols-outlined">notifications_active</span>
+<span class="absolute top-2 right-4 w-2 h-2 bg-error rounded-full"></span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider mt-1">Alerts</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-500 px-4 py-2 hover:text-[#005c9b] dark:hover:text-blue-300 transition-transform active:scale-95 duration-150">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider mt-1">Settings</span>
+</div>
+</nav>
+</body></html>

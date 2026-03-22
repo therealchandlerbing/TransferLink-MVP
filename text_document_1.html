@@ -1,0 +1,57 @@
+# TransferLink User Workflow Map (v2.0 Prototype)
+
+This document maps the screen sequences for each primary user role, demonstrating how the prototype facilitates a seamless, bi-directional information loop.
+
+---
+
+## 1. LTC Nurse Workflow: Initiating a Transfer
+*The primary driver of the clinical handoff process.*
+
+1.  **S0: Role Selector / S15: Login:** Nurse selects their persona (e.g., Sarah Mitchell, RN) and shift.
+2.  **S1: Patient List:** View the roster for "Cascade View Assisted Living".
+3.  **S2: Patient Record (LTC View):** Review Margaret Tanaka's baseline clinical data and person-centered care preferences.
+4.  **S3: Initiate Transfer:** Quick-entry form for the emergency (reason, symptoms, destination).
+5.  **S4: Transfer Confirmation:** Final review of the transfer record.
+6.  **S5: QR Code Generated:** The "Hero" screen for physical handoff.
+7.  **S6: Print Preview (Optional):** Generates a paper backup with the embedded QR code.
+
+---
+
+## 2. EMS Crew Workflow: En-Route Care
+*Immediate access to life-saving data during transport.*
+
+1.  **S7: QR Scanner (EMS):** Scan the physical or digital QR code provided by the LTC facility.
+2.  **S8: Patient Record (EMS View):** 
+    *   **Priority Banner:** Immediate visibility of Code Status (DNR/DNI) and Primary Language.
+    *   **POLST Access:** Red button for instant access to the legal medical directive.
+    *   **Expanded Comfort Section:** Insights into how to manage the patient's distress during transport.
+
+---
+
+## 3. ED Staff Workflow: Hospital Intake & Discharge
+*Receiving the patient and closing the information loop.*
+
+1.  **S9: QR Scanner (ED):** Scan the patient's QR code upon arrival at the Emergency Department.
+2.  **S10: Patient Record (ED View):** Identical to the EMS view but with a primary action to **"Complete ED Return Info"**.
+3.  **S11: ED Return Form:** ED Physician/Nurse documents the diagnosis, vitals at discharge, and instructions.
+4.  **S12: Transfer Complete:** Confirmation that the data has been synced back to the originating LTC facility.
+
+---
+
+## 4. Facility Admin & Charge Nurse Workflow: Operational Oversight
+*Monitoring facility-wide safety and return notifications.*
+
+1.  **S17: Facility Dashboard:** Real-time stats on active transfers, pending returns, and critical alerts.
+2.  **S18: Transfer History:** Audit log of all past movements to track facility outcomes.
+3.  **S19: SBAR Handoff Report:** Generate a standardized clinical report for any resident for shift changes or follow-ups.
+4.  **S13: Facility Return Record:** Notification and review of the ED data once the patient is back at the facility.
+5.  **S14: Transfer Timeline:** A vertical audit trail of every scan and update throughout the journey.
+
+---
+
+## 5. Patient Admission Workflow: Onboarding
+*Preparing the baseline for future emergencies.*
+
+1.  **S1: Add Patient Button:** Triggers the 5-step Intake Modal.
+2.  **S26-S14: Intake Steps:** Guided capture of Demographics, Clinical Baseline, Contacts, and Care Preferences.
+3.  **S2: New Record:** The patient is now "Emergency Ready".

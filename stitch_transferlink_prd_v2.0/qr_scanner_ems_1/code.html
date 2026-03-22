@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script type='text/javascript' nonce='AhQaqCTU46UNA5jvafzEdw==' src='https://contribution.usercontent.google.com/ixsucAn2uosw6NxAdy5tohIYTjRQT1vp-qS3lRLeCOyiiKMXKLT-gxGXtQiXRm6Eh74DjozvUCuHuGK-Sp1DzHNUOnEvmq7wLQ-wrtvVA-M--MkEnTQng6i2nIQFC8tc6yfDFf1z8p1ZHVmTF3_9W7CeTrwNr_X2vFyZkOp6wxChHmgzLfclT0lAD9uqX9B71dYkClKuj_Ve1xT97LH1uTCeWgYcVdfj8Guhy_B_vZvHBHjI7hKkVT8gl9cEIotV7TOKTh88cZgehHC_vV_jg_uJtpNvqvqU-W86H_pCBt15qSBo9TYKladPiWYhvfhrYLfFcSpEBNQAkPHYJzxqolg0MkaRs6izrnPFIrATtclBJQ4gYZYufpx09ooCcpo8Jm6KFx8Ywz0pcdkbRS2N8SB2UK8s29a0sOf0rex8BN81dMpeOfNN9kcA8GzF4U2RRKyYHSPny7qGcCKNmoADU61K1ikvPFL_kqfJeXmuOun6MvnaQoiuYrQtmAIvi1V-_ZtgYoHSGaBf9hWzkJ8RaOfamYB-JUh-iZNlUQ5vAaKAbNDGrhL9Gd0bBPjYTNbXCetfSPOHd3rI23Ij-m9tl1_jE6BfvvE0ceo352JOE0-WhrciGvrbHsTsQ8NaRkEsxJ5S9CbhSYR9NqcBKYT4W9QQD5Ivud9EaPWFJ83VO3Pa_Qnh32x6laW8cz2VAl-6H9ymqnWP1KsfkOkBnRO8j_yN2PLQ620VOTWJ2yMms5bbvI9O58MrFmey9UxTRLEBxQWF3zX9A4NAtUy1Bj_yeUEqDvRf6sW8NgWo-hP3'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#f2f4f7",
+              "on-tertiary-fixed": "#2b1700",
+              "on-tertiary-container": "#fff6ef",
+              "inverse-primary": "#9ecaff",
+              "surface-container": "#eceef1",
+              "on-primary": "#ffffff",
+              "tertiary-container": "#a06400",
+              "on-secondary-fixed": "#0a1a3a",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#00497c",
+              "on-primary-container": "#f5f8ff",
+              "primary-fixed-dim": "#9ecaff",
+              "error-container": "#ffdad6",
+              "tertiary-fixed-dim": "#ffb962",
+              "surface": "#f7f9fc",
+              "secondary": "#4f5e81",
+              "on-error-container": "#93000a",
+              "on-surface-variant": "#414750",
+              "on-primary-fixed": "#001d36",
+              "surface-variant": "#e0e3e6",
+              "on-secondary": "#ffffff",
+              "outline-variant": "#c1c7d2",
+              "secondary-fixed": "#d9e2ff",
+              "on-secondary-container": "#4d5b7e",
+              "on-surface": "#191c1e",
+              "background": "#f7f9fc",
+              "on-tertiary-fixed-variant": "#663e00",
+              "surface-container-high": "#e6e8eb",
+              "on-secondary-fixed-variant": "#384668",
+              "primary": "#005c9b",
+              "error": "#ba1a1a",
+              "surface-tint": "#0b61a1",
+              "secondary-fixed-dim": "#b7c6ee",
+              "on-background": "#191c1e",
+              "surface-bright": "#f7f9fc",
+              "inverse-on-surface": "#eff1f4",
+              "primary-container": "#2e75b6",
+              "on-error": "#ffffff",
+              "primary-fixed": "#d1e4ff",
+              "tertiary-fixed": "#ffddb9",
+              "surface-container-lowest": "#ffffff",
+              "outline": "#717781",
+              "inverse-surface": "#2d3133",
+              "surface-dim": "#d8dadd",
+              "surface-container-highest": "#e0e3e6",
+              "secondary-container": "#c5d4fd",
+              "tertiary": "#7f4e00"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        @keyframes progress-fill {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+        .scan-line {
+            animation: scan 1.8s linear infinite;
+        }
+        .progress-bar-fill {
+            animation: progress-fill 1.8s ease-in-out forwards;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="flex items-center justify-between px-6 py-4 w-full sticky top-0 z-40 bg-[#f7f9fc] dark:bg-slate-950">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img alt="Clinical Staff Profile" class="w-full h-full object-cover" data-alt="Close up portrait of medical professional" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzUdaV-YDj6JbmfszzhaPam8IYDRzXbk1rXtKYGQK_vK4dSWU1DEangYCWYL4fqmGDMkGNsAjw9NOPofuYl1EU-GH41VhwE5AFB-OH7_YDfup0ke5OHQo__u594AhPlKOSy4g7-pSruTYqS1gTNT9hdu5Qc5yXITyr82zo28f5RjK-cEqyinVkKPcLGjW13wAolXu-EpO-LdZw8iO0ON6By2nO_od1e1El8u5mEJEGAhCbCm_hg-Q0xzWdEYSp5E9-cJCsQuRcdlPe"/>
+</div>
+<span class="text-2xl font-black text-[#005c9b] dark:text-blue-400 font-headline tracking-tight">TransferLink</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#eceef1]/50 transition-all text-[#005c9b]">
+<span class="material-symbols-outlined" data-icon="swap_horiz">swap_horiz</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas: QR Scanner Interface -->
+<main class="flex-grow relative flex flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,_#2b3a5a_0%,_#1B2A4A_100%)] p-6">
+<!-- Camera Viewfinder Overlay -->
+<div class="relative w-full max-w-sm aspect-square">
+<!-- Corner Brackets -->
+<div class="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-white/80 rounded-tl-xl"></div>
+<div class="absolute top-0 right-0 w-12 h-12 border-t-4 border-r-4 border-white/80 rounded-tr-xl"></div>
+<div class="absolute bottom-0 left-0 w-12 h-12 border-b-4 border-l-4 border-white/80 rounded-bl-xl"></div>
+<div class="absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4 border-white/80 rounded-br-xl"></div>
+<!-- Scanning Area Content -->
+<div class="absolute inset-4 rounded-lg overflow-hidden flex items-center justify-center">
+<!-- Mock QR Code -->
+<div class="w-48 h-48 opacity-40 mix-blend-overlay">
+<img alt="QR Code" class="w-full h-full object-contain" data-alt="Black and white abstract QR code pattern" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0cOVqsawcrwfnCQdpMTB41kceQwPUoFfe0bYA30w9vPE2Jd-gfpPGSqt2o4TDXeuj5lRURbugTrAJnH_jwZCFb25NUrAuen1bm4peFIVoo8qYBEE4CmSxO7KntSjY5AIuB45uxLFop376I2gI9SiGyOa2cg0Jk8W7ng2ysmmd45rKhKE82NcfF5F5ll-czGbai7T1rlfAehgA2_hlzKPDiUoqCinUcZklaCNo4Hllfh10HbWr_RlOQCfN7DpB7AOcqX-4mQEBbvla"/>
+</div>
+<!-- Animated Scanning Line -->
+<div class="scan-line absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary-fixed to-transparent shadow-[0_0_15px_rgba(158,202,255,0.8)] z-10"></div>
+</div>
+</div>
+<!-- UI Feedback & Controls -->
+<div class="mt-12 w-full max-w-sm flex flex-col items-center gap-8">
+<div class="text-center">
+<h1 class="font-headline font-bold text-2xl text-white mb-2 tracking-tight">QR Scanner (EMS)</h1>
+<p class="text-on-primary-container/70 text-sm font-medium uppercase tracking-widest">Scanning Patient Transfer ID</p>
+</div>
+<!-- Progress Bar -->
+<div class="w-full h-2 bg-white/10 rounded-full overflow-hidden backdrop-blur-md">
+<div class="progress-bar-fill h-full bg-gradient-to-r from-primary to-primary-container shadow-[0_0_10px_rgba(46,117,182,0.5)]"></div>
+</div>
+<!-- Status Message (Simulated Success State) -->
+<div class="flex items-center gap-3 px-6 py-3 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 animate-pulse">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: &#39;FILL&#39; 1;">check_circle</span>
+<span class="text-white font-bold tracking-wide">Scan Successful</span>
+</div>
+<!-- Secondary Actions -->
+<div class="flex gap-4 w-full">
+<button class="flex-1 flex items-center justify-center gap-2 h-14 bg-white/10 text-white rounded-xl font-bold backdrop-blur-md hover:bg-white/20 transition-all active:scale-95">
+<span class="material-symbols-outlined">flashlight_on</span>
+</button>
+<button class="flex-[3] flex items-center justify-center gap-2 h-14 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl font-bold shadow-lg active:scale-95 transition-all">
+<span class="material-symbols-outlined">edit</span>
+<span>Enter Code Manually</span>
+</button>
+</div>
+</div>
+<!-- Decorative Info Cards (Bento Style Asymmetry) -->
+<div class="mt-12 grid grid-cols-2 gap-4 w-full max-w-md">
+<div class="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
+<p class="text-[10px] uppercase font-bold text-white/40 tracking-widest mb-1">Crew Unit</p>
+<p class="text-white font-headline font-bold">Medic 42</p>
+</div>
+<div class="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
+<p class="text-[10px] uppercase font-bold text-white/40 tracking-widest mb-1">Destination</p>
+<p class="text-white font-headline font-bold truncate">ST. JUDE ED</p>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-t border-[#eceef1]/20 dark:border-slate-800 shadow-[0px_-8px_24px_rgba(25,28,30,0.06)] rounded-t-[1.5rem]">
+<a class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-500 px-4 py-2 hover:text-[#005c9b] transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="low_priority">low_priority</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider">Transfers</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-500 px-4 py-2 hover:text-[#005c9b] transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="groups">groups</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider">Patients</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-500 px-4 py-2 hover:text-[#005c9b] transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="notifications_active">notifications_active</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider">Alerts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-500 px-4 py-2 hover:text-[#005c9b] transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="settings">settings</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider">Settings</span>
+</a>
+</nav>
+<!-- Success Feedback Spacer -->
+<div class="h-24"></div>
+</body></html>

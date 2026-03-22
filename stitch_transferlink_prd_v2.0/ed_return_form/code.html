@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ED Return Form - TransferLink</title>
+<script type='text/javascript' nonce='vI/+MUfitcd58aTOszL+5g==' src='https://contribution.usercontent.google.com/bJ5A5-0VogxctpsoS2X8qcZV1lIRgxkMUSz7ONewJNkGz05ECI9pg3S8Iqy-qh2FQZasadfbZ7pCXbvD2kYR9spSg8FDpWL1NVzVzsfQSYGNG8sseErnMxK5EJKThSvccD0Q_hnoRCbeqY27piJEDczyBI5BRZ2C6IQ3rTX0l7jyD3E2loak9PqJ96NmNWhc69Yh41KkfzJxTZa5SufFvZ1urK8lSxquHhe34fzj4zLiQcW9nUt4zWpEIBjVemQTsna7wvZKJD7oPnd6M4o7IXrpm7lDRPA_2EWfYzu8n0eSH4y6MgTPP1erbLtoNJvmMfNLaqRAk3N7FGXbfv8v6Mzat85W5vz7stdxgrEq8-7w9V_ncMitfBPVXrpQfrLKBBYpA5wegyRe53Hs7s3fNtKTdRwSi26LnH-m9D4LUPHLPg3SaK7N8IAnm9chYsH1SPxbKfvOMc_5MkZoi257czx4DeF87FIo8SDXp_Lsi-KPrSuKBj3mCqcAArVC796gaRsthifX8zlpqNByEI4OmEJGUzH7LtzQ2uLj-qLU8DoXJo2DTN0yMQMiZErHK48dlBJxFXf0JRr62yMfIZL9Smd1zQ5VGnUA4UMeQQ8Dq_--SWjc5Bfo8yjpYMtEX4Aw1c4OOjDzUaasnQovKnko7nfLGEQFaFsDfKgz5JaSnQshLlLLkvKms0_jskoHboVRSegsGOZktxECD-XCUUIr1MHlZ74IxHckXaKl67nOxhbeV9PiM6cMf5cL_DJWNMdmlI051IX4hHwB-P7LYCgXCpCEWnxK7AaBi10HNcbP'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#f2f4f7",
+              "on-tertiary-fixed": "#2b1700",
+              "on-tertiary-container": "#fff6ef",
+              "inverse-primary": "#9ecaff",
+              "surface-container": "#eceef1",
+              "on-primary": "#ffffff",
+              "tertiary-container": "#a06400",
+              "on-secondary-fixed": "#0a1a3a",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#00497c",
+              "on-primary-container": "#f5f8ff",
+              "primary-fixed-dim": "#9ecaff",
+              "error-container": "#ffdad6",
+              "tertiary-fixed-dim": "#ffb962",
+              "surface": "#f7f9fc",
+              "secondary": "#4f5e81",
+              "on-error-container": "#93000a",
+              "on-surface-variant": "#414750",
+              "on-primary-fixed": "#001d36",
+              "surface-variant": "#e0e3e6",
+              "on-secondary": "#ffffff",
+              "outline-variant": "#c1c7d2",
+              "secondary-fixed": "#d9e2ff",
+              "on-secondary-container": "#4d5b7e",
+              "on-surface": "#191c1e",
+              "background": "#f7f9fc",
+              "on-tertiary-fixed-variant": "#663e00",
+              "surface-container-high": "#e6e8eb",
+              "on-secondary-fixed-variant": "#384668",
+              "primary": "#005c9b",
+              "error": "#ba1a1a",
+              "surface-tint": "#0b61a1",
+              "secondary-fixed-dim": "#b7c6ee",
+              "on-background": "#191c1e",
+              "surface-bright": "#f7f9fc",
+              "inverse-on-surface": "#eff1f4",
+              "primary-container": "#2e75b6",
+              "on-error": "#ffffff",
+              "primary-fixed": "#d1e4ff",
+              "tertiary-fixed": "#ffddb9",
+              "surface-container-lowest": "#ffffff",
+              "outline": "#717781",
+              "inverse-surface": "#2d3133",
+              "surface-dim": "#d8dadd",
+              "surface-container-highest": "#e0e3e6",
+              "secondary-container": "#c5d4fd",
+              "tertiary": "#7f4e00"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pulse-badge {
+            position: relative;
+        }
+        .pulse-badge::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 9999px;
+            background: currentColor;
+            opacity: 0.2;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.2; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none !important;
+            box-shadow: 0 0 0 2px #2e75b6 !important;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-white">
+<!-- TopAppBar -->
+<header class="flex items-center justify-between px-6 py-4 w-full sticky top-0 z-40 bg-[#f7f9fc] dark:bg-slate-950 shadow-none">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Clinical staff profile picture in medical scrubs" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_pnT6AvKdfs58zQi9jTLA77t-4acZRiteDhI5B_DrWucZbTl_GN9CJa9zepqpLt6tcQbi5t5cfXzrvbfvmv5EIQcl6rKXQQu09a5nW66NbLqi4oSKQ1LX-1TQEO1aOV-zeWpvGj9jWSMJ0KU15YeX11oQSBDtJNOoP8XM3ie_gHPIgF3NzaKVagRTvGvx5gB7nyxEYniZlug5qiKxE-uas5bkQzZr614ZjzGhb5vFd6fv6qnky-wJTQZp9RHzzdo27xWMaC3Vl3ju"/>
+</div>
+<h1 class="text-2xl font-black text-[#005c9b] dark:text-blue-400 font-headline tracking-tight">TransferLink</h1>
+</div>
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined p-2 rounded-xl text-[#005c9b] dark:text-blue-400 hover:bg-[#eceef1]/50 dark:hover:bg-slate-800 transition-all active:opacity-80">swap_horiz</button>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-6 py-10 pb-32">
+<!-- Header Section -->
+<div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="text-xs font-bold uppercase tracking-widest text-primary bg-primary-fixed px-3 py-1 rounded-full">ED Staff Portal</span>
+<div class="flex items-center gap-1.5 px-3 py-1 bg-surface-container rounded-full text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">
+<span class="w-2 h-2 rounded-full bg-[#F57C00] pulse-badge"></span>
+                        Active Session
+                    </div>
+</div>
+<h2 class="text-4xl font-extrabold font-headline text-on-surface tracking-tight">ED Return Form</h2>
+<p class="text-on-surface-variant mt-2 max-w-lg">Documenting patient stability and treatment summary for transition back to Long-Term Care facility.</p>
+</div>
+<div class="flex items-center gap-4 p-4 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10">
+<div class="w-12 h-12 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl">patient_list</span>
+</div>
+<div>
+<p class="text-[11px] font-bold uppercase tracking-tighter text-on-surface-variant">Patient Profile</p>
+<p class="font-bold text-lg">Eleanor Rigby</p>
+<p class="text-xs text-on-surface-variant">DOB: 05/14/1942 • ID: #TR-9982</p>
+</div>
+</div>
+</div>
+<form class="space-y-8">
+<!-- Provider Selection -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-[0px_8px_24px_rgba(25,28,30,0.04)]">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">medical_information</span>
+<h3 class="font-headline font-bold text-xl uppercase tracking-tight text-on-surface">Clinical Provider</h3>
+</div>
+<div class="relative">
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2 px-1" for="provider">Discharging Physician / NP</label>
+<div class="relative">
+<select class="w-full bg-surface-container-low border-none rounded-xl py-4 pl-5 pr-12 appearance-none font-medium text-on-surface cursor-pointer" id="provider">
+<option value="dr-james-park">Dr. James Park, MD (Attending)</option>
+<option value="dr-sarah-chen">Dr. Sarah Chen, MD</option>
+<option value="np-marcus-vance">Marcus Vance, NP</option>
+<option value="dr-elisa-martinez">Dr. Elisa Martinez, MD</option>
+</select>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Vitals Grid -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-[0px_8px_24px_rgba(25,28,30,0.04)]">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">vital_signs</span>
+<h3 class="font-headline font-bold text-xl uppercase tracking-tight text-on-surface">Stable Vitals Summary</h3>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- BP -->
+<div class="bg-surface-container-low p-5 rounded-xl border-l-4 border-primary">
+<label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Blood Pressure</label>
+<input class="w-full bg-transparent border-none p-0 text-3xl font-black text-on-surface focus:ring-0" placeholder="00/00" type="text" value="118/76"/>
+<span class="text-[10px] font-bold text-primary mt-1 block">mmHg</span>
+</div>
+<!-- Pulse -->
+<div class="bg-surface-container-low p-5 rounded-xl border-l-4 border-tertiary">
+<label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Pulse</label>
+<input class="w-full bg-transparent border-none p-0 text-3xl font-black text-on-surface focus:ring-0" placeholder="00" type="number" value="72"/>
+<span class="text-[10px] font-bold text-tertiary mt-1 block">BPM</span>
+</div>
+<!-- RR -->
+<div class="bg-surface-container-low p-5 rounded-xl border-l-4 border-secondary">
+<label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Respirations</label>
+<input class="w-full bg-transparent border-none p-0 text-3xl font-black text-on-surface focus:ring-0" placeholder="00" type="number" value="16"/>
+<span class="text-[10px] font-bold text-secondary mt-1 block">Breaths/Min</span>
+</div>
+<!-- SpO2 -->
+<div class="bg-surface-container-low p-5 rounded-xl border-l-4 border-primary-container">
+<label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">SpO2</label>
+<input class="w-full bg-transparent border-none p-0 text-3xl font-black text-on-surface focus:ring-0" placeholder="00" type="number" value="98"/>
+<span class="text-[10px] font-bold text-primary-container mt-1 block">% Room Air</span>
+</div>
+</div>
+</section>
+<!-- Diagnosis & Notes -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-[0px_8px_24px_rgba(25,28,30,0.04)]">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">assignment</span>
+<h3 class="font-headline font-bold text-xl uppercase tracking-tight text-on-surface">Discharge Diagnosis</h3>
+</div>
+<textarea class="w-full bg-surface-container-low border-none rounded-xl p-5 font-medium text-on-surface leading-relaxed placeholder:text-outline" placeholder="Enter primary discharge diagnosis and clinical findings..." rows="4">Acute cystitis without complication. Course of Nitrofurantoin initiated. Patient stable for return to LTC facility on PO medications. No acute imaging findings.</textarea>
+</section>
+<!-- Toggles & Actions -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Checklist Toggles -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0px_8px_24px_rgba(25,28,30,0.04)] flex flex-col justify-center gap-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">pill</span>
+<span class="font-bold text-sm text-on-surface tracking-tight">Prescription Sent to Pharmacy</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-14 h-8 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[&#39;&#39;] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">phone_callback</span>
+<span class="font-bold text-sm text-on-surface tracking-tight">Report Called to LTC Nurse</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-14 h-8 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[&#39;&#39;] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+<!-- Final Action -->
+<div class="flex flex-col gap-4">
+<button class="h-full min-h-[120px] bg-gradient-to-br from-[#005c9b] to-[#2e75b6] text-white rounded-xl shadow-lg flex flex-col items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all group" type="submit">
+<span class="material-symbols-outlined text-4xl group-hover:scale-110 transition-transform">verified_user</span>
+<span class="font-black text-lg font-headline uppercase tracking-widest">Save and Update Record</span>
+</button>
+<button class="py-4 bg-surface-container-highest text-on-primary-fixed-variant font-bold rounded-xl hover:bg-surface-variant transition-colors flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-sm">cancel</span>
+                        Cancel &amp; Discard
+                    </button>
+</div>
+</div>
+</form>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-t border-[#eceef1]/20 dark:border-slate-800 shadow-[0px_-8px_24px_rgba(25,28,30,0.06)] rounded-t-[1.5rem] md:hidden">
+<div class="flex flex-col items-center justify-center bg-gradient-to-br from-[#005c9b] to-[#2e75b6] text-white rounded-[1.25rem] px-5 py-2 scale-105">
+<span class="material-symbols-outlined">low_priority</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider">Transfers</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-500 px-4 py-2 hover:text-[#005c9b] dark:hover:text-blue-300 transition-transform active:scale-95 duration-150">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider">Patients</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-500 px-4 py-2 hover:text-[#005c9b] dark:hover:text-blue-300 transition-transform active:scale-95 duration-150">
+<span class="material-symbols-outlined">notifications_active</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider">Alerts</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-500 px-4 py-2 hover:text-[#005c9b] dark:hover:text-blue-300 transition-transform active:scale-95 duration-150">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider">Settings</span>
+</div>
+</nav>
+<!-- Desktop Sidebar Suggestion (Responsive Anchor) -->
+<aside class="hidden md:flex fixed left-6 top-24 bottom-24 w-16 flex-col items-center gap-8 py-8 bg-surface-container-lowest rounded-full shadow-sm z-30">
+<button class="material-symbols-outlined text-primary bg-primary/10 w-10 h-10 rounded-full flex items-center justify-center" title="Transfers">low_priority</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors" title="Patients">groups</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors" title="Alerts">notifications_active</button>
+<div class="mt-auto">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors" title="Settings">settings</button>
+</div>
+</aside>
+</body></html>

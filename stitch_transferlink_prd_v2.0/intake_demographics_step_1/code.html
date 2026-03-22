@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Patient Intake - Demographics</title>
+<script type='text/javascript' nonce='G0C4wFfKp+YRHYT+OfOqXA==' src='https://contribution.usercontent.google.com/88hxBrV3M_P9jBJghvC7Z7xaHTGWk5dKpjGXw2R6LsM1NxScqdvy5vAdVvLydu5o4zdJDhGNKRgWZlU6SGRo0WHkXPIOwvevYyBAvj1_KcjICL6Shu0X85WUq7cMmslaXoHLTqdJuhfcgmHUsrtfkuiS2kvPr8Oq1YCLhD-INJEqAZtB6RiPzZPJG2rhIWg7RL0Av__cPVyfGnd5_CWsaYNme94dlHdlX6KR3blCs146lUThmICJud4eELWzdhGa8Y7I1SEyggrCu-hZyhI45RJiXJZjWmICS2ksAEnDs95AfoUKBBCzXRVhB7uC8IhANwGB6A8oh5kpSgG2raWQ-25cGlplryPfg9YecQ6yyeK_uzpAxfCQOAsvG5pTey98P9LvXJg23PUbTUFHG73lJpLtfi7UphOhpwAsvYTyJaZ_EtYJZCiObggweZppcPkM6S7iSCLFWWB8_-TCscUSNX06xPcppMiBPLV4dSNfcakpfuFCCGs_eosHdvzzOBVLh6rBvOTgWUXnDNyhDhdZimRJwHrmZW-pJNWz5eYNpeUxXkJRIFaxkMJnf_UFo2hAVesN2Swyoobhi6UwlmhsnDF8UwK1iJJZIFo1w_ikHqWSA-Q9Gauc3JseNnJ0jY32NaqH6jQ-93Um2IQ-p5HmR_KlPo-zL3OG_pTLJKw3OpPjO-AtA1SNlR2FIc42Hjgz2ld-y2qHyrJyVps9equPKUCjoGq6v0jrEE8hm9w7KCOt7o4jYRaa21XjVPFZ7uiWB3qlpqzH9tbr6ACM8LuyrnU7ld-z_HpI9CpTbBfC'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=DM+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-container": "#a06400",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#e0e3e6",
+                        "secondary-fixed-dim": "#b7c6ee",
+                        "surface-dim": "#d8dadd",
+                        "error-container": "#ffdad6",
+                        "secondary": "#4f5e81",
+                        "on-surface-variant": "#414750",
+                        "primary-fixed": "#d1e4ff",
+                        "on-primary-container": "#f5f8ff",
+                        "tertiary": "#7f4e00",
+                        "on-tertiary-fixed": "#2b1700",
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#191c1e",
+                        "inverse-primary": "#9ecaff",
+                        "surface-bright": "#f7f9fc",
+                        "on-surface": "#191c1e",
+                        "surface-container-highest": "#e0e3e6",
+                        "outline": "#717781",
+                        "tertiary-fixed-dim": "#ffb962",
+                        "surface-container-low": "#f2f4f7",
+                        "primary-container": "#2e75b6",
+                        "on-primary-fixed": "#001d36",
+                        "on-secondary-fixed-variant": "#384668",
+                        "surface-container": "#eceef1",
+                        "tertiary-fixed": "#ffddb9",
+                        "surface-tint": "#0b61a1",
+                        "primary-fixed-dim": "#9ecaff",
+                        "outline-variant": "#c1c7d2",
+                        "inverse-surface": "#2d3133",
+                        "on-tertiary-fixed-variant": "#663e00",
+                        "on-tertiary-container": "#fff6ef",
+                        "on-error": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "surface": "#f7f9fc",
+                        "secondary-container": "#c5d4fd",
+                        "inverse-on-surface": "#eff1f4",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#4d5b7e",
+                        "surface-container-high": "#e6e8eb",
+                        "secondary-fixed": "#d9e2ff",
+                        "on-secondary-fixed": "#0a1a3a",
+                        "background": "#f7f9fc",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#00497c",
+                        "primary": "#005c9b"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "dmsans": ["DM Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e0e3e6;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased overflow-hidden">
+<div class="fixed inset-0 z-50 flex flex-col bg-surface">
+<header class="bg-[#f7f9fc] flex items-center justify-between w-full px-10 h-16 sticky top-0 z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#005c9b]" data-icon="clinical_notes">clinical_notes</span>
+<h1 class="Headline-LG font-manrope font-bold text-[#191c1e] text-xl">Continuum Clinical</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-[#eceef1] rounded-full transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+</header>
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-6 pt-3 bg-white/70 backdrop-blur-md border-t border-[#f2f4f7] shadow-[0px_-8px_24px_rgba(25,28,30,0.06)] rounded-t-[1.5rem] md:hidden">
+<div class="flex flex-col items-center justify-center bg-[#2e75b6] text-white rounded-[1.5rem] px-5 py-2 scale-95 duration-200 ease-in-out">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-manrope text-[11px] font-semibold uppercase tracking-wider">Demographics</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] px-5 py-2 hover:text-[#005c9b]">
+<span class="material-symbols-outlined" data-icon="vitals">vitals</span>
+<span class="font-manrope text-[11px] font-semibold uppercase tracking-wider">Baseline</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] px-5 py-2 hover:text-[#005c9b]">
+<span class="material-symbols-outlined" data-icon="contact_phone">contact_phone</span>
+<span class="font-manrope text-[11px] font-semibold uppercase tracking-wider">Contacts</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] px-5 py-2 hover:text-[#005c9b]">
+<span class="material-symbols-outlined" data-icon="volunteer_activism">volunteer_activism</span>
+<span class="font-manrope text-[11px] font-semibold uppercase tracking-wider">Care</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] px-5 py-2 hover:text-[#005c9b]">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="font-manrope text-[11px] font-semibold uppercase tracking-wider">Review</span>
+</div>
+</nav>
+<main class="flex-1 overflow-y-auto custom-scrollbar bg-surface pb-32">
+<div class="max-w-3xl mx-auto px-6 pt-10">
+<div class="mb-10 flex flex-col gap-2">
+<span class="text-primary font-dmsans font-bold tracking-widest text-xs uppercase">Intake Process: Step 1 of 5</span>
+<h2 class="text-4xl font-headline font-extrabold text-on-surface tracking-tight">Demographics</h2>
+<p class="text-on-surface-variant max-w-lg font-dmsans">Enter the patient's core identification data. Ensure accuracy for emergency transfer protocols.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="col-span-full bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/15">
+<label class="block text-[11px] font-headline font-bold text-on-surface-variant uppercase tracking-wider mb-3">Legal Full Name</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-4 font-dmsans text-lg focus:ring-2 focus:ring-primary transition-all" placeholder="e.g. Jonathan Quincy Adams" type="text"/>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/15">
+<label class="block text-[11px] font-headline font-bold text-on-surface-variant uppercase tracking-wider mb-3">Preferred Name (Short)</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-3 font-dmsans focus:ring-2 focus:ring-primary transition-all" placeholder="e.g. John" type="text"/>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/15">
+<label class="block text-[11px] font-headline font-bold text-on-surface-variant uppercase tracking-wider mb-3">Date of Birth</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-3 font-dmsans focus:ring-2 focus:ring-primary transition-all" type="date"/>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/15">
+<label class="block text-[11px] font-headline font-bold text-on-surface-variant uppercase tracking-wider mb-3">Room / Bed Number</label>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline" data-icon="bed">bed</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-3 font-dmsans focus:ring-2 focus:ring-primary transition-all" placeholder="e.g. 402-A" type="text"/>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/15">
+<label class="block text-[11px] font-headline font-bold text-on-surface-variant uppercase tracking-wider mb-3">Biological Age</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-3 font-dmsans focus:ring-2 focus:ring-primary transition-all" placeholder="Age" type="number"/>
+</div>
+<div class="col-span-full bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/15">
+<label class="block text-[11px] font-headline font-bold text-on-surface-variant uppercase tracking-wider mb-3">Primary Language</label>
+<select class="w-full bg-surface-container-low border-none rounded-lg p-3 font-dmsans focus:ring-2 focus:ring-primary transition-all appearance-none">
+<option>English</option>
+<option>Spanish</option>
+<option>Mandarin</option>
+<option>French</option>
+<option>Other / Interpreter Required</option>
+</select>
+</div>
+<div class="col-span-full mt-4">
+<label class="block text-[11px] font-headline font-bold text-on-surface-variant uppercase tracking-wider mb-4">Code Status</label>
+<div class="flex flex-wrap gap-4">
+<button class="flex-1 flex items-center justify-center gap-2 py-4 px-6 rounded-xl border-2 border-primary bg-primary/5 text-primary font-dmsans font-bold transition-all hover:bg-primary/10">
+<span class="material-symbols-outlined" data-icon="favorite" style="font-variation-settings: &#39;FILL&#39; 1;">favorite</span>
+                                Full Code
+                            </button>
+<button class="flex-1 flex items-center justify-center gap-2 py-4 px-6 rounded-xl border-2 border-outline-variant text-on-surface-variant font-dmsans font-bold transition-all hover:bg-surface-container">
+<span class="material-symbols-outlined" data-icon="do_not_disturb_on">do_not_disturb_on</span>
+                                DNR
+                            </button>
+<button class="flex-1 flex items-center justify-center gap-2 py-4 px-6 rounded-xl border-2 border-outline-variant text-on-surface-variant font-dmsans font-bold transition-all hover:bg-surface-container">
+<span class="material-symbols-outlined" data-icon="cancel">cancel</span>
+                                DNR/DNI
+                            </button>
+</div>
+</div>
+</div>
+<div class="mt-12 p-6 bg-tertiary/10 rounded-xl flex items-start gap-4 border border-tertiary/20">
+<span class="material-symbols-outlined text-tertiary" data-icon="info">info</span>
+<div class="text-sm text-on-tertiary-fixed-variant font-dmsans">
+<p class="font-bold">Clinical Note:</p>
+<p>Verify all demographics against the facility face sheet before proceeding to the baseline assessment.</p>
+</div>
+</div>
+</div>
+</main>
+<footer class="fixed bottom-0 left-0 w-full bg-white px-10 py-6 flex items-center justify-between border-t border-outline-variant/10 z-[60]">
+<div class="flex items-center gap-8">
+<div class="flex gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-surface-container-highest"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-surface-container-highest"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-surface-container-highest"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-surface-container-highest"></div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant font-manrope uppercase tracking-widest hidden md:block">Step 1: Patient Details</span>
+</div>
+<div class="flex gap-4">
+<button class="px-8 py-4 rounded-xl text-primary font-bold font-dmsans hover:bg-primary/5 transition-all">
+                    Cancel
+                </button>
+<button class="px-12 py-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-white font-bold font-dmsans shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2">
+                    Next Section
+                    <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</footer>
+</div>
+<div class="fixed inset-0 bg-slate-200/50 -z-10 blur-3xl opacity-30">
+<div class="absolute top-0 left-1/4 w-96 h-96 bg-primary rounded-full filter blur-3xl"></div>
+<div class="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary rounded-full filter blur-3xl"></div>
+</div>
+</body></html>

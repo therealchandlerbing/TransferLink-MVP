@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Patient Record - Margaret Tanaka</title>
+<script type='text/javascript' nonce='0R+puFNMzm7Lpnob4aXLVQ==' src='https://contribution.usercontent.google.com/qPd4-sgQ33Eo5VcNWWWvk_UJETuLv1xwacfzRykMP8zvi5qozYN86Sq3E_AExB2c7t1edJTGjJ1xOMlBOQGV9tqp5gr9MsmWqcYr6ccy18GQGLpeDcgaQBuPodA7KiPiZCU-FrR_LticIASTFR4IWqokBasA9xRYUsjc5MQWabwYXnXWxD3RveLaOgnR6hhTwnP7wFEy3Nn3JRXYp8qEUOZq1B0H-e7buTmaJcGvqcH_0rNWmskXsizo5pfEkaOkSOdWPozlWaBeMQc5Q_ad2rKQhApwH9FOVqvwydbEO6GvKCW7BPU8xFgJGrwz7_-3thLyHaUJCsF95Yr4tNzHQEYLPyzLfC3iPPn4PBP0iDHR1V4JOgVwfFNGxjg0_x2ORTpTQCOLCUjs2mTvqnhGEPY9Ln_S06mXQkHyu6bWorPnmurUPPyxw5vBjcLfRFWctV1R3TekmYrHpDAtlkZKMpmRQZRzFBBAWSNjC3-pMWn2xaGQvneAyUVEHc_AooM32eWQGKIxDY5SAWOYSaDUli-GIAHATkNEg-xG8lvsWcqOOVm2-NA4s5WJCQafioaLqJ__2CiCp9rq6gzwvAyFzrXkn2V2olibzwayfFCv5rNZf1yInUe9drCmSms4mvoKnmEiLXAuqCgbVn9N3Uhde-Q-924yKQvgO2q1uIQ5Q5bq5hkR_i_PE0lWZeYjvItGJ0s9Jsc9Vj4VVvBpU36v36MMF6Q_EQusHAALYhNxv2g3hiUrqYy1lFyJd76Mmz1om5iqV0zNYiA4TEZO4a2r-4vU9XzJOO5MdL64Ixbb'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=DM+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#005c9b",
+              "secondary": "#4f5e81",
+              "surface-tint": "#0b61a1",
+              "secondary-fixed-dim": "#b7c6ee",
+              "inverse-primary": "#9ecaff",
+              "outline": "#717781",
+              "secondary-fixed": "#d9e2ff",
+              "on-primary-fixed-variant": "#00497c",
+              "outline-variant": "#c1c7d2",
+              "on-secondary-fixed-variant": "#384668",
+              "inverse-on-surface": "#eff1f4",
+              "surface-bright": "#f7f9fc",
+              "on-tertiary-fixed": "#2b1700",
+              "surface-dim": "#d8dadd",
+              "primary-fixed-dim": "#9ecaff",
+              "on-secondary": "#ffffff",
+              "surface-variant": "#e0e3e6",
+              "on-surface": "#191c1e",
+              "on-surface-variant": "#414750",
+              "tertiary-fixed": "#ffddb9",
+              "on-secondary-fixed": "#0a1a3a",
+              "primary-container": "#2e75b6",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed": "#d1e4ff",
+              "surface": "#f7f9fc",
+              "on-tertiary-container": "#fff6ef",
+              "surface-container-low": "#f2f4f7",
+              "on-error": "#ffffff",
+              "surface-container-highest": "#e0e3e6",
+              "tertiary-fixed-dim": "#ffb962",
+              "surface-container": "#eceef1",
+              "on-secondary-container": "#4d5b7e",
+              "on-primary": "#ffffff",
+              "error-container": "#ffdad6",
+              "inverse-surface": "#2d3133",
+              "on-background": "#191c1e",
+              "error": "#ba1a1a",
+              "on-tertiary": "#ffffff",
+              "on-error-container": "#93000a",
+              "surface-container-high": "#e6e8eb",
+              "on-primary-container": "#f5f8ff",
+              "tertiary": "#7f4e00",
+              "on-tertiary-fixed-variant": "#663e00",
+              "on-primary-fixed": "#001d36",
+              "tertiary-container": "#a06400",
+              "secondary-container": "#c5d4fd",
+              "background": "#f7f9fc"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pulse-ring {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.4; }
+            70% { transform: scale(1.5); opacity: 0; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-surface antialiased">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#f7f9fc] dark:bg-slate-900">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-none">
+<div class="flex items-center gap-4">
+<button class="text-[#005c9b] dark:text-blue-400 hover:bg-[#eceef1] transition-colors p-2 rounded-full active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-[&#39;Manrope&#39;] font-bold text-lg tracking-tight text-[#005c9b]">Patient Record</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant bg-surface-container px-2 py-1 rounded">Read-only</span>
+<button class="text-[#005c9b] dark:text-blue-400 hover:bg-[#eceef1] transition-colors p-2 rounded-full active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="unfold_more">unfold_more</span>
+</button>
+</div>
+</div>
+<div class="bg-[#eceef1] dark:bg-slate-800 h-[1px] w-full"></div>
+</header>
+<main class="pt-16 pb-32 px-6 max-w-4xl mx-auto space-y-6">
+<!-- Clinical Header Strip -->
+<section class="mt-6 overflow-hidden rounded-xl bg-surface-container-lowest flex flex-col md:flex-row shadow-sm">
+<div class="bg-error px-6 py-4 flex flex-col justify-center min-w-[140px]">
+<span class="text-white/80 font-bold text-[10px] uppercase tracking-widest">Code Status</span>
+<span class="text-white font-headline font-extrabold text-2xl tracking-tighter">DNR / DNI</span>
+</div>
+<div class="flex-1 px-8 py-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div>
+<h2 class="font-headline font-bold text-3xl text-on-surface tracking-tight">Margaret Tanaka</h2>
+<p class="text-on-surface-variant font-medium">DOB: 05/12/1941 (82y) • Female</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-on-surface-variant font-bold text-[10px] uppercase tracking-widest">Primary Language</span>
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-xl" data-icon="translate">translate</span>
+<span class="font-headline font-bold text-xl">Japanese</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid: Key Vitals & Status -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Active Status Card -->
+<div class="md:col-span-1 bg-surface-container-low p-6 rounded-xl flex flex-col justify-between">
+<div class="flex items-center justify-between mb-4">
+<span class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Transfer Status</span>
+<div class="relative flex items-center justify-center h-3 w-3">
+<span class="absolute inline-flex h-full w-full rounded-full bg-[#F57C00] opacity-75 pulse-ring"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-[#F57C00]"></span>
+</div>
+</div>
+<div class="space-y-1">
+<p class="text-xl font-bold text-on-surface">Active Transfer</p>
+<p class="text-sm text-on-surface-variant">To: St. Jude Emergency</p>
+</div>
+</div>
+<!-- Medical History Snapshot -->
+<div class="md:col-span-2 bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4">
+<span class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Critical Allergies &amp; Warnings</span>
+<div class="flex flex-wrap gap-3">
+<span class="px-4 py-2 bg-error-container text-on-error-container rounded-lg font-bold text-sm">Penicillin (Anaphylaxis)</span>
+<span class="px-4 py-2 bg-tertiary-container text-on-tertiary-container rounded-lg font-bold text-sm">Latex Sensitivity</span>
+<span class="px-4 py-2 bg-surface-container-high text-on-surface-variant rounded-lg font-bold text-sm">Fall Risk: High</span>
+</div>
+</div>
+</div>
+<!-- Person-Centered Care (Expanded by Default) -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<div class="px-6 py-5 bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-3 text-on-surface">
+<span class="material-symbols-outlined text-primary" data-icon="person_heart">person_heart</span>
+<h3 class="font-headline font-bold text-lg">Person-Centered Care Preferences</h3>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="expand_less">expand_less</span>
+</div>
+<div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+<!-- Communication -->
+<div class="space-y-2">
+<div class="flex items-center gap-2 text-on-surface-variant mb-1">
+<span class="material-symbols-outlined text-sm" data-icon="forum">forum</span>
+<span class="text-[11px] font-bold uppercase tracking-widest">Communication</span>
+</div>
+<p class="text-on-surface font-medium leading-relaxed">Soft-spoken; needs hearing aids (in top drawer). Prefers visual cues. Use simple Japanese phrases if available.</p>
+</div>
+<!-- Lighting & Environment -->
+<div class="space-y-2">
+<div class="flex items-center gap-2 text-on-surface-variant mb-1">
+<span class="material-symbols-outlined text-sm" data-icon="light_mode">light_mode</span>
+<span class="text-[11px] font-bold uppercase tracking-widest">Environment</span>
+</div>
+<p class="text-on-surface font-medium leading-relaxed">Highly sensitive to bright fluorescent lights. Prefers low-level ambient lighting to reduce agitation.</p>
+</div>
+<!-- Cultural & Spiritual -->
+<div class="space-y-2">
+<div class="flex items-center gap-2 text-on-surface-variant mb-1">
+<span class="material-symbols-outlined text-sm" data-icon="temple_buddhist">temple_buddhist</span>
+<span class="text-[11px] font-bold uppercase tracking-widest">Cultural / Spiritual</span>
+</div>
+<p class="text-on-surface font-medium leading-relaxed">Buddhist. Keep Omamori (amulet) on person at all times. Modesty is high priority during exams.</p>
+</div>
+<!-- Distress & Comfort -->
+<div class="space-y-2">
+<div class="flex items-center gap-2 text-on-surface-variant mb-1">
+<span class="material-symbols-outlined text-sm" data-icon="sentiment_dissatisfied">sentiment_dissatisfied</span>
+<span class="text-[11px] font-bold uppercase tracking-widest">Distress Signs</span>
+</div>
+<p class="text-on-surface font-medium leading-relaxed">Twists hem of shirt when anxious. Responds well to quiet classical music or rhythmic breathing guidance.</p>
+</div>
+<!-- Family Contacts -->
+<div class="md:col-span-2 pt-4 border-t border-surface-variant/30">
+<div class="flex items-center gap-2 text-on-surface-variant mb-4">
+<span class="material-symbols-outlined text-sm" data-icon="group">group</span>
+<span class="text-[11px] font-bold uppercase tracking-widest">Key Contacts</span>
+</div>
+<div class="flex flex-col md:flex-row gap-4">
+<div class="flex-1 bg-surface-container-low p-4 rounded-xl flex items-center gap-4">
+<div class="h-10 w-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-bold">KT</div>
+<div>
+<p class="font-bold text-on-surface">Kenji Tanaka</p>
+<p class="text-xs text-on-surface-variant">Son / Health Proxy • (555) 019-2283</p>
+</div>
+</div>
+<div class="flex-1 bg-surface-container-low p-4 rounded-xl flex items-center gap-4">
+<div class="h-10 w-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="home_health">home_health</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">Lotus Care Home</p>
+<p class="text-xs text-on-surface-variant">Primary Facility • (555) 012-9900</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer Info -->
+<footer class="text-center py-6 space-y-2">
+<p class="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant/60">QR scan access, Read-only</p>
+<p class="text-[10px] text-on-surface-variant/40">Clinician Session ID: EMS-9921-TX • 14:22:10 UTC</p>
+</footer>
+<!-- Primary Action Button (Fixed above BottomNav) -->
+<div class="fixed bottom-28 left-0 w-full px-6 z-40 pointer-events-none">
+<div class="max-w-4xl mx-auto flex justify-center">
+<button class="pointer-events-auto w-full md:w-auto md:min-w-[320px] h-16 rounded-xl bg-gradient-to-r from-error to-[#d32f2f] text-white font-headline font-bold text-lg shadow-lg flex items-center justify-center gap-3 active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="picture_as_pdf">picture_as_pdf</span>
+                    VIEW POLST
+                </button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50">
+<div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md shadow-[0px_-8px_24px_rgba(25,28,30,0.06)] rounded-t-3xl border-t border-[#eceef1]/20 flex justify-around items-center px-4 pb-6 pt-3 h-20">
+<div class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-400 px-6 py-2 hover:text-[#005c9b] transition-colors active:scale-90 duration-200 ease-in-out">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider mt-1">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-400 px-6 py-2 hover:text-[#005c9b] transition-colors active:scale-90 duration-200 ease-in-out">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider mt-1">History</span>
+</div>
+<!-- ACTIVE TAB: SBAR (Related to clinical records/reports) -->
+<div class="flex flex-col items-center justify-center bg-[#2e75b6] text-white rounded-2xl px-6 py-2 scale-105 transition-transform active:scale-90 duration-200 ease-in-out">
+<span class="material-symbols-outlined" data-icon="description" style="font-variation-settings: &#39;FILL&#39; 1;">description</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider mt-1">SBAR</span>
+</div>
+</div>
+</nav>
+</body></html>

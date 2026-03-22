@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Clinical Concierge - Print Preview</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@400;500;600&amp;family=Courier+Prime:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script type='text/javascript' nonce='vcAtueiEJJOKzEEoEgNDyw==' src='https://contribution.usercontent.google.com/HoFt9NM0xvCgK8E8esiqYjx5mXl_EPeXRl_4YQs8TKEMTaPtJuwyXl_rBW3g7idLKlli_jJWVkfvFLuCguCl0L2K6KDt0vJxSeRSrYQ1HGB04OgUdXXGiJuj34eJKUoUd7GZi2uFTmEBnm7t7Z7ju8Zin6f3zeYmAx8YY_Lm_WHeRSXqnVQ6txVRWfZ6-oEaA9HZLwX6EkepsIABRu6zwoqLA8SlP1MOeYhkgAg8ph__VxwufFD_qiW5XKS9BG-B1moUCuLibsBMguIl5m4NXfzKFvKwLL0DTHwrgF_yxtD0MT6uwU3LsOcN6LV0S2QX4zYnbmSNLTAYAM6xXT3ef5vTqseZRXXVsVinLDwwAzBQ3VD70EIq6yuWLGpMxmF3l_wgc18eCfIyTvCYnbMDJcNoocMVgDAPkrlglpRD0Yeg29qseCw-NemIaRbWbjJzqduFcnR2VaXA6MlKl68RJHG6kOjMUkAHxX9K3cvmvOo60l33-HvWQO1A7kY3SuuQ8XZO8UjUO_zakk7pu_QwOmx9kxLLL6_zog_xr78cvSa5TZxCieTqJB0DR_AvJFc6uBgJXL8ArCQNKD4R5exPFuTg-TMKHDXJA2mW2N-W3ey-M_1tHs2z6gEBchRVqH4P075FT_o4OH1mkIi-QC4JoSeqkunss81ZqDRno-VOZERl7AGFjRkJ7S-bQNQ9u5_C5hCl2Oi0wZFIeYWz_c5N98vBsZi3mKbrYEL8PkXqfdkTmQP7fjY2wf8xzjL5doDSK2dqaib5ZGtX58SGgbmUCpeGma5jXBJIG1QZhzE1'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-error-container": "#93000a",
+              "outline": "#717781",
+              "on-primary-fixed": "#001d36",
+              "surface": "#f7f9fc",
+              "primary-fixed": "#d1e4ff",
+              "primary": "#005c9b",
+              "tertiary-fixed-dim": "#ffb962",
+              "surface-container-lowest": "#ffffff",
+              "error": "#ba1a1a",
+              "surface-tint": "#0b61a1",
+              "secondary-fixed-dim": "#b7c6ee",
+              "surface-container-high": "#e6e8eb",
+              "on-secondary-container": "#4d5b7e",
+              "on-primary-fixed-variant": "#00497c",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffddb9",
+              "tertiary": "#7f4e00",
+              "on-tertiary-fixed-variant": "#663e00",
+              "background": "#f7f9fc",
+              "surface-container-highest": "#e0e3e6",
+              "on-surface-variant": "#414750",
+              "surface-container": "#eceef1",
+              "secondary": "#4f5e81",
+              "surface-bright": "#f7f9fc",
+              "on-tertiary-container": "#fff6ef",
+              "inverse-surface": "#2d3133",
+              "primary-container": "#2e75b6",
+              "secondary-fixed": "#d9e2ff",
+              "tertiary-container": "#a06400",
+              "on-primary-container": "#f5f8ff",
+              "inverse-on-surface": "#eff1f4",
+              "on-error": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "primary-fixed-dim": "#9ecaff",
+              "secondary-container": "#c5d4fd",
+              "on-tertiary-fixed": "#2b1700",
+              "on-secondary-fixed-variant": "#384668",
+              "outline-variant": "#c1c7d2",
+              "error-container": "#ffdad6",
+              "surface-variant": "#e0e3e6",
+              "surface-container-low": "#f2f4f7",
+              "on-secondary-fixed": "#0a1a3a",
+              "inverse-primary": "#9ecaff",
+              "on-surface": "#191c1e",
+              "on-background": "#191c1e",
+              "surface-dim": "#d8dadd",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"],
+              "mono": ["Courier Prime", "Courier New", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            body { background-color: white !important; }
+            .print-shadow { shadow: none !important; }
+            .paper-canvas { margin: 0 !important; width: 100% !important; border: none !important; box-shadow: none !important; }
+        }
+        .paper-canvas {
+            aspect-ratio: 8.5 / 11;
+        }
+        .clinical-line {
+            border-bottom: 1px solid #c1c7d2;
+            height: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-dim font-body text-on-surface antialiased min-h-screen pb-20">
+<header class="bg-[#f7f9fc] dark:bg-slate-900 text-[#005c9b] dark:text-blue-400 font-manrope font-bold text-lg tracking-tight flex justify-between items-center w-full px-6 py-3 no-print">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+<h1 class="text-xl font-extrabold text-[#005c9b] dark:text-blue-400">Clinical Concierge</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-sm font-medium uppercase tracking-widest text-on-surface-variant">Print Preview</span>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg active:scale-95 transition-all">
+<span class="material-symbols-outlined">print</span>
+                Print Document
+            </button>
+</div>
+</header>
+<main class="flex flex-col items-center py-12 px-4">
+<div class="paper-canvas bg-white w-full max-w-[850px] p-12 shadow-[0px_8px_24px_rgba(25,28,30,0.06)] font-mono text-on-surface">
+<div class="flex justify-between items-start border-b-2 border-on-surface pb-6 mb-8">
+<div>
+<h2 class="text-2xl font-bold uppercase tracking-tighter">Transfer Summary Record</h2>
+<p class="mt-1">Generated: 10/24/2023 - 14:42 EST</p>
+<p>Facility: Oakwood Long-Term Care Center</p>
+</div>
+<div class="text-right">
+<img alt="QR code for digital patient record access" class="w-24 h-24 border border-on-surface p-1" data-alt="Black and white QR code for patient record tracking" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACaNw2N4kZ7RQ9PizHvtb8168oaUL7StqCvSL3xcq8KpNW6p1H1FZRysJ9tsuoAbUXabvSYmStH1tgOsPdVIH38E7vr_M40Fpa4KVjGbyFTknjNF5-wpTFqkhtsRnCJNSBI9WynR7nGHkD47Qu6OMkFxBJfqcxF_skMB9rpLlVPGYDimzz_fSGDJvwxNvuM_S4AOFZLyEqLisa9pXiUV7oDiNeNQqQW562b1uGd17FZGsg-n8-XE4Ihc9q4PH-_j9OiQIgNulvpAIY"/>
+<p class="text-[10px] mt-1 font-bold">SCAN FOR DIGITAL CHART</p>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-6 mb-8">
+<div class="col-span-2 grid grid-cols-2 gap-y-2 border-r border-outline-variant pr-6">
+<div class="text-on-surface-variant text-xs uppercase">Patient Name</div>
+<div class="font-bold">HARRINGTON, JAMES W.</div>
+<div class="text-on-surface-variant text-xs uppercase">Date of Birth</div>
+<div>05/12/1941 (82Y)</div>
+<div class="text-on-surface-variant text-xs uppercase">Gender</div>
+<div>MALE</div>
+<div class="text-on-surface-variant text-xs uppercase">MRN / ID</div>
+<div>LTC-99823-X</div>
+</div>
+<div class="pl-2">
+<div class="text-on-surface-variant text-xs uppercase mb-1">Vitals (Current)</div>
+<div class="text-sm space-y-1">
+<p>BP: 138/84</p>
+<p>HR: 78 BPM</p>
+<p>SPO2: 94% (RA)</p>
+<p>TEMP: 98.6 F</p>
+</div>
+</div>
+</div>
+<div class="mb-8 p-4 bg-surface-container-low rounded-lg border-2 border-on-surface">
+<h3 class="text-sm font-bold uppercase mb-3 border-b border-on-surface pb-1">Advance Directives / Code Status</h3>
+<div class="grid grid-cols-3 gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">check_box</span>
+<span class="font-bold">FULL CODE</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">check_box_outline_blank</span>
+<span>DNR (No Code)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">check_box_outline_blank</span>
+<span>DNI</span>
+</div>
+</div>
+</div>
+<div class="mb-8">
+<h3 class="text-sm font-bold uppercase mb-2 text-error">Allergies &amp; Sensitivities</h3>
+<div class="p-4 border-2 border-error-container bg-error-container/10 text-on-error-container font-bold">
+                    * PENICILLIN (ANAPHYLAXIS)<br/>
+                    * LATEX (CONTACT DERMATITIS)<br/>
+                    * SHELLFISH
+                </div>
+</div>
+<div class="mb-8">
+<h3 class="text-sm font-bold uppercase mb-2 border-b border-on-surface pb-1">Current Active Medications</h3>
+<table class="w-full text-sm border-collapse">
+<thead>
+<tr class="text-left border-b border-outline">
+<th class="py-1">Medication</th>
+<th class="py-1">Dosage</th>
+<th class="py-1">Freq</th>
+<th class="py-1">Last Admin</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<tr>
+<td class="py-2">Lisinopril</td>
+<td class="py-2">20mg</td>
+<td class="py-2">QD</td>
+<td class="py-2">08:00</td>
+</tr>
+<tr>
+<td class="py-2">Metformin</td>
+<td class="py-2">500mg</td>
+<td class="py-2">BID</td>
+<td class="py-2">08:00</td>
+</tr>
+<tr>
+<td class="py-2">Warfarin</td>
+<td class="py-2">5mg</td>
+<td class="py-2">QD</td>
+<td class="py-2">20:00 (Prev)</td>
+</tr>
+<tr>
+<td class="py-2">Atorvastatin</td>
+<td class="py-2">40mg</td>
+<td class="py-2">QHS</td>
+<td class="py-2">21:00 (Prev)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-auto pt-8">
+<h3 class="text-sm font-bold uppercase mb-4 text-primary">ED Return / Discharge Notes (Handwritten)</h3>
+<div class="clinical-line"></div>
+<div class="clinical-line"></div>
+<div class="clinical-line"></div>
+<div class="clinical-line"></div>
+<div class="mt-8 flex justify-between items-end">
+<div class="w-64">
+<div class="border-b border-on-surface mb-1"></div>
+<p class="text-[10px] uppercase">Transferring RN Signature</p>
+</div>
+<div class="w-64">
+<div class="border-b border-on-surface mb-1"></div>
+<p class="text-[10px] uppercase">Receiving ED Provider Signature</p>
+</div>
+</div>
+</div>
+<div class="mt-12 pt-4 border-t border-outline-variant text-center text-[9px] text-on-surface-variant uppercase tracking-widest">
+                Clinical Concierge Internal Document - Confidential Patient Information - HIPAA Protected
+            </div>
+</div>
+</main>
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl z-50 border-t border-[#f2f4f7]/15 shadow-[0px_-8px_24px_rgba(25,28,30,0.06)] no-print">
+<div class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-400 px-5 py-2 hover:text-[#005c9b] transition-all">
+<span class="material-symbols-outlined mb-1">swap_horiz</span>
+<span class="font-manrope font-medium text-[11px] uppercase tracking-wider">Transfers</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-400 px-5 py-2 hover:text-[#005c9b] transition-all">
+<span class="material-symbols-outlined mb-1">person_search</span>
+<span class="font-manrope font-medium text-[11px] uppercase tracking-wider">Patients</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-400 px-5 py-2 hover:text-[#005c9b] transition-all">
+<span class="material-symbols-outlined mb-1">notifications_active</span>
+<span class="font-manrope font-medium text-[11px] uppercase tracking-wider">Alerts</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-[#2e75b6] text-white rounded-2xl px-5 py-2 transition-all duration-300 scale-90">
+<span class="material-symbols-outlined mb-1">settings</span>
+<span class="font-manrope font-medium text-[11px] uppercase tracking-wider">Settings</span>
+</div>
+</nav>
+</body></html>

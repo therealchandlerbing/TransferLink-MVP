@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Facility Dashboard - Cascade View</title>
+<script type='text/javascript' nonce='DcZgTIIxFk+gd0keMtqzrw==' src='https://contribution.usercontent.google.com/2SVz-bgD_QXwAL3Qd86N-so3psjGF8iIDoCU37QRu5hc16Xx6CPbHVBBxfNMSfqScS4NslLIlFtjHNXwoX6-3ctHOZD2E3jp6DkhQH2ljZYX4ldfF6KaC0yqrPq9CVR1-bteVjN62SiiRYQ5HGyAKK7AzwJTU3SnNeFRInHpSk9Xb6WJjIMb8myE6_RAZLNeVxT7ByMXCv9GV620l1b6TUngUx67QfVyBJaZlA8Haq_0vyJZGbEGZPDlvo-4gVUYBiQh9mL65-Z_6iI3QHDWJb-lfrIDjqvhNslejXki00Xfy3xd-CTF7lSKZlzWZQl8tojWyBLLGGtr8HSy6byFo5CWVtSOChxlZWKyGVVH8F2wo6Prhb3dO8MDDXSS3Ce1G9LMDTKMX1yTYCZDaiz4EgHIsGI-vtOvG8sQOnbE6m4f1wH616V-mP8QQj4wwSebDtymj5110lsoFO7fI6ZJ_ULK8MKi8l_ysZI3IcZB8t7-l9YbjoM7U5sr5Kt9ahxzHCsf82U64XRCQqULQi2LcMc121VnAkqUdf6zIzxBkDBufYPgoGrfWUhiS_yzn7ThrFXSA5C6r1RWRFyZrLMrR6Yn0jRRLU4kJ7pLMFdRSNKhHSWUE3c_DpilQyDtueWCzGUxDDbu_fiipe4IAK0DXrHnnlSWBb3gRQYheW-OTDHglLT_Q8qPJL1lM86FSUmhGE3-vFjrWT-wCKhaWkb7ysy6YCxIA5snEt54iTqJ2OGHGDt_k-gsdRcbCOqauCTMrBYaQXwQQsjy3yNnG1_jlxIbPBttPZzLg9McR8kV'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#f2f4f7",
+              "on-tertiary-fixed": "#2b1700",
+              "on-tertiary-container": "#fff6ef",
+              "inverse-primary": "#9ecaff",
+              "surface-container": "#eceef1",
+              "on-primary": "#ffffff",
+              "tertiary-container": "#a06400",
+              "on-secondary-fixed": "#0a1a3a",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#00497c",
+              "on-primary-container": "#f5f8ff",
+              "primary-fixed-dim": "#9ecaff",
+              "error-container": "#ffdad6",
+              "tertiary-fixed-dim": "#ffb962",
+              "surface": "#f7f9fc",
+              "secondary": "#4f5e81",
+              "on-error-container": "#93000a",
+              "on-surface-variant": "#414750",
+              "on-primary-fixed": "#001d36",
+              "surface-variant": "#e0e3e6",
+              "on-secondary": "#ffffff",
+              "outline-variant": "#c1c7d2",
+              "secondary-fixed": "#d9e2ff",
+              "on-secondary-container": "#4d5b7e",
+              "on-surface": "#191c1e",
+              "background": "#f7f9fc",
+              "on-tertiary-fixed-variant": "#663e00",
+              "surface-container-high": "#e6e8eb",
+              "on-secondary-fixed-variant": "#384668",
+              "primary": "#005c9b",
+              "error": "#ba1a1a",
+              "surface-tint": "#0b61a1",
+              "secondary-fixed-dim": "#b7c6ee",
+              "on-background": "#191c1e",
+              "surface-bright": "#f7f9fc",
+              "inverse-on-surface": "#eff1f4",
+              "primary-container": "#2e75b6",
+              "on-error": "#ffffff",
+              "primary-fixed": "#d1e4ff",
+              "tertiary-fixed": "#ffddb9",
+              "surface-container-lowest": "#ffffff",
+              "outline": "#717781",
+              "inverse-surface": "#2d3133",
+              "surface-dim": "#d8dadd",
+              "surface-container-highest": "#e0e3e6",
+              "secondary-container": "#c5d4fd",
+              "tertiary": "#7f4e00"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pulse-ring {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            70% { transform: scale(2); opacity: 0; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="flex items-center justify-between px-6 py-4 w-full sticky top-0 z-40 bg-[#f7f9fc] dark:bg-slate-950">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden">
+<img alt="Clinical Staff Profile" class="w-full h-full object-cover" data-alt="Professional clinical staff profile avatar silhouette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUNye2guZcCdbmAPbu7zVYUJRJaEoLBCmfFJ0yq15qzE7xzchyGSi_8KtcinfJJsJDb50iU-fzd0RmzOwOUaTW4uewW3A_VVamO_miBRwOP7d9pVIj3xxJrPM87uRvvTdGU71HI9hsjDL0uwOjaOAU-DZXl_Dl4W5msryDXP4HKUhY-RBFPJg7MHA5j9gA12Wx47vgiINpcXRXl9ud83cgy3S6t511HJGBtxwWK2DzBPy1V8xHqg3NK7cu9fqDL6J7tGb8dKofJw-w"/>
+</div>
+<span class="text-2xl font-black text-[#005c9b] dark:text-blue-400 font-[&#39;Manrope&#39;] tracking-tight">TransferLink</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-[#eceef1]/50 transition-all active:opacity-80">
+<span class="material-symbols-outlined text-[#005c9b]">swap_horiz</span>
+</button>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 pt-4">
+<!-- Toast Notification -->
+<div class="mb-8 flex justify-center">
+<div class="bg-primary-container text-on-primary-container px-6 py-4 rounded-2xl shadow-xl flex items-center justify-between w-full max-w-md animate-in fade-in slide-in-from-top-4 duration-500 border border-white/20"><div class="flex items-center gap-4">
+<div class="relative flex items-center justify-center">
+<span class="absolute w-4 h-4 bg-white/40 rounded-full pulse-ring"></span>
+<span class="w-2.5 h-2.5 bg-white rounded-full"></span>
+</div>
+<div class="flex flex-col">
+<span class="font-black tracking-wider text-xs uppercase">1 Active Transfer</span>
+<span class="text-[10px] opacity-80 uppercase font-bold tracking-tighter">In Progress - ETA 12m</span>
+</div>
+</div>
+<button class="p-1 hover:bg-white/10 rounded-full">
+<span class="material-symbols-outlined text-lg">close</span>
+</button></div>
+</div>
+<div class="flex flex-col gap-2 mb-10"><div class="flex flex-col gap-1">
+<span class="text-primary font-bold text-sm uppercase tracking-[0.2em] mb-1">Operational Command</span>
+<h1 class="text-3xl font-extrabold font-headline text-on-surface tracking-tight">Welcome, Teresa Morales</h1>
+<p class="text-on-surface-variant font-medium flex items-center gap-2">
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[10px] rounded font-bold uppercase">Charge Nurse</span>
+    Cascade View Facility Overview
+  </p>
+</div></div>
+<!-- Bento Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+<!-- Total Residents -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-between min-h-[140px] transition-all hover:bg-surface-dim active:scale-95 duration-150">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">Total Residents</span>
+<span class="material-symbols-outlined text-primary">groups</span>
+</div>
+<div class="text-3xl font-black text-on-surface">142</div>
+</div>
+<!-- Active Transfers -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-between min-h-[140px] transition-all hover:bg-surface-dim active:scale-95 duration-150 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-tertiary/5 rounded-full -mr-8 -mt-8"></div>
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">Active Transfers</span>
+<div class="relative">
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-[#F57C00] rounded-full pulse-ring" style="font-variation-settings: &#39;FILL&#39; 1;"></span>
+<span class="material-symbols-outlined text-[#F57C00]">emergency_home</span>
+</div>
+</div>
+<div class="text-3xl font-black text-[#F57C00]">01</div>
+</div>
+<!-- Completed 30d -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-between min-h-[140px] transition-all hover:bg-surface-dim active:scale-95 duration-150">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">Completed (30d)</span>
+<span class="material-symbols-outlined text-primary">task_alt</span>
+</div>
+<div class="text-3xl font-black text-on-surface">28</div>
+</div>
+<!-- Pending Returns -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-between min-h-[140px] transition-all hover:bg-surface-dim active:scale-95 duration-150">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">Pending Returns</span>
+<span class="material-symbols-outlined text-tertiary">assignment_return</span>
+</div>
+<div class="text-3xl font-black text-on-surface">04</div>
+</div>
+</div>
+<!-- Alert Section -->
+<section class="mb-12">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-lg font-black font-headline uppercase tracking-[0.15em] text-on-surface flex items-center gap-3"><span class="w-2 h-6 bg-error rounded-full"></span>Critical Alerts</h2>
+<span class="px-3 py-1 bg-error-container text-on-error-container text-xs font-bold rounded-full">3 REQUIRES ACTION</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Alert Card 1: Maggie Tanaka -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex items-center gap-6 shadow-none group transition-all hover:bg-surface-dim">
+<div class="w-16 h-16 rounded-xl bg-surface-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-3xl">patient_list</span>
+</div>
+<div class="flex-grow">
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline font-extrabold text-lg text-on-surface">Maggie Tanaka</h3>
+<span class="text-xs text-on-surface-variant font-medium">• Room 402-B</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed">Transfer authorization signature pending from family representative.</p>
+<div class="mt-3 flex items-center gap-4">
+<span class="flex items-center gap-1 text-[10px] font-black uppercase text-tertiary tracking-tighter">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                High Priority
+                            </span>
+<span class="text-[10px] text-outline font-semibold">2 hours ago</span>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-primary hover:text-white hover:border-transparent transition-all active:scale-90">
+<span class="material-symbols-outlined text-xl">check</span>
+</button>
+</div>
+<!-- Alert Card 2: Dorothy Williams -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex items-center gap-6 shadow-none group transition-all hover:bg-surface-dim">
+<div class="w-16 h-16 rounded-xl bg-surface-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-3xl">medical_information</span>
+</div>
+<div class="flex-grow">
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline font-extrabold text-lg text-on-surface">Dorothy Williams</h3>
+<span class="text-xs text-on-surface-variant font-medium">• Room 118-A</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed">Incoming return transfer: ETA 15:45 from St. Jude Medical Center.</p>
+<div class="mt-3 flex items-center gap-4">
+<span class="flex items-center gap-1 text-[10px] font-black uppercase text-primary tracking-tighter">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                Inbound
+                            </span>
+<span class="text-[10px] text-outline font-semibold">45 mins ago</span>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-primary hover:text-white hover:border-transparent transition-all active:scale-90">
+<span class="material-symbols-outlined text-xl">check</span>
+</button>
+</div>
+<!-- Alert Card 3: System Alert -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex items-center gap-6 shadow-none group transition-all hover:bg-surface-dim">
+<div class="w-16 h-16 rounded-xl bg-surface-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-error text-3xl">warning</span>
+</div>
+<div class="flex-grow">
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline font-extrabold text-lg text-on-surface">Medication Sync</h3>
+<span class="text-xs text-on-surface-variant font-medium">• System Wide</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed">3 patient records require manual reconciliation after ED discharge.</p>
+<div class="mt-3 flex items-center gap-4">
+<span class="flex items-center gap-1 text-[10px] font-black uppercase text-error tracking-tighter">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                Urgent Action
+                            </span>
+<span class="text-[10px] text-outline font-semibold">10 mins ago</span>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-primary hover:text-white hover:border-transparent transition-all active:scale-90">
+<span class="material-symbols-outlined text-xl">check</span>
+</button>
+</div>
+<!-- Placeholder / Empty State for symmetry -->
+<div class="bg-surface-container dashed border-2 border-outline-variant/20 rounded-xl flex flex-col items-center justify-center p-6 opacity-50">
+<span class="material-symbols-outlined text-outline text-2xl mb-2">add_circle</span>
+<span class="text-[10px] font-bold uppercase tracking-widest text-outline">No more alerts</span>
+</div>
+</div>
+</section>
+<!-- Facility Insights Card (Glassmorphism Example) -->
+<section class="mt-12">
+<div class="relative rounded-3xl overflow-hidden p-8 bg-gradient-to-br from-[#005c9b] to-[#2e75b6] text-white">
+<div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl"></div>
+<div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+<div>
+<h2 class="text-3xl font-black font-headline mb-4 leading-tight">Cascade View Operational Efficiency</h2>
+<p class="text-white/80 font-medium mb-6">Your facility has reduced transfer wait times by 14% this month compared to the regional average.</p>
+<button class="bg-white text-primary px-8 py-4 rounded-xl font-bold hover:bg-opacity-90 transition-all active:scale-95 shadow-xl">
+                            View Detailed Report
+                        </button>
+</div>
+<div class="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
+<div class="space-y-4">
+<div class="flex justify-between items-end border-b border-white/10 pb-3">
+<span class="text-sm font-semibold opacity-70 uppercase tracking-wider">Avg. Dispatch</span>
+<span class="text-2xl font-black">12.4m</span>
+</div>
+<div class="flex justify-between items-end border-b border-white/10 pb-3">
+<span class="text-sm font-semibold opacity-70 uppercase tracking-wider">Form Accuracy</span>
+<span class="text-2xl font-black">99.2%</span>
+</div>
+<div class="flex justify-between items-end">
+<span class="text-sm font-semibold opacity-70 uppercase tracking-wider">Staff Satisfaction</span>
+<span class="text-2xl font-black">4.8/5</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-t border-[#eceef1]/20 dark:border-slate-800 shadow-[0px_-8px_24px_rgba(25,28,30,0.06)] rounded-t-[1.5rem]">
+<!-- Active Tab: Transfers (Assuming home-level operational view maps here) -->
+<a class="flex flex-col items-center justify-center bg-gradient-to-br from-[#005c9b] to-[#2e75b6] text-white rounded-[1.25rem] px-5 py-2 scale-105 transition-all" href="#">
+<span class="material-symbols-outlined mb-0.5" style="font-variation-settings: &#39;FILL&#39; 1;">low_priority</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider">Transfers</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-500 px-4 py-2 hover:text-[#005c9b] dark:hover:text-blue-300 transition-transform active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mb-0.5">groups</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider">Patients</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-500 px-4 py-2 hover:text-[#005c9b] dark:hover:text-blue-300 transition-transform active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mb-0.5">notifications_active</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider">Alerts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#414750] dark:text-slate-500 px-4 py-2 hover:text-[#005c9b] dark:hover:text-blue-300 transition-transform active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mb-0.5">settings</span>
+<span class="font-[&#39;Manrope&#39;] text-[11px] font-semibold uppercase tracking-wider">Settings</span>
+</a>
+</nav>
+<!-- FAB (Suppressed based on UI logic for focused dashboard, but usually home needs it. We include here for 'New Transfer' primary action) -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-gradient-to-br from-[#005c9b] to-[#2e75b6] text-white rounded-full shadow-2xl flex items-center justify-center group active:scale-95 transition-all z-40">
+<span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform">add</span>
+</button>
+</body></html>

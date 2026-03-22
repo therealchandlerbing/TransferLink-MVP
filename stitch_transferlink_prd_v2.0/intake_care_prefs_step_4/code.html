@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Care Preferences - Continuum Clinical</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script type='text/javascript' nonce='BGgDo8SRxFFFvMPgTwUt4w==' src='https://contribution.usercontent.google.com/Ywb2T6uNoQwnUQYeIXpxQbKwL4CyXFCMtqwRJJmJKTpRoTHs0UnALcEBYUZkaEEfZOyHg5-KwMKDIiIUgxfRJQyKBB5teWbqu865mklDiquVYptPsvo__FRfYPjrPG9mZkIWdxEJ9FHWEysayNYJk8Xs6pOQh_iOX6xDHPTxoQyrC2NR-LFuBrja5i7oMbfrcwNbKqjpOcbQoRfvkuzX2bV83tMibMZ4vaFknoZhcsGK5cYD8N-F-Rgny0S9TzOthtwxkoHI-iAdC34CX3z1ukNh4LWBb2OgcJzWQOPccshDrmfTSYYf9L1X8J1C2P5tXMbD8VrlogAKKfFuBewpu0f3j9lTW3mpUXzLu2SjQLKBSXrqhIxeowWI4UydcLQTTdHK0LENXkwF6pN75FM9UQ9gG6aEltqlmj08Fypq5wiPr5oVSroR6p0R0oRRZLZYviXbdE2ePrcDxyQ64WqGDO4v6zyPSi2RthekZh-IAe4Xae76AOvt1RThhUELRtmgqBaSKXjIbK5-j91L8J_tvHJhrZgUr24vpl5ZTa895mxr4LDec-pS3sHwd9joJ8iWo-xtbqhxpw_VgBRZlEDCaoYDqbM6nMnyHIBdyA4ZCCQ4MQIo007qf3AniIPtUVtdOF9rXr48nTmjqoSPMmpxP2S7azArll6vE2RE2TD4bSSK7WTrUY7lrZcfu1Ppwtc8VWh93Wbtq--QN8X6qI-iABKNDkFBTM_GCmFPc1FFCEHkBJIAcTBmPhnYXZPNkQGn7qqNcNXK4rlvL42OsxxeMtJjUSWCJltnbOU-MDSj'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-container": "#a06400",
+              "on-error-container": "#93000a",
+              "surface-variant": "#e0e3e6",
+              "secondary-fixed-dim": "#b7c6ee",
+              "surface-dim": "#d8dadd",
+              "error-container": "#ffdad6",
+              "secondary": "#4f5e81",
+              "on-surface-variant": "#414750",
+              "primary-fixed": "#d1e4ff",
+              "on-primary-container": "#f5f8ff",
+              "tertiary": "#7f4e00",
+              "on-tertiary-fixed": "#2b1700",
+              "surface-container-lowest": "#ffffff",
+              "on-background": "#191c1e",
+              "inverse-primary": "#9ecaff",
+              "surface-bright": "#f7f9fc",
+              "on-surface": "#191c1e",
+              "surface-container-highest": "#e0e3e6",
+              "outline": "#717781",
+              "tertiary-fixed-dim": "#ffb962",
+              "surface-container-low": "#f2f4f7",
+              "primary-container": "#2e75b6",
+              "on-primary-fixed": "#001d36",
+              "on-secondary-fixed-variant": "#384668",
+              "surface-container": "#eceef1",
+              "tertiary-fixed": "#ffddb9",
+              "surface-tint": "#0b61a1",
+              "primary-fixed-dim": "#9ecaff",
+              "outline-variant": "#c1c7d2",
+              "inverse-surface": "#2d3133",
+              "on-tertiary-fixed-variant": "#663e00",
+              "on-tertiary-container": "#fff6ef",
+              "on-error": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "surface": "#f7f9fc",
+              "secondary-container": "#c5d4fd",
+              "inverse-on-surface": "#eff1f4",
+              "error": "#ba1a1a",
+              "on-secondary-container": "#4d5b7e",
+              "surface-container-high": "#e6e8eb",
+              "secondary-fixed": "#d9e2ff",
+              "on-secondary-fixed": "#0a1a3a",
+              "background": "#f7f9fc",
+              "on-secondary": "#ffffff",
+              "on-primary-fixed-variant": "#00497c",
+              "primary": "#005c9b"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .step-active {
+            box-shadow: 0 0 0 2px white, 0 0 0 4px #005c9b;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-surface antialiased">
+<!-- Full Screen Modal Overlay -->
+<div class="fixed inset-0 z-50 flex flex-col bg-surface overflow-hidden">
+<!-- Sticky Header (Shared TopAppBar logic) -->
+<header class="flex items-center justify-between w-full px-6 md:px-10 h-16 bg-surface shadow-sm z-50 shrink-0">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="clinical_notes">clinical_notes</span>
+<span class="font-headline font-bold text-xl tracking-tight text-primary">Continuum Clinical</span>
+</div>
+<!-- Step Navigation -->
+<div class="hidden md:flex items-center gap-8">
+<div class="flex items-center gap-2">
+<span class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-xs">1</span>
+<span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Demographics</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-xs">2</span>
+<span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Baseline</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-xs">3</span>
+<span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Contacts</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs ring-2 ring-primary ring-offset-2">4</span>
+<span class="text-xs font-semibold text-primary uppercase tracking-wider">Care</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-xs">5</span>
+<span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Review</span>
+</div>
+</div>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</header>
+<!-- Main Content Canvas (Scrollable) -->
+<main class="flex-1 overflow-y-auto pb-32">
+<!-- Person-Centered Care Banner (Asymmetric High-End UI) -->
+<div class="relative w-full h-64 md:h-80 overflow-hidden mb-10">
+<div class="absolute inset-0 bg-gradient-to-br from-[#6b21a8] to-[#db2777] opacity-90"></div>
+<img class="absolute inset-0 w-full h-full object-cover mix-blend-overlay" data-alt="Healthcare professional providing compassionate care to an elderly patient" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRK4V_y99V2D9qexYIEu71t50OLy91I5JFJnSACkrNe3McbplSVT2tXwTIOT1ZgAPagiUuArhRuMbVwQxCFwuf51x038rC5q6QnX0RgpNYHedP5gPe_cKYG7s_QpRz5JJbZBIada4-QtCzRWfbUGZUFM26VI9QVCDFtThtVVM4uafN14akkwvtEp4roZ_lWdsUASNg4WU7oN9CVResmrgEpIvelqoKWJX34nfsorXhDJAN2mVyBZvxzpoP6pT302aluONSV6ymhlNh"/>
+<div class="relative h-full container mx-auto px-6 md:px-10 flex flex-col justify-center">
+<div class="max-w-2xl">
+<div class="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-white text-xs font-bold tracking-widest uppercase mb-4">Focus Area</div>
+<h1 class="font-headline font-extrabold text-4xl md:text-6xl text-white mb-4 leading-tight">Person-Centered Care</h1>
+<p class="text-white/80 text-lg md:text-xl font-medium max-w-xl">Tailor the clinical environment to individual preferences to reduce anxiety and promote healing during transition.</p>
+</div>
+</div>
+<!-- Floating Glass Card (Asymmetry) -->
+<div class="absolute bottom-0 right-10 translate-y-1/2 hidden lg:block">
+<div class="bg-white/70 backdrop-blur-xl p-8 rounded-xl shadow-xl w-80 border border-white/40">
+<span class="material-symbols-outlined text-[#db2777] mb-4 text-3xl" data-icon="volunteer_activism">volunteer_activism</span>
+<h3 class="font-headline font-bold text-on-surface mb-2">Our Philosophy</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Care is most effective when it respects the human behind the patient record.</p>
+</div>
+</div>
+</div>
+<!-- Intake Flow Section -->
+<div class="container mx-auto px-6 md:px-10">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+<div class="lg:col-span-8 space-y-12">
+<!-- Lighting Preferences -->
+<div class="group">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-primary group-focus-within:bg-primary group-focus-within:text-white transition-all">
+<span class="material-symbols-outlined" data-icon="light_mode">light_mode</span>
+</div>
+<div>
+<h2 class="font-headline font-bold text-xl text-on-surface">Lighting</h2>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest font-semibold">Visual Comfort &amp; Safety</p>
+</div>
+</div>
+<div class="relative">
+<textarea class="w-full min-h-[120px] bg-white border-0 rounded-xl p-6 shadow-sm ring-1 ring-outline-variant focus:ring-2 focus:ring-primary transition-all text-on-surface" placeholder="E.g., Prefers dim lighting at night, requires high contrast for reading, or sensitive to fluorescent glare..."></textarea>
+</div>
+</div>
+<!-- Communication -->
+<div class="group">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-primary group-focus-within:bg-primary group-focus-within:text-white transition-all">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+</div>
+<div>
+<h2 class="font-headline font-bold text-xl text-on-surface">Communication</h2>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest font-semibold">Interaction Style</p>
+</div>
+</div>
+<div class="relative">
+<textarea class="w-full min-h-[120px] bg-white border-0 rounded-xl p-6 shadow-sm ring-1 ring-outline-variant focus:ring-2 focus:ring-primary transition-all text-on-surface" placeholder="E.g., Uses hearing aids (left ear), prefers written instructions, or needs staff to speak slowly and face-to-face..."></textarea>
+</div>
+</div>
+<!-- Family Involvement -->
+<div class="group">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-primary group-focus-within:bg-primary group-focus-within:text-white transition-all">
+<span class="material-symbols-outlined" data-icon="family_restroom">family_restroom</span>
+</div>
+<div>
+<h2 class="font-headline font-bold text-xl text-on-surface">Family</h2>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest font-semibold">Support Network</p>
+</div>
+</div>
+<div class="relative">
+<textarea class="w-full min-h-[120px] bg-white border-0 rounded-xl p-6 shadow-sm ring-1 ring-outline-variant focus:ring-2 focus:ring-primary transition-all text-on-surface" placeholder="E.g., Daughter Mary should be present for medical updates, prefers spouse to stay overnight if possible..."></textarea>
+</div>
+</div>
+<!-- Cultural/Spiritual -->
+<div class="group">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-primary group-focus-within:bg-primary group-focus-within:text-white transition-all">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div>
+<h2 class="font-headline font-bold text-xl text-on-surface">Cultural/Spiritual</h2>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest font-semibold">Identity &amp; Beliefs</p>
+</div>
+</div>
+<div class="relative">
+<textarea class="w-full min-h-[120px] bg-white border-0 rounded-xl p-6 shadow-sm ring-1 ring-outline-variant focus:ring-2 focus:ring-primary transition-all text-on-surface" placeholder="E.g., Specific dietary restrictions, prayer times, or cultural customs regarding personal space..."></textarea>
+</div>
+</div>
+<!-- Distress Management -->
+<div class="group">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-primary group-focus-within:bg-primary group-focus-within:text-white transition-all">
+<span class="material-symbols-outlined" data-icon="psychology_alt">psychology_alt</span>
+</div>
+<div>
+<h2 class="font-headline font-bold text-xl text-on-surface">Distress Management</h2>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest font-semibold">Anxiety &amp; Comfort</p>
+</div>
+</div>
+<div class="relative">
+<textarea class="w-full min-h-[120px] bg-white border-0 rounded-xl p-6 shadow-sm ring-1 ring-outline-variant focus:ring-2 focus:ring-primary transition-all text-on-surface" placeholder="E.g., Becomes agitated by loud alarms, responds well to soft music or tactile comfort items like a weighted blanket..."></textarea>
+</div>
+</div>
+</div>
+<!-- Side Guidance / Bento Elements -->
+<div class="lg:col-span-4 space-y-6">
+<div class="p-8 bg-primary-container rounded-2xl text-on-primary-container shadow-lg">
+<h3 class="font-headline font-bold text-lg mb-2">Why this matters?</h3>
+<p class="text-sm opacity-90 leading-relaxed mb-6">Transitions between LTC and ED can cause 'Transfer Trauma'. Documenting these preferences ensures continuity of the person's identity, not just their symptoms.</p>
+<div class="bg-white/10 p-4 rounded-lg flex items-start gap-3">
+<span class="material-symbols-outlined text-sm mt-1" data-icon="info">info</span>
+<span class="text-xs font-medium">Data collected here will be prominently displayed on the clinical transfer dashboard.</span>
+</div>
+</div>
+<div class="p-6 bg-surface-container-low rounded-2xl">
+<h4 class="font-headline font-bold text-sm uppercase tracking-widest mb-4">Quick Tips</h4>
+<ul class="space-y-4">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-tertiary" data-icon="check_circle">check_circle</span>
+<span class="text-sm text-on-surface-variant">Be specific about triggers.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-tertiary" data-icon="check_circle">check_circle</span>
+<span class="text-sm text-on-surface-variant">Mention assistive devices.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-tertiary" data-icon="check_circle">check_circle</span>
+<span class="text-sm text-on-surface-variant">Include 'what works' vs 'what doesn't'.</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Sticky Footer (Action Bar) -->
+<footer class="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-xl px-6 md:px-10 py-6 flex items-center justify-between border-t border-outline-variant/20 z-50">
+<button class="px-8 h-14 bg-surface-container-highest text-on-primary-fixed-variant rounded-xl font-bold font-headline hover:bg-surface-dim transition-all flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+                Back
+            </button>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex flex-col items-end mr-4">
+<span class="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">Completion</span>
+<div class="w-48 h-1.5 bg-surface-container rounded-full mt-1 overflow-hidden">
+<div class="w-4/5 h-full bg-primary"></div>
+</div>
+</div>
+<button class="px-10 h-14 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl font-bold font-headline shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2">
+                    Next Step
+                    <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</footer>
+</div>
+<!-- Mobile Bottom Navigation (Suppressed per task context of full-screen modal, but including logic for shell reference) -->
+<nav class="md:hidden hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-6 pt-3 bg-white/70 backdrop-blur-md rounded-t-[1.5rem] shadow-[0px_-8px_24px_rgba(25,28,30,0.06)] border-t border-outline-variant/10">
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-2">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-manrope text-[11px] font-semibold uppercase tracking-wider mt-1">Demographics</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary text-white rounded-[1.5rem] px-5 py-2">
+<span class="material-symbols-outlined" data-icon="volunteer_activism">volunteer_activism</span>
+<span class="font-manrope text-[11px] font-semibold uppercase tracking-wider mt-1 text-center leading-none">Care</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-2">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="font-manrope text-[11px] font-semibold uppercase tracking-wider mt-1">Review</span>
+</div>
+</nav>
+</body></html>
