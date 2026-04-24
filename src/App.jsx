@@ -4,9 +4,11 @@ import { INIT_PATIENTS, NEW_PT_TEMPLATE, DEMO_SCREEN_MAP } from './data.js';
 import { ToastContainer, NotificationCenter, GuidedDemo, IntakeModal, MedicationImportModal, S15 } from './modals.jsx';
 import { S0, S1, S2, S3, S4, S5, S6, S7, S9, S8, S10 } from './screens1.jsx';
 import { S11, S12, S13, S14, S17, S18, S19, S20 } from './screens2.jsx';
+import { LandingPage, OnboardingModule } from './landing.jsx';
 
 export default function App() {
   const [screen, setScreen] = useState(0);
+  const [presentation, setPresentation] = useState('landing');
   const [ptId, setPtId] = useState(0);
   const [patients, setPatients] = useState(INIT_PATIENTS);
   const [toasts, setToasts] = useState([]);
@@ -128,6 +130,24 @@ export default function App() {
         ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(0,0,0,.15); border-radius: 2px; }
       `}</style>
 
+      {presentation === 'landing' && (
+        <LandingPage
+          m={m}
+          onStartOnboarding={() => setPresentation('onboarding')}
+          onOpenPrototype={() => { setPresentation('app'); setScreen(17); }}
+        />
+      )}
+      {presentation === 'onboarding' && (
+        <OnboardingModule
+          m={m}
+          setPersona={setPersona}
+          setRole={setRole}
+          onBack={() => setPresentation('landing')}
+          onComplete={() => { setPresentation('app'); setScreen(17); }}
+        />
+      )}
+      {presentation === 'app' && (
+        <>
       <ToastContainer toasts={toasts} setToasts={setToasts} />
       {showNotif && <NotificationCenter notifications={notifs} onClose={() => setShowNotif(false)} onSelect={(n) => { setNotifs(ns => ns.map(x => x.id === n.id ? { ...x, unread: false } : x)); if (n.ptId != null) { setPtId(n.ptId); go(2); } setShowNotif(false); }} m={m} />}
       {showIntake && <IntakeModal onClose={() => setShowIntake(false)} onDone={handleNewPatient} m={m} />}
@@ -193,6 +213,8 @@ export default function App() {
           <span style={{ fontSize: 13 }}>🏠</span>
           Home
         </button>
+      )}
+        </>
       )}
     </div>
 
