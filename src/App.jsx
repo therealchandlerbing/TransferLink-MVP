@@ -112,7 +112,7 @@ export default function App() {
   const sharedProps = { go, m, p, patients, ptId, setPt: setPtId, visited, persona, role };
 
   return (
-    <div style={{ maxWidth: 680, margin: '0 auto', minHeight: '100vh', position: 'relative', fontFamily: "'Inter',system-ui,sans-serif", color: C.tx }}>
+    <div style={{ maxWidth: presentation === 'app' ? 680 : '100%', margin: '0 auto', minHeight: '100vh', position: 'relative', fontFamily: "'Inter',system-ui,sans-serif", color: C.tx }}>
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #1a1a2e; }
