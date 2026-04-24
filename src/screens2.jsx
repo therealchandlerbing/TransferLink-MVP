@@ -23,6 +23,7 @@ export const S11 = ({ go, m, p, updateER }) => {
   const [ins, setIns] = useState(p.er.ins);
   const [rptCalled, setRptCalled] = useState(!!p.er.rpt);
   const [hasRx, setHasRx] = useState(!!p.er.rx);
+  const [followUpRequired, setFollowUpRequired] = useState(p.er.followUpRequired !== false);
   const vitals = [[bp, setBp, 'BP', C.accent], [hr, setHr, 'Pulse', C.amber], [rr, setRr, 'RR', C.purple], [sp, setSp, 'SPO2', C.green]];
   const isValid = dx.trim() && bp.trim() && hr.trim();
   return (
@@ -67,10 +68,14 @@ export const S11 = ({ go, m, p, updateER }) => {
             <div><span style={{ fontSize: 14, fontWeight: 600, color: C.tx }}>report called to facility?</span>{rptCalled && <span style={{ fontSize: 12, color: C.txS, display: 'block' }}>Called {p.er.rpt || 'Cascade View'}</span>}</div>
             <Toggle val={rptCalled} onChange={setRptCalled} m={m} />
           </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, padding: '12px 14px', background: '#F8F9FB', borderRadius: 10 }}>
+            <div><span style={{ fontSize: 14, fontWeight: 600, color: C.tx }}>Follow-up appointment required?</span><span style={{ fontSize: 12, color: C.txS, display: 'block' }}>Surfaces this patient on the dashboard follow-up queue</span></div>
+            <Toggle val={followUpRequired} onChange={setFollowUpRequired} m={m} />
+          </div>
           <SL ch="Discharge Instructions" ic="📋" />
           <textarea value={ins} onChange={e => setIns(e.target.value)} rows={4} placeholder="Follow-up instructions for facility staff and family..." style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, fontFamily: 'inherit', background: C.lG, color: C.tx, resize: 'vertical', boxSizing: 'border-box' }} />
         </>} />
-        <Bt full ch={isValid ? 'Complete and Notify Facility' : 'Complete required fields'} disabled={!isValid} onClick={() => { updateER({ dx, bp, hr, rr, sp, rx: hasRx ? rx : '', rpt: rptCalled ? p.er.rpt || 'Called facility' : '', ins, dr }); go(12); }} m={m} />
+        <Bt full ch={isValid ? 'Complete and Notify Facility' : 'Complete required fields'} disabled={!isValid} onClick={() => { updateER({ dx, bp, hr, rr, sp, rx: hasRx ? rx : '', rpt: rptCalled ? p.er.rpt || 'Called facility' : '', ins, dr, followUpRequired }); go(12); }} m={m} />
       </div>
     </div>
   );
@@ -160,7 +165,7 @@ export const S13 = ({ go, m, p, patients, ptId, setPt, ackReturn }) => {
           </div>
           <FR l="Instructions" v={p.er.ins} />
           <FR l="Provider" v={p.er.dr} />
-          {p.er.rx && <FR l="Medication changes" v={<span>{p.er.rx} <MedSourceBadge src={{ method: 'manual', label: 'From ED return', count: (p.er.rx.match(/\d+mg/g) || ['mg']).length, verified: true }} compact /></span>} />}
+          {p.er.rx && <FR l="Medication changes" v={<span>{p.er.rx} <MedSourceBadge src={{ method: 'manual', label: 'From ED return', count: (p.er.rx.match(/\d+\s?(mg|mcg|g|ml|units?|iu)\b/gi) || []).length, verified: true }} compact /></span>} />}
         </>} />
 
         <div style={{ display: 'flex', gap: m ? 8 : 10, marginTop: 10, flexWrap: 'wrap' }}>
@@ -222,7 +227,7 @@ export const S17 = ({ go, m, patients, persona, alerts, dismissAlert, setPt }) =
   const inTransfer = patients.filter(x => x.tx?.reason && !(x.er?.submittedAt));
   const pendingReturn = patients.filter(x => x.tx?.reason && x.er?.dx && !x.er?.ackedAt);
   const acked = patients.filter(x => x.er?.ackedAt);
-  const followUp = patients.filter(x => x.er?.ins && /follow up|follow-up|pulmonology|cardiology|endocrinology/i.test(x.er.ins));
+  const followUp = patients.filter(x => x.er?.dx && x.er?.followUpRequired);
   const completionRate = patients.length ? Math.round((acked.length / Math.max(1, patients.filter(x => x.tx?.reason).length)) * 100) : 0;
 
   const stats = [
@@ -406,7 +411,7 @@ export const S19 = ({ go, m, patients, persona }) => {
   const [downloaded, setDownloaded] = useState(false);
   const pt = patients[ptIdx];
   const author = persona?.name || 'RN Sarah Mitchell';
-  const now = pt.tx?.time || 'March 20, 2026 at 2:47 AM';
+  const now = pt.tx?.time || new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
 
   const medText = pt.meds.map(x => x.n + ' ' + x.f).join('; ') || 'None on file';
   const medSourceText = pt.medSource ? `Source: ${pt.medSource.label} (${pt.medSource.count} meds, imported ${pt.medSource.importedAt}, verified at transfer).` : 'Source: manual entry — unverified.';
