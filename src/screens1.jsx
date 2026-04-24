@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { C, Chk, DnA, QR, Bg, Av, Cd, Bt, SL, TB, Bk, FR, TxIn, BellIco } from './components.jsx';
-import { AllergyB, CodeBanner, PtHd, Steps, TransferTracker, PtSwitcher, POLST, Scanner, Sections, ComfortSection } from './clinical.jsx';
+import { AllergyB, CodeBanner, PtHd, Steps, TransferTracker, PtSwitcher, POLST, Scanner, Sections, ComfortSection, EDCriticalSummary } from './clinical.jsx';
 
 // ===== S0 — HOME =====
 export const S0 = ({ go, m, onStartDemo }) => {
@@ -190,7 +190,7 @@ export const S1 = ({ go, m, setPt, patients, onAddPt }) => {
 };
 
 // ===== S2 — PATIENT RECORD =====
-export const S2 = ({ go, m, p, patients, ptId, setPt, visited }) => (
+export const S2 = ({ go, m, p, patients, ptId, setPt, visited, onOpenMedImport }) => (
   <div style={{ minHeight: '100vh', background: C.bg }}>
     <TB m={m} left={<Bk go={go} to={1} label="Patients" />} ctr="Patient Record" right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
     <Steps cur={0} m={m} />
@@ -199,6 +199,7 @@ export const S2 = ({ go, m, p, patients, ptId, setPt, visited }) => (
       <PtHd p={p} onQR={() => go(5)} m={m} />
       <AllergyB p={p} m={m} />
       <Sections p={p} m={m} />
+      <Bt full outline ch="Import / Attach Medication Source" onClick={onOpenMedImport} m={m} />
       <div style={{ marginTop: 8 }}>
         <Bt full ch="Initiate Transfer to ED" onClick={() => go(3)} m={m} />
       </div>
@@ -207,12 +208,13 @@ export const S2 = ({ go, m, p, patients, ptId, setPt, visited }) => (
 );
 
 // ===== S3 — INITIATE TRANSFER =====
-export const S3 = ({ go, m, p, update }) => {
+export const S3 = ({ go, m, p, update, onOpenMedImport }) => {
   const allSymp = ['Shortness of Breath', 'Chest Pain', 'Altered Mental Status', 'Fall/Injury', 'GI Distress', 'Fever', 'Pain', 'Other'];
   const [reason, setReason] = useState(p.tx.reason);
   const [symp, setSymp] = useState([...p.tx.symp]);
   const [intv, setIntv] = useState(p.tx.intv);
   const [chg, setChg] = useState(p.tx.chg);
+  const [showSecondary, setShowSecondary] = useState(false);
   const [dest, setDest] = useState(p.tx.dest || 'Providence Regional Medical Center, Everett');
   const [showDest, setShowDest] = useState(false);
   const dests = ['Providence Regional Medical Center, Everett', 'Swedish Edmonds', 'EvergreenHealth Monroe', 'Harborview Medical Center, Seattle'];
@@ -225,7 +227,15 @@ export const S3 = ({ go, m, p, update }) => {
       <Steps cur={1} m={m} />
       <div style={{ padding: m ? 14 : 20, maxWidth: 600, margin: '0 auto' }}>
         <Cd m={m} style={{ borderLeft: `4px solid ${C.amber}` }} ch={<>
-          <div style={{ fontSize: 12, color: C.txS, marginBottom: 16 }}>Transfer: {p.tx.time || 'March 20, 2026'} · {p.tx.nurse || 'RN Sarah Mitchell'}</div>
+          <div style={{ fontSize: 12, color: C.txS, marginBottom: 12 }}>Transfer: {p.tx.time || 'March 20, 2026'} · {p.tx.nurse || 'RN Sarah Mitchell'}</div>
+          <div style={{ background: C.lG, border: `1px solid ${C.green}30`, borderRadius: 10, padding: '8px 10px', marginBottom: 12, fontSize: 12, color: C.greenD }}>
+            <strong>Under 5 minute mode:</strong> baseline data is already in record. Complete essentials now, add optional details only if needed.
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 6, marginBottom: 16 }}>
+            {[reason.trim(), symp.length > 0, chg.trim(), dest.trim(), !!p.medAttachment]?.map((done, idx) => (
+              <div key={idx} style={{ height: 6, borderRadius: 3, background: done ? C.green : C.bdr }} />
+            ))}
+          </div>
           <SL ch="Reason for Transfer" ic="📝" />
           <textarea value={reason} onChange={e => setReason(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: '#F8F9FB', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 16 }} />
           <SL ch="Current Symptoms" ic="🩺" />
@@ -235,8 +245,6 @@ export const S3 = ({ go, m, p, update }) => {
               return <span key={i} onClick={() => toggleSymp(s)} style={{ padding: m ? '10px 14px' : '8px 14px', borderRadius: 20, fontSize: 13, fontWeight: 600, background: sel ? C.amber : '#F0F0F0', color: sel ? '#fff' : C.txS, border: sel ? `2px solid ${C.amberD}` : `1px solid ${C.bdr}`, cursor: 'pointer', transition: 'all .15s' }}>{sel ? '✓ ' : ''}{s}</span>;
             })}
           </div>
-          <SL ch="Interventions Already Taken" ic="💉" />
-          <textarea value={intv} onChange={e => setIntv(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: '#F8F9FB', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 16 }} />
           <SL ch="Recent Changes (72h)" ic="📊" />
           <textarea value={chg} onChange={e => setChg(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: '#F8F9FB', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 16 }} />
           <SL ch="Destination" ic="🏥" />
@@ -250,6 +258,16 @@ export const S3 = ({ go, m, p, update }) => {
               </div>
             )}
           </div>
+          <div style={{ marginTop: 12, marginBottom: 16 }}>
+            <Bt full outline ch={p.medAttachment ? 'Update Medication Attachment' : 'Import / Attach Medication List'} onClick={onOpenMedImport} m={m} />
+          </div>
+          <div onClick={() => setShowSecondary(!showSecondary)} style={{ fontSize: 12, fontWeight: 700, color: C.accent, cursor: 'pointer', marginBottom: 10 }}>
+            {showSecondary ? 'Hide secondary fields ▲' : 'Show secondary fields ▼'}
+          </div>
+          {showSecondary && <>
+            <SL ch="Interventions Already Taken" ic="💉" />
+            <textarea value={intv} onChange={e => setIntv(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: '#F8F9FB', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 16 }} />
+          </>}
         </>} />
         <Bt full ch="Generate QR Code and Continue" onClick={handleContinue} m={m} disabled={!isValid} />
         {!isValid && <div style={{ textAlign: 'center', fontSize: 12, color: C.amber, marginTop: 8 }}>Please complete reason and select at least one symptom</div>}
@@ -278,6 +296,9 @@ export const S4 = ({ go, m, p, patients, ptId, setPt }) => (
 // ===== S5 — QR READY =====
 export const S5 = ({ go, m, p }) => {
   const [shared, setShared] = useState(false);
+  const [format, setFormat] = useState('Mobile display');
+  const eventId = `TL-${String(p.id).padStart(3, '0')}-0320`;
+  const fallbackLink = `transfer.link/e/${eventId.toLowerCase()}`;
   return (
   <div style={{ minHeight: '100vh', background: C.bg }}>
     <TB m={m} left={<Bk go={go} to={2} label="Record" />} ctr="QR Code Ready" />
@@ -304,6 +325,20 @@ export const S5 = ({ go, m, p }) => {
           <strong>Transfer to:</strong> {p.tx.dest}<br />
           <strong>Initiated:</strong> {p.tx.time}<br />
           <strong>By:</strong> {p.tx.nurse}
+        </div>
+        <div style={{ marginTop: 12, textAlign: 'left' }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.txS, textTransform: 'uppercase', marginBottom: 6 }}>Handoff toolkit format</div>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            {['Print transfer sheet', 'Wristband label', 'Mobile display'].map(opt => (
+              <span key={opt} onClick={() => setFormat(opt)} style={{ padding: '6px 10px', borderRadius: 18, fontSize: 11, fontWeight: 700, cursor: 'pointer', background: format === opt ? C.accent : '#fff', color: format === opt ? '#fff' : C.txS, border: `1px solid ${format === opt ? C.accent : C.bdr}` }}>{opt}</span>
+            ))}
+          </div>
+          <div style={{ marginTop: 8, fontSize: 11, color: C.txS }}>Selected: <strong>{format}</strong></div>
+          <div style={{ marginTop: 6, background: '#fff', border: `1px dashed ${C.bdr}`, borderRadius: 8, padding: 8, fontSize: 11, color: C.txS, lineHeight: 1.6 }}>
+            <div><strong>Backup short link:</strong> {fallbackLink}</div>
+            <div><strong>Transfer event ID:</strong> {eventId}</div>
+            <div><strong>Access:</strong> EMS + ED read-only, ED return form write access only.</div>
+          </div>
         </div>
       </>} />
       <div style={{ display: 'flex', flexDirection: m ? 'column' : 'row', gap: m ? 8 : 12, marginTop: 4 }}>
@@ -362,11 +397,19 @@ export const S9 = ({ go, m }) => <Scanner label="TransferLink | ED Scan" onDone=
 // ===== S8 — EMS VIEW =====
 export const S8 = ({ go, m, p, patients, ptId, setPt }) => {
   const [pol, setPol] = useState(false);
+  const [langView, setLangView] = useState('English');
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
       {pol && p.polst && <POLST p={p} onClose={() => setPol(false)} m={m} />}
       <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr={m ? 'EMS View' : 'TransferLink | EMS'} accent={C.amber} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
       <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
+        <Cd m={m} style={{ borderLeft: `4px solid ${C.purple}` }} ch={<>
+          <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', color: C.txS, marginBottom: 6 }}>Multilingual summary view</div>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 6 }}>
+            {['English', p.lang, 'Spanish'].map(l => <span key={l} onClick={() => setLangView(l)} style={{ padding: '5px 9px', borderRadius: 14, fontSize: 11, cursor: 'pointer', fontWeight: 700, background: langView === l ? C.purple : '#fff', color: langView === l ? '#fff' : C.txS, border: `1px solid ${langView === l ? C.purple : C.bdr}` }}>{l}</span>)}
+          </div>
+          <div style={{ fontSize: 12, color: C.txS }}>Display language: <strong>{langView}</strong> (prototype simulated translation output)</div>
+        </>} />
         <CodeBanner p={p} lg m={m} />
         <AllergyB p={p} m={m} />
         <PtHd p={p} m={m} />
@@ -381,11 +424,20 @@ export const S8 = ({ go, m, p, patients, ptId, setPt }) => {
 // ===== S10 — ED VIEW =====
 export const S10 = ({ go, m, p, patients, ptId, setPt }) => {
   const [pol, setPol] = useState(false);
+  const [langView, setLangView] = useState('English');
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
       {pol && p.polst && <POLST p={p} onClose={() => setPol(false)} m={m} />}
       <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr={m ? 'ED View' : 'TransferLink | ED'} accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
       <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
+        <Cd m={m} style={{ borderLeft: `4px solid ${C.purple}` }} ch={<>
+          <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', color: C.txS, marginBottom: 6 }}>Triage language output</div>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 6 }}>
+            {['English', p.lang, 'Spanish'].map(l => <span key={l} onClick={() => setLangView(l)} style={{ padding: '5px 9px', borderRadius: 14, fontSize: 11, cursor: 'pointer', fontWeight: 700, background: langView === l ? C.purple : '#fff', color: langView === l ? '#fff' : C.txS, border: `1px solid ${langView === l ? C.purple : C.bdr}` }}>{l}</span>)}
+          </div>
+          <div style={{ fontSize: 12, color: C.txS }}>ED view language: <strong>{langView}</strong> (prototype simulation)</div>
+        </>} />
+        <EDCriticalSummary p={p} m={m} onOpenPolst={() => setPol(true)} />
         <CodeBanner p={p} lg m={m} />
         <AllergyB p={p} m={m} />
         <PtHd p={p} m={m} />

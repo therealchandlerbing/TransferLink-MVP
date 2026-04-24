@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import React from 'react';
 
 // ===== DESIGN TOKENS =====
 export const C = {
@@ -41,12 +42,7 @@ export const Chips=({items,bg=C.lA,color=C.tx})=><div style={{display:"flex",fle
 
 // ===== TXIN (Optimization 2: Debounce/Local State) =====
 export const TxIn = ({ value, onChange, placeholder, rows }) => {
-  const [local, setLocal] = useState(value || '');
-  useEffect(() => { setLocal(value || ''); }, [value]);
-  const handleBlur = () => { if (local !== value) onChange(local); };
-  const hKeyDown = (e) => { if (e.key === 'Enter' && !rows) handleBlur(); };
-
   const style = { width: "100%", padding: "10px 14px", borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: "#F8F9FB", boxSizing: "border-box", fontFamily: "inherit" };
-  if (rows) return <textarea value={local} onChange={e => setLocal(e.target.value)} onBlur={handleBlur} placeholder={placeholder} rows={rows} style={{ ...style, resize: "vertical" }} />;
-  return <input value={local} onChange={e => setLocal(e.target.value)} onBlur={handleBlur} onKeyDown={hKeyDown} placeholder={placeholder} style={style} />;
+  if (rows) return <textarea value={value || ''} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={rows} style={{ ...style, resize: "vertical" }} />;
+  return <input value={value || ''} onChange={e => onChange(e.target.value)} placeholder={placeholder} style={style} />;
 };

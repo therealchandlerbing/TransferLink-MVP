@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { C, Chk, WarnIco, Bg, Av, Cd, Bt, SL, TB, Bk, TxIn } from './components.jsx';
-import { DEMO_SCREEN_MAP, NEW_PT_TEMPLATE, PERSONAS } from './data.js';
+import { DEMO_SCREEN_MAP, NEW_PT_TEMPLATE, PERSONAS, FACILITY_MODES } from './data.js';
 import { MScaleSelect, FScaleSelect } from './clinical.jsx';
 
 // ===== TOAST SYSTEM =====
@@ -44,6 +44,66 @@ export const NotificationCenter = ({ notifications, onClose, onSelect, m }) => (
     </div>
   </div>
 );
+
+// ===== MEDICATION IMPORT MODAL =====
+export const MedicationImportModal = ({ p, onClose, onImport, m }) => {
+  const methods = [
+    { label: 'Upload medication report PDF', source: 'Facility document upload', fileName: `${p.short?.toLowerCase().replace(/\s+/g, '_') || 'patient'}_med_report.pdf` },
+    { label: 'Photograph or scan medication list', source: 'Nurse mobile capture', fileName: `${p.short?.toLowerCase().replace(/\s+/g, '_') || 'patient'}_med_photo.jpg` },
+    { label: 'Import from EHR export file', source: 'EHR / CSV export', fileName: `${p.short?.toLowerCase().replace(/\s+/g, '_') || 'patient'}_ehr_export.csv` },
+  ];
+  const [sel, setSel] = useState(0);
+  const selected = methods[sel];
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 180, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: m ? 12 : 24 }} onClick={onClose}>
+      <div onClick={e => e.stopPropagation()} style={{ width: '100%', maxWidth: 560, background: '#fff', borderRadius: 16, boxShadow: '0 20px 60px rgba(0,0,0,.25)', overflow: 'hidden' }}>
+        <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.bdr}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <div style={{ fontSize: 17, fontWeight: 800, color: C.navy }}>Medication Import & Attachment</div>
+            <div style={{ fontSize: 12, color: C.txS, marginTop: 2 }}>{p.short} · Simulated prototype workflow</div>
+          </div>
+          <button onClick={onClose} style={{ border: 'none', background: '#F5F5F5', borderRadius: 16, width: 32, height: 32, cursor: 'pointer' }}>✕</button>
+        </div>
+        <div style={{ padding: '18px 20px' }}>
+          <SL ch="Choose medication source" ic="💊" />
+          <div style={{ display: 'grid', gap: 8 }}>
+            {methods.map((mth, i) => (
+              <div key={mth.label} onClick={() => setSel(i)} style={{ border: `1.5px solid ${sel === i ? C.accent : C.bdr}`, borderRadius: 12, padding: '10px 12px', cursor: 'pointer', background: sel === i ? C.lA : '#fff' }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: C.navy }}>{mth.label}</div>
+                <div style={{ fontSize: 11, color: C.txS, marginTop: 2 }}>{mth.source}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: 12, borderRadius: 10, background: '#F8F9FB', border: `1px solid ${C.bdr}`, padding: 12, fontSize: 12, color: C.txS, lineHeight: 1.6 }}>
+            <div><strong>File:</strong> {selected.fileName}</div>
+            <div><strong>Timestamp:</strong> March 20, 2026 at 2:44 AM</div>
+            <div><strong>Active meds:</strong> {p.meds?.length || 0}</div>
+            <div><strong>Status:</strong> Verified at transfer</div>
+          </div>
+        </div>
+        <div style={{ padding: '14px 20px', borderTop: `1px solid ${C.bdr}`, display: 'flex', gap: 10 }}>
+          <Bt ch="Cancel" outline onClick={onClose} m={m} style={{ flex: 1 }} />
+          <Bt
+            ch="Attach Medication Source"
+            bg={C.green}
+            onClick={() => onImport({
+              method: selected.label,
+              source: selected.source,
+              fileName: selected.fileName,
+              importedAt: 'March 20, 2026 at 2:44 AM',
+              activeCount: p.meds?.length || 0,
+              verifiedAtTransfer: true,
+              preview: [`Source: ${selected.source}`, `Attachment: ${selected.fileName}`, 'Marked active at transfer by LTC nurse']
+            })}
+            m={m}
+            style={{ flex: 1 }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // ===== GUIDED DEMO =====
 export const GuidedDemo = ({ onExit, demoStep, setDemoStep, navigate, selectPatient, m }) => {
@@ -251,6 +311,7 @@ export const S15 = ({ go, m, setPersona, setRole }) => {
   const [selPersona, setSelPersona] = useState(0);
   const [selRole, setSelRole] = useState(0);
   const [selShift, setSelShift] = useState(0);
+  const [selMode, setSelMode] = useState(0);
   const roles = ['RN / LVN', 'Charge Nurse', 'Administrator', 'MD / NP'];
   const shifts = ['Day (7a-7p)', 'Night (7p-7a)', 'Swing'];
 
@@ -285,6 +346,17 @@ export const S15 = ({ go, m, setPersona, setRole }) => {
               {shifts.map((s, i) => <span key={i} onClick={() => setSelShift(i)} style={{ padding: '8px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: selShift === i ? C.accent : '#F0F2F5', color: selShift === i ? '#fff' : C.txS, cursor: 'pointer' }}>{s}</span>)}
             </div>
           </div>
+          <div style={{ marginBottom: 20 }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: C.txS }}>Facility Setup Mode</span>
+            <div style={{ display: 'grid', gap: 6, marginTop: 8 }}>
+              {FACILITY_MODES.map((mode, i) => (
+                <div key={mode.key} onClick={() => setSelMode(i)} style={{ border: `1px solid ${selMode === i ? C.accent : C.bdr}`, borderRadius: 10, padding: '8px 10px', background: selMode === i ? C.lA : '#F8F9FB', cursor: 'pointer' }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: C.navy }}>{mode.label}</div>
+                  <div style={{ fontSize: 11, color: C.txS, marginTop: 1 }}>{mode.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
           <Bt full ch="Sign In" onClick={() => { setPersona(PERSONAS[selPersona]); setRole(roles[selRole]); setLoginStep(1); }} m={m} />
           <div style={{ textAlign: 'center', marginTop: 16, fontSize: 12, color: C.txS }}>Secured with facility-level authentication.</div>
         </>} />
@@ -309,6 +381,7 @@ export const S15 = ({ go, m, setPersona, setRole }) => {
           <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 8 }}>
             <Bg ch={roles[selRole]} bg={C.accent} />
             <Bg ch={shifts[selShift]} bg={C.lA} color={C.accent} />
+            <Bg ch={FACILITY_MODES[selMode].label} bg={C.lP} color={C.purple} />
           </div>
         </div>
         {obs.map((o, i) => (

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { C, Chk, Bg, Av, Cd, Bt, SL, TB, Bk, FR, TxIn } from './components.jsx';
 import { PtSwitcher, TransferTracker } from './clinical.jsx';
+import { INTEGRATION_CONNECTORS } from './data.js';
 
-const Toggle = ({ val, onChange, m }) => (
+const Toggle = ({ val, onChange }) => (
   <div onClick={() => onChange(!val)} style={{ width: 48, height: 26, borderRadius: 13, background: val ? C.green : '#CCC', cursor: 'pointer', position: 'relative', transition: 'background .2s', flexShrink: 0 }}>
     <div style={{ position: 'absolute', top: 3, left: val ? 25 : 3, width: 20, height: 20, borderRadius: 10, background: '#fff', boxShadow: '0 1px 4px rgba(0,0,0,.2)', transition: 'left .2s' }} />
   </div>
@@ -73,7 +74,7 @@ export const S11 = ({ go, m, p, updateER }) => {
 };
 
 // ===== S12 — RECORD UPDATED =====
-export const S12 = ({ go, m, p }) => (
+export const S12 = ({ go, m, p, returnStatus }) => (
   <div style={{ minHeight: '100vh', background: C.bg }}>
     {/* Hero banner — full-width dark success header */}
     <div style={{ background: `linear-gradient(160deg,${C.greenD} 0%,#1B6B3A 60%,#145C31 100%)`, padding: m ? '40px 20px 36px' : '56px 40px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
@@ -91,8 +92,8 @@ export const S12 = ({ go, m, p }) => (
       </div>
       {/* Status badges */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 16 }}>
-        <span style={{ background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.3)', color: '#fff', padding: '5px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700 }}>✓ Facility notified</span>
-        <span style={{ background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.3)', color: '#fff', padding: '5px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700 }}>✓ Record closed</span>
+        <span style={{ background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.3)', color: '#fff', padding: '5px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700 }}>✓ ED submitted</span>
+        <span style={{ background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.3)', color: '#fff', padding: '5px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700 }}>{returnStatus?.facilityNotified ? '✓ Facility notified' : 'Pending notify'}</span>
       </div>
     </div>
 
@@ -104,6 +105,7 @@ export const S12 = ({ go, m, p }) => (
         {p.er.dr && <FR l="Provider" v={p.er.dr} />}
         {p.er.rx && <FR l="Medications" v={p.er.rx} />}
         {p.er.ins && <FR l="Instructions" v={p.er.ins} />}
+        {returnStatus?.facilityNotified && <FR l="Facility Notification" v={returnStatus.facilityNotified} />}
       </>} />
       <Bt full ch="Return Home" onClick={() => go(0)} m={m} bg={C.green} />
       <div style={{ textAlign: 'center', marginTop: 12 }}>
@@ -115,10 +117,34 @@ export const S12 = ({ go, m, p }) => (
 
 
 // ===== S13 — FACILITY RETURN =====
-export const S13 = ({ go, m, p, patients, ptId, setPt }) => (
-  <div style={{ minHeight: '100vh', background: C.bg }}>
-    <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr="Patient Returned" accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
-    <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
+export const S13 = ({ go, m, p, patients, ptId, setPt, returnStatus, onAcknowledge }) => {
+  const [actionMsg, setActionMsg] = useState('');
+  const returnSummary = `${p.short} ED Return Summary\nDiagnosis: ${p.er.dx}\nProvider: ${p.er.dr}\nInstructions: ${p.er.ins}\nMedication changes: ${p.er.rx || 'None listed'}\n`;
+  const downloadSummary = () => {
+    const blob = new Blob([returnSummary], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${p.short.toLowerCase().replace(/\s+/g, '_')}_return_summary.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setActionMsg('Return summary downloaded');
+    setTimeout(() => setActionMsg(''), 1800);
+  };
+  const copyInstructions = async () => {
+    try {
+      await navigator.clipboard.writeText(p.er.ins || '');
+      setActionMsg('Instructions copied');
+      setTimeout(() => setActionMsg(''), 1800);
+    } catch {
+      setActionMsg('Copy not available in this browser');
+      setTimeout(() => setActionMsg(''), 1800);
+    }
+  };
+  return (
+    <div style={{ minHeight: '100vh', background: C.bg }}>
+      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr="Patient Returned" accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
+      <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
       <div style={{ background: `linear-gradient(90deg,${C.lG},#F0FFF4)`, border: `1.5px solid ${C.green}`, borderLeft: `4px solid ${C.green}`, borderRadius: 12, padding: m ? '12px 14px' : '14px 20px', marginBottom: m ? 10 : 14, display: 'flex', alignItems: 'center', gap: 10 }}>
         <span style={{ fontSize: 20 }}>✅</span>
         <div><div style={{ fontWeight: 700, fontSize: 14, color: C.greenD }}>{p.short} has returned from the ED</div><div style={{ fontSize: 12, color: C.txS }}>{p.er.time || 'Today'} · via {p.tx.dest?.split(',')[0]}</div></div>
@@ -137,26 +163,37 @@ export const S13 = ({ go, m, p, patients, ptId, setPt }) => (
         <FR l="Instructions" v={p.er.ins} />
         <FR l="Provider" v={p.er.dr} />
         {p.er.rx && <FR l="Medications" v={p.er.rx} />}
+        <div style={{ marginTop: 10, borderTop: `1px solid ${C.bdr}`, paddingTop: 8, fontSize: 12, color: C.txS }}>
+          <div>ED submitted: {returnStatus?.edSubmitted || 'Pending'}</div>
+          <div>Facility notified: {returnStatus?.facilityNotified || 'Pending'}</div>
+          <div>Nurse acknowledged: {returnStatus?.nurseAcknowledged || 'Awaiting acknowledgment'}</div>
+          <div>Record closed: {returnStatus?.recordClosed || 'Open'}</div>
+        </div>
       </>} />
       <div style={{ display: 'flex', gap: m ? 8 : 12, marginTop: 8, flexDirection: m ? 'column' : 'row' }}>
         <Bt full outline ch="View Full Timeline" onClick={() => go(14)} m={m} />
-        <Bt full ch="✓ Acknowledge" onClick={() => go(0)} m={m} bg={C.green} />
+        <Bt full outline ch="Download Return Summary" onClick={downloadSummary} m={m} />
+        <Bt full outline ch="Copy Instructions" onClick={copyInstructions} m={m} />
+        <Bt full ch="✓ Acknowledge" onClick={() => { onAcknowledge(); go(17); }} m={m} bg={C.green} />
       </div>
+      {actionMsg && <div style={{ marginTop: 8, fontSize: 12, color: C.greenD, fontWeight: 700 }}>{actionMsg}</div>}
     </div>
   </div>
-);
+  );
+};
 
 // ===== S14 — TIMELINE =====
-export const S14 = ({ go, m, p }) => {
+export const S14 = ({ go, m, p, returnStatus }) => {
   const events = [
     { ic: '🏠', col: C.accent, time: 'Pre-Transfer', label: 'Baseline Record on File', sub: 'Code: ' + p.code + ' · ' + p.allergy.length + ' allergy(ies) documented' },
     { ic: '📝', col: C.navy, time: p.tx.time || '—', label: 'Transfer Initiated', sub: p.tx.reason?.slice(0, 80) + '…' || '' },
     { ic: '📱', col: C.accent, time: p.tx.time || '—', label: 'QR Code Generated', sub: 'Sent to: ' + (p.tx.dest || '—') },
     { ic: '🚑', col: C.amber, time: 'En Route', label: 'EMS Scanned QR', sub: 'Full record accessed on transport' },
     { ic: '🏥', col: C.green, time: p.er.time?.replace(' at ', ', ') || '—', label: 'ED Received Patient', sub: p.er.dr || '—' },
-    { ic: '✅', col: C.green, time: p.er.time || '—', label: 'ED Documentation Complete', sub: p.er.dx || '—' },
-    { ic: '🔔', col: C.accent, time: p.er.rpt || '—', label: 'Facility Notified', sub: 'Report called to Cascade View' },
-    { ic: '🏠', col: C.green, time: 'Current', label: 'Patient Returned to Facility', sub: 'Record complete and closed' },
+    { ic: '✅', col: C.green, time: returnStatus?.edSubmitted || p.er.time || '—', label: 'ED Documentation Complete', sub: p.er.dx || '—' },
+    { ic: '🔔', col: C.accent, time: returnStatus?.facilityNotified || p.er.rpt || '—', label: 'Facility Notified', sub: 'Push notification delivered' },
+    { ic: '✍️', col: C.purple, time: returnStatus?.nurseAcknowledged || 'Pending', label: 'Nurse Acknowledged', sub: returnStatus?.nurseAcknowledged ? 'Instructions acknowledged by facility nurse' : 'Awaiting facility acknowledgment' },
+    { ic: '🏠', col: C.green, time: returnStatus?.recordClosed || 'Open', label: 'Return Record Closed', sub: returnStatus?.recordClosed ? 'Closed-loop complete' : 'Open until acknowledged' },
   ];
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
@@ -186,11 +223,27 @@ export const S14 = ({ go, m, p }) => {
 };
 
 // ===== S17 — FACILITY DASHBOARD =====
-export const S17 = ({ go, m, p, patients, persona, alerts, dismissAlert }) => {
+export const S17 = ({ go, m, patients, persona, alerts, dismissAlert, returnTracking }) => {
+  const [statusFilter, setStatusFilter] = useState('All');
+  const activeTransfers = patients.filter(x => x.tx?.reason && !x.er?.dx);
+  const returnedPendingAck = patients.filter(pt => pt.er?.dx && !returnTracking?.[pt.id]?.nurseAcknowledged);
+  const completedReturns = patients.filter(pt => returnTracking?.[pt.id]?.recordClosed);
+  const pendingEDReturn = patients.filter(x => x.tx?.reason && !x.er?.dx);
+  const followUpDue = patients.filter(pt => pt.er?.ins);
+  const completionRate = patients.filter(x => x.tx?.reason).length
+    ? Math.round((completedReturns.length / patients.filter(x => x.tx?.reason).length) * 100)
+    : 0;
+  const filteredRecent = patients.filter(pt => {
+    if (statusFilter === 'Active') return activeTransfers.some(a => a.id === pt.id);
+    if (statusFilter === 'Pending return') return pendingEDReturn.some(a => a.id === pt.id);
+    if (statusFilter === 'Needs ack') return returnedPendingAck.some(a => a.id === pt.id);
+    if (statusFilter === 'Closed') return completedReturns.some(a => a.id === pt.id);
+    return pt.tx?.reason;
+  });
   const stats = [
     { n: patients.length, l: 'Residents', ic: '👥', c: C.accent },
     { n: patients.filter(x => x.tx && x.tx.reason).length, l: 'Transfers Today', ic: '🚑', c: C.amber },
-    { n: patients.filter(x => x.er && x.er.dx).length, l: 'ED Returns', ic: '✅', c: C.green },
+    { n: returnedPendingAck.length, l: 'Needs Ack', ic: '✍️', c: C.purple },
     { n: patients.filter(x => x.polst).length, l: 'POLST on File', ic: '📋', c: C.purple },
   ];
   return (
@@ -227,17 +280,50 @@ export const S17 = ({ go, m, p, patients, persona, alerts, dismissAlert }) => {
             } />
           ))}
         </>}
+        {returnedPendingAck.length > 0 && (
+          <Cd m={m} style={{ borderLeft: `4px solid ${C.amber}`, background: C.lW }} ch={<>
+            <div style={{ fontSize: 13, fontWeight: 700, color: C.navy }}>Returned patients need acknowledgement</div>
+            <div style={{ fontSize: 12, color: C.txS, marginTop: 2 }}>
+              {returnedPendingAck.map(pt => pt.short).join(', ')}
+            </div>
+          </>} />
+        )}
+        <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr', gap: 10, marginBottom: 12 }}>
+          {[
+            ['Active transfers', activeTransfers.length, C.amber],
+            ['Pending ED return', pendingEDReturn.length, C.accent],
+            ['Returned, needs acknowledgement', returnedPendingAck.length, C.purple],
+            ['Follow-up due', followUpDue.length, C.green]
+          ].map(([label, value, color]) => (
+            <Cd key={label} m={m} style={{ borderLeft: `4px solid ${color}` }} ch={<>
+              <div style={{ fontSize: 11, color: C.txS, textTransform: 'uppercase', fontWeight: 700 }}>{label}</div>
+              <div style={{ fontSize: 24, fontWeight: 900, color }}>{value}</div>
+            </>} />
+          ))}
+        </div>
+        <Cd m={m} style={{ borderLeft: `4px solid ${C.green}` }} ch={<>
+          <div style={{ fontSize: 11, color: C.txS, textTransform: 'uppercase', fontWeight: 700 }}>Closed-loop completion rate</div>
+          <div style={{ fontSize: 22, fontWeight: 900, color: C.green }}>{completionRate}%</div>
+          <div style={{ height: 8, background: '#E8ECEF', borderRadius: 6, overflow: 'hidden', marginTop: 8 }}>
+            <div style={{ width: `${completionRate}%`, background: C.green, height: '100%' }} />
+          </div>
+        </>} />
         <SL ch="Quick Actions" ic="⚡" />
         <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr', gap: m ? 8 : 12, marginBottom: 14 }}>
-          {[['Patient Roster', '📋', 1], ['Transfer History', '📁', 18], ['SBAR Report', '📊', 19], ['New Patient', '➕', 'add']].map(([l, ic, s], i) => (
+          {[['Patient Roster', '📋', 1], ['Transfer History', '📁', 18], ['SBAR Report', '📊', 19], ['Data Sources', '🔌', 20], ['New Patient', '➕', 'add']].map(([l, ic, s], i) => (
             <Cd key={i} m={m} onClick={() => go(s)} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 12 }} ch={<>
               <div style={{ width: 40, height: 40, borderRadius: 12, background: C.lA, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>{ic}</div>
               <span style={{ fontSize: 14, fontWeight: 600, color: C.navy }}>{l}</span>
             </>} />
           ))}
         </div>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 10 }}>
+          {['All', 'Active', 'Pending return', 'Needs ack', 'Closed'].map(f => (
+            <span key={f} onClick={() => setStatusFilter(f)} style={{ padding: '6px 10px', borderRadius: 16, cursor: 'pointer', fontSize: 11, fontWeight: 700, background: statusFilter === f ? C.navy : '#fff', color: statusFilter === f ? '#fff' : C.txS, border: `1px solid ${statusFilter === f ? C.navy : C.bdr}` }}>{f}</span>
+          ))}
+        </div>
         <SL ch="Recent Activity" ic="📊" />
-        {patients.filter(x => x.tx && x.tx.reason).map((pt, i) => (
+        {filteredRecent.map((pt, i) => (
           <Cd key={i} m={m} onClick={() => { go(2); }} style={{ cursor: 'pointer' }} ch={
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -301,13 +387,15 @@ export const S18 = ({ go, m, patients, setPt }) => {
 // ===== S19 — SBAR REPORT =====
 export const S19 = ({ go, m, patients }) => {
   const [ptIdx, setPtIdx] = useState(0);
+  const [variant, setVariant] = useState('EMS handoff');
   const pt = patients[ptIdx];
   const [copied, setCopied] = useState(false);
+  const sourceMeds = pt.medAttachment ? `${pt.medAttachment.method} (${pt.medAttachment.fileName})` : 'Manual entry';
   const sbar = [
-    { label: 'S — Situation', color: C.red, ic: '🔴', content: `I am calling about ${pt.name}, room ${pt.room}. The reason for this communication is: ${pt.tx.reason || '[Transfer reason]'}. Symptoms include: ${(pt.tx.symp || []).join(', ') || '[symptoms]'}.` },
-    { label: 'B — Background', color: C.amber, ic: '🟡', content: `Code Status: ${pt.code}. ${pt.polst ? 'POLST on file.' : ''} Allergies: ${pt.allergy.length > 0 ? pt.allergy.join(', ') : 'NKA'}. Conditions: ${pt.hx.join(', ')}. Current medications: ${pt.meds.map(x => x.n + ' ' + x.f).join('; ')}.` },
-    { label: 'A — Assessment', color: C.accent, ic: '🔵', content: `Recent changes: ${pt.tx.chg || '[Recent changes]'}. Interventions taken: ${pt.tx.intv || '[Interventions]'}.` },
-    { label: 'R — Recommendation', color: C.green, ic: '🟢', content: `Patient is being transferred to ${pt.tx.dest || '[Destination]'}. Family contact: ${pt.contact} (${pt.contactRel}) ${pt.contactPh}. ${pt.comfort.comm}` },
+    { label: 'S — Situation', color: C.red, ic: '🔴', content: `(${variant}) ${pt.name}, room ${pt.room}. Reason: ${pt.tx.reason || '[Transfer reason]'}. Symptoms: ${(pt.tx.symp || []).join(', ') || '[symptoms]'}.` },
+    { label: 'B — Background', color: C.amber, ic: '🟡', content: `Code: ${pt.code}. ${pt.polst ? 'POLST on file.' : ''} Allergies: ${pt.allergy.length > 0 ? pt.allergy.join(', ') : 'NKA'}. Conditions: ${pt.hx.join(', ')}. Medication source: ${sourceMeds}.` },
+    { label: 'A — Assessment', color: C.accent, ic: '🔵', content: `Recent changes: ${pt.tx.chg || '[Recent changes]'}. Interventions: ${pt.tx.intv || '[Interventions]'}. Last status: ${(pt.vitalsHistory || []).slice(-1).map(v => `${v.time} BP ${v.bp} HR ${v.hr} SPO2 ${v.sp}%`).join('') || 'No current vitals'}.` },
+    { label: 'R — Recommendation', color: C.green, ic: '🟢', content: `Destination: ${pt.tx.dest || '[Destination]'}. Family: ${pt.contact} (${pt.contactRel}) ${pt.contactPh}. Person-centered flags: ${pt.personCentered?.languageNeed || pt.lang}, ${pt.personCentered?.calmingStrategies || pt.comfort.dist}.` },
   ];
   const fullText = sbar.map(s => `${s.label}:\n${s.content}`).join('\n\n');
   return (
@@ -317,6 +405,17 @@ export const S19 = ({ go, m, patients }) => {
         <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
           {patients.map((p, i) => <span key={i} onClick={() => setPtIdx(i)} style={{ padding: '8px 16px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: ptIdx === i ? C.accent : '#fff', color: ptIdx === i ? '#fff' : C.txS, cursor: 'pointer', border: `1px solid ${ptIdx === i ? C.accent : C.bdr}` }}>{p.init} — {p.short}</span>)}
         </div>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+          {['EMS handoff', 'ED triage', 'Facility return'].map(v => (
+            <span key={v} onClick={() => setVariant(v)} style={{ padding: '6px 12px', borderRadius: 18, fontSize: 12, fontWeight: 700, background: variant === v ? C.purple : '#fff', color: variant === v ? '#fff' : C.txS, border: `1px solid ${variant === v ? C.purple : C.bdr}`, cursor: 'pointer' }}>{v}</span>
+          ))}
+        </div>
+        <Cd m={m} style={{ borderLeft: `4px solid ${C.purple}`, marginBottom: 12 }} ch={<>
+          <FR l="Generated" v="March 20, 2026 at 6:18 PM" />
+          <FR l="Author" v={pt.tx.nurse || 'RN Sarah Mitchell'} />
+          <FR l="Destination" v={pt.tx.dest || 'Not selected'} />
+          <FR l="Medication Source" v={sourceMeds} />
+        </>} />
         {sbar.map((s, i) => (
           <Cd key={i} m={m} style={{ borderLeft: `4px solid ${s.color}`, marginBottom: m ? 8 : 12 }} ch={<>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
@@ -329,8 +428,35 @@ export const S19 = ({ go, m, patients }) => {
         <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
           <Bt full ch={copied ? '✓ Copied!' : '📋 Copy SBAR'} bg={copied ? C.green : C.accent} onClick={() => { navigator.clipboard.writeText(fullText).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 2000); }} m={m} />
           <Bt full outline ch="🖨 Print" onClick={() => window.print()} m={m} />
+          <Bt full outline ch="⬇ Download" onClick={() => {}} m={m} />
         </div>
       </div>
     </div>
   );
 };
+
+// ===== S20 — DATA SOURCES / INTEGRATIONS =====
+export const S20 = ({ go, m }) => (
+  <div style={{ minHeight: '100vh', background: C.bg }}>
+    <TB m={m} left={<Bk go={go} to={17} label="Dashboard" />} ctr="Data Sources & Integrations" />
+    <div style={{ padding: m ? 14 : 20, maxWidth: 720, margin: '0 auto' }}>
+      <Cd m={m} style={{ borderLeft: `4px solid ${C.accent}` }} ch={<>
+        <div style={{ fontSize: 14, fontWeight: 700, color: C.navy, marginBottom: 4 }}>Prototype architecture story</div>
+        <div style={{ fontSize: 12, color: C.txS, lineHeight: 1.6 }}>
+          TransferLink supports standalone facilities, document upload workflows, and API-connected organizations without becoming a full EHR module.
+        </div>
+      </>} />
+      {INTEGRATION_CONNECTORS.map((conn) => (
+        <Cd key={conn.name} m={m} style={{ borderLeft: `4px solid ${conn.mode === 'Connected' ? C.green : conn.mode === 'Pilot-ready' ? C.accent : C.amber}` }} ch={<>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <div style={{ fontSize: 15, fontWeight: 800, color: C.navy }}>{conn.name}</div>
+            <Bg ch={`${conn.mode} · ${conn.status}`} bg={conn.mode === 'Connected' ? C.green : conn.mode === 'Pilot-ready' ? C.accent : C.amber} />
+          </div>
+          <div style={{ display: 'grid', gap: 5 }}>
+            {conn.scope.map((sc) => <div key={sc} style={{ fontSize: 12, color: C.txS }}>• {sc}</div>)}
+          </div>
+        </>} />
+      ))}
+    </div>
+  </div>
+);
