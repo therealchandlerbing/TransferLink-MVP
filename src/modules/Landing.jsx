@@ -9,7 +9,8 @@ import { navigate } from '../shared/routing.js';
 
 const globalStyles = `
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #0c1424; }
+  body { background: #0c1424; -webkit-text-size-adjust: 100%; }
+  button, [role="button"], a { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   input,textarea,button { font-family: inherit; }
   @keyframes bp { 0%,100%{opacity:.9}50%{opacity:.5} }
   @keyframes flowPulse { 0%{opacity:.15} 50%{opacity:.55} 100%{opacity:.15} }
@@ -22,13 +23,14 @@ const globalStyles = `
   ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 2px; }
 `;
 
-function Hero({ m }) {
+function Hero({ m, xs }) {
+  const headlineSize = xs ? 34 : (m ? 42 : 68);
   return (
-    <div style={{ textAlign: 'center', padding: m ? '56px 18px 28px' : '88px 32px 44px', position: 'relative' }}>
-      <div style={{ fontSize: m ? 10 : 11, fontWeight: 700, letterSpacing: 3.5, color: C.accent, textTransform: 'uppercase', marginBottom: 18 }}>
+    <div style={{ textAlign: 'center', padding: m ? '60px 16px 28px' : '88px 32px 44px', position: 'relative' }}>
+      <div style={{ fontSize: m ? 10 : 11, fontWeight: 700, letterSpacing: xs ? 2.4 : 3.5, color: C.accent, textTransform: 'uppercase', marginBottom: 18 }}>
         DNP Research · WA State · 2026
       </div>
-      <div style={{ fontFamily: "'Manrope','Inter',sans-serif", fontSize: m ? 42 : 68, fontWeight: 900, color: '#fff', letterSpacing: -2, lineHeight: .98 }}>
+      <div style={{ fontFamily: "'Manrope','Inter',sans-serif", fontSize: headlineSize, fontWeight: 900, color: '#fff', letterSpacing: xs ? -1.2 : -2, lineHeight: .98 }}>
         One QR code.<br />
         <span style={{ color: C.accent }}>Every handoff.</span>
       </div>
@@ -282,25 +284,38 @@ function Footer({ m }) {
   );
 }
 
+const scrollToResearch = () => {
+  document.getElementById('tl-research')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
 export default function Landing() {
-  const m = useWindowWidth() < 760;
+  const w = useWindowWidth();
+  const m  = w < 760;  // stack multi-column layouts
+  const xs = w < 420;  // tiny phones — shrink chrome further
+  const navLinkStyle = {
+    color: 'rgba(255,255,255,.55)', textDecoration: 'none', transition: 'color .2s',
+    background: 'none', border: 'none', cursor: 'pointer',
+    fontFamily: 'inherit', fontSize: xs ? 11 : (m ? 12 : 13), fontWeight: 600,
+    padding: '8px 2px',  // wider tap target without visible change
+    whiteSpace: 'nowrap',
+  };
 
   return (
     <div style={{ minHeight: '100vh', background: `radial-gradient(ellipse at top,${C.navy}, #0c1424 70%)`, color: '#fff', fontFamily: "'Inter',system-ui,sans-serif", position: 'relative', overflow: 'hidden' }}>
       <style>{globalStyles}</style>
       <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle at 1px 1px,rgba(255,255,255,.025) 1px,transparent 0)', backgroundSize: '32px 32px', pointerEvents: 'none' }} />
       <div style={{ position: 'relative' }}>
-        <div style={{ position: 'absolute', top: m ? 16 : 24, left: m ? 18 : 32, right: m ? 18 : 32, display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 2 }}>
-          <div style={{ fontFamily: "'Manrope','Inter',sans-serif", fontSize: m ? 18 : 20, fontWeight: 900, color: '#fff', letterSpacing: -.4 }}>
+        <div style={{ position: 'absolute', top: m ? 10 : 24, left: m ? 14 : 32, right: m ? 14 : 32, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, zIndex: 2 }}>
+          <div style={{ fontFamily: "'Manrope','Inter',sans-serif", fontSize: xs ? 16 : (m ? 18 : 20), fontWeight: 900, color: '#fff', letterSpacing: -.4, flexShrink: 0, whiteSpace: 'nowrap' }}>
             Transfer<span style={{ color: C.accent }}>Link</span>
           </div>
-          <div style={{ display: 'flex', gap: m ? 12 : 18, fontSize: 13, fontWeight: 600 }}>
-            <a href="#tl-research" className="tl-link" style={{ color: 'rgba(255,255,255,.55)', textDecoration: 'none', transition: 'color .2s' }}>Research</a>
-            <a href="#/app" className="tl-link" style={{ color: 'rgba(255,255,255,.55)', textDecoration: 'none', transition: 'color .2s' }}>Prototype</a>
-            <a href="#/tour" className="tl-link" style={{ color: 'rgba(255,255,255,.55)', textDecoration: 'none', transition: 'color .2s' }}>Tour</a>
-          </div>
+          <nav aria-label="Primary" style={{ display: 'flex', gap: xs ? 10 : (m ? 14 : 18), alignItems: 'center' }}>
+            {!xs && <button type="button" onClick={scrollToResearch} className="tl-link" style={navLinkStyle}>Research</button>}
+            <a href="#/app"  className="tl-link" style={navLinkStyle}>Prototype</a>
+            <a href="#/tour" className="tl-link" style={navLinkStyle}>Tour</a>
+          </nav>
         </div>
-        <Hero m={m} />
+        <Hero m={m} xs={xs} />
         <PrimaryCTAs m={m} />
         <ProblemSection m={m} />
         <HowItWorks m={m} />

@@ -10,7 +10,7 @@
 // The Prototype maps segments[0] onto its internal screen index. The Tour maps
 // segments[0] onto the guided-demo step index.
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const DEFAULT_ROUTE = { module: 'landing', segments: [] };
 
@@ -46,5 +46,7 @@ export function useHashRoute() {
     window.addEventListener('hashchange', onChange);
     return () => window.removeEventListener('hashchange', onChange);
   }, []);
-  return parseHash(hash);
+  // Memoize so consumers can use the route object as a useMemo / useEffect
+  // dependency without triggering on every parent render.
+  return useMemo(() => parseHash(hash), [hash]);
 }

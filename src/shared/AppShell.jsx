@@ -14,7 +14,8 @@ import { ToastContainer, NotificationCenter } from '../modals.jsx';
 
 const globalStyles = `
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #1a1a2e; }
+  body { background: #1a1a2e; -webkit-text-size-adjust: 100%; }
+  button, [role="button"] { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .card-hover:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(15,29,47,.12) !important; }
   .hover-scale:hover { transform: scale(1.03); }
   @keyframes bp { 0%,100%{opacity:.9}50%{opacity:.5} }
@@ -30,9 +31,13 @@ const globalStyles = `
 `;
 
 export function BellButton({ onClick, count }) {
+  const label = count > 0
+    ? `Open notifications (${count} unread)`
+    : 'Open notifications';
   return (
     <button
       onClick={onClick}
+      aria-label={label}
       style={{
         position: 'fixed', top: 10, right: 12, zIndex: 50,
         background: 'none', border: 'none', cursor: 'pointer', padding: 4,
