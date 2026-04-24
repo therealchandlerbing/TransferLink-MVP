@@ -72,7 +72,7 @@ export default function App() {
 
   const ackReturn = useCallback(() => {
     const now = new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
-    setPatients(ps => ps.map(x => x.id === ptId ? { ...x, er: { ...x.er, ackedAt: now, ackedBy: persona ? persona.name : 'RN Sarah Mitchell' } } : x));
+    setPatients(ps => ps.map(x => x.id === ptId ? { ...x, er: { ...x.er, ackedAt: now, ackedBy: persona ? persona.name : 'RN Sarah Mitchell', closedAt: now } } : x));
     addToast('Return loop closed. Acknowledgement recorded.', 'ok');
   }, [ptId, persona, addToast]);
 

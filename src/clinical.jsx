@@ -139,11 +139,23 @@ export const ComfortSection = ({ p, m, defaultOpen = false }) => {
 // ===== MEDICATION IMPORT MODAL =====
 // Supports the three prototype paths the committee asked for: PDF upload, photograph, EHR/CSV import
 // Always keeps manual entry available for low-resource facilities
-export const MedImportModal = ({ open, onClose, onImport, currentSource, m }) => {
+// Callers conditionally render this component so it remounts per open — useState initializers
+// reflect the current patient's source every time, with no sync effect required.
+export const MedImportModal = ({ onClose, onImport, currentSource, m }) => {
   const [method, setMethod] = useState(currentSource?.method || 'pdf');
   const [step, setStep] = useState(0); // 0=choose, 1=uploading, 2=success
   const [file, setFile] = useState(currentSource?.file || '');
   const count = currentSource?.count || 5;
+  // Simulated upload transition. Effect-owned timeout so close / unmount / pick-again all clean up automatically.
+  useEffect(() => {
+    if (step !== 1) return undefined;
+    const fileMap = { pdf: 'CascadeView_MAR_20260320.pdf', photo: 'IMG_MAR_20260320.jpg', pcc_import: 'PCC_MedList_live.xml', manual: null };
+    const t = setTimeout(() => {
+      setFile(fileMap[method]);
+      setStep(2);
+    }, 900);
+    return () => clearTimeout(t);
+  }, [step, method]);
   const options = [
     { id: 'pdf', ic: '📄', label: 'Upload medication report PDF', sub: 'PointClickCare MAR, MatrixCare export, facility PDF' },
     { id: 'photo', ic: '📷', label: 'Photograph or scan paper list', sub: 'For facilities with no EHR access' },
@@ -153,11 +165,6 @@ export const MedImportModal = ({ open, onClose, onImport, currentSource, m }) =>
   const handlePick = (id) => {
     setMethod(id);
     setStep(1);
-    setTimeout(() => {
-      const fileMap = { pdf: 'CascadeView_MAR_20260320.pdf', photo: 'IMG_MAR_20260320.jpg', pcc_import: 'PCC_MedList_live.xml', manual: null };
-      setFile(fileMap[id]);
-      setStep(2);
-    }, 900);
   };
   const confirm = () => {
     const labelMap = { pdf: 'Uploaded medication report', photo: 'Photo of paper MAR', pcc_import: 'PointClickCare MAR', manual: 'Manually entered' };
@@ -170,10 +177,8 @@ export const MedImportModal = ({ open, onClose, onImport, currentSource, m }) =>
       importedAt: new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }),
       importedBy: 'RN Sarah Mitchell',
     });
-    setStep(0);
     onClose();
   };
-  if (!open) return null;
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.55)', zIndex: 160, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: m ? 10 : 20 }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: m ? 14 : 20, width: '100%', maxWidth: 520, maxHeight: '90vh', overflow: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,.3)' }}>

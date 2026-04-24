@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { C, Chk, WarnIco, Bg, Av, Cd, Bt, SL, TB, Bk, TxIn, MedSourceBadge } from './components.jsx';
-import { DEMO_SCREEN_MAP, NEW_PT_TEMPLATE, PERSONAS, FACILITY_MODES } from './data.js';
+import { C, Chk, WarnIco, Bg, Av, Cd, Bt, SL, TB, Bk, TxIn } from './components.jsx';
+import { DEMO_SCREEN_MAP, NEW_PT_TEMPLATE, PERSONAS, FACILITY_MODES, FACILITY_INFO } from './data.js';
 import { MScaleSelect, FScaleSelect, MedImportModal } from './clinical.jsx';
 
 // ===== TOAST SYSTEM =====
@@ -122,7 +122,7 @@ export const IntakeModal = ({ onClose, onDone, m }) => {
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 100, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: m ? 0 : 20, paddingTop: m ? 0 : 40, overflow: 'auto' }} onClick={onClose}>
-      <MedImportModal open={medOpen} onClose={() => setMedOpen(false)} onImport={src => upd('medSource', src)} currentSource={d.medSource} m={m} />
+      {medOpen && <MedImportModal onClose={() => setMedOpen(false)} onImport={src => upd('medSource', src)} currentSource={d.medSource} m={m} />}
       <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: m ? 0 : 20, width: m ? '100%' : '95%', maxWidth: 620, maxHeight: m ? '100vh' : '90vh', overflow: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,.25)' }}>
         <div style={{ position: 'sticky', top: 0, background: '#fff', zIndex: 5, borderBottom: `1px solid ${C.bdr}`, padding: '16px 20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
@@ -335,7 +335,7 @@ export const S15 = ({ go, m, setPersona, setRole }) => {
       <div style={{ padding: m ? 14 : 20, maxWidth: 620, margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: 18 }}>
           <div style={{ fontSize: m ? 20 : 24, fontWeight: 800, color: C.navy, marginBottom: 4 }}>Welcome, {persona.name.split(' ')[0]}</div>
-          <div style={{ fontSize: 13, color: C.txS }}>Cascade View Assisted Living · Document-upload facility</div>
+          <div style={{ fontSize: 13, color: C.txS }}>{FACILITY_INFO.name} · {FACILITY_INFO.modeLabel}</div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 8, flexWrap: 'wrap' }}>
             <Bg ch={roles[selRole]} bg={C.accent} />
             <Bg ch={shifts[selShift]} bg={C.lA} color={C.accent} />
@@ -346,16 +346,19 @@ export const S15 = ({ go, m, setPersona, setRole }) => {
         <Cd m={m} style={{ marginBottom: 14 }} ch={<>
           <SL ch="This facility's mode" ic="🏥" />
           <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr 1fr', gap: 8 }}>
-            {FACILITY_MODES.map(mm => (
-              <div key={mm.id} style={{ background: mm.id === 'documentUpload' ? C.lA : '#F8F9FB', border: `1.5px solid ${mm.id === 'documentUpload' ? mm.color : C.bdr}`, borderRadius: 10, padding: '10px 10px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span style={{ fontSize: 18 }}>{mm.ic}</span>
-                  {mm.id === 'documentUpload' && <Bg ch="Current" bg={mm.color} style={{ fontSize: 9, padding: '2px 6px' }} />}
+            {FACILITY_MODES.map(mm => {
+              const isCurrent = mm.id === FACILITY_INFO.mode;
+              return (
+                <div key={mm.id} style={{ background: isCurrent ? C.lA : '#F8F9FB', border: `1.5px solid ${isCurrent ? mm.color : C.bdr}`, borderRadius: 10, padding: '10px 10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ fontSize: 18 }}>{mm.ic}</span>
+                    {isCurrent && <Bg ch="Current" bg={mm.color} style={{ fontSize: 9, padding: '2px 6px' }} />}
+                  </div>
+                  <div style={{ fontSize: 12, fontWeight: 800, color: C.navy, marginTop: 6 }}>{mm.label}</div>
+                  <div style={{ fontSize: 10, color: C.txS, marginTop: 2, lineHeight: 1.4 }}>{mm.sub}</div>
                 </div>
-                <div style={{ fontSize: 12, fontWeight: 800, color: C.navy, marginTop: 6 }}>{mm.label}</div>
-                <div style={{ fontSize: 10, color: C.txS, marginTop: 2, lineHeight: 1.4 }}>{mm.sub}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div style={{ fontSize: 11, color: C.txT, marginTop: 8, fontStyle: 'italic' }}>Same product works for adult family homes, mid-size AL, and EHR-connected SNFs.</div>
         </>} />

@@ -59,10 +59,21 @@ export const MedSourceBadge = ({ src, compact, onClick }) => {
     </span>
   );
   const icons = { pdf: "📄", photo: "📷", pcc_import: "🏥", epic: "🩺", manual: "✍️", csv: "📊" };
+  const verified = !!src.verified;
+  const style = {
+    display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 16,
+    fontSize: 11, fontWeight: 700,
+    background: verified ? "#E6F7FA" : C.lW,
+    color: verified ? C.accentD : C.amberD,
+    border: `1px solid ${verified ? C.accent + "40" : C.amber + "60"}`,
+    cursor: onClick ? "pointer" : "default",
+  };
+  const status = verified ? "verified at transfer" : "unverified";
+  const shortStatus = verified ? "verified" : "unverified";
   return (
-    <span onClick={onClick} {...getA11yProps(onClick)} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 16, background: "#E6F7FA", color: C.accentD, fontSize: 11, fontWeight: 700, border: `1px solid ${C.accent}40`, cursor: onClick ? "pointer" : "default" }}>
+    <span onClick={onClick} {...getA11yProps(onClick)} style={style}>
       <span>{icons[src.method] || "📎"}</span>
-      {compact ? `${src.count} meds · verified` : `${src.label} · ${src.count} meds · verified at transfer`}
+      {compact ? `${src.count} meds · ${shortStatus}` : `${src.label} · ${src.count} meds · ${status}`}
     </span>
   );
 };
@@ -73,7 +84,7 @@ export const ReturnStates = ({ er, m }) => {
     { k: "submittedAt", label: "ED submitted return packet", ic: "📤", ts: er?.submittedAt },
     { k: "notifiedAt", label: "Facility notified", ic: "🔔", ts: er?.notifiedAt },
     { k: "ackedAt", label: er?.ackedBy ? `Acknowledged by ${er.ackedBy}` : "Awaiting nurse acknowledgement", ic: "✅", ts: er?.ackedAt },
-    { k: "closedAt", label: "Return record closed", ic: "📁", ts: er?.ackedAt },
+    { k: "closedAt", label: "Return record closed", ic: "📁", ts: er?.closedAt },
   ];
   return (
     <div style={{ background: "#fff", border: `1px solid ${C.bdr}`, borderRadius: 12, padding: m ? 10 : 14 }}>

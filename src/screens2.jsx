@@ -329,13 +329,13 @@ export const S17 = ({ go, m, patients, persona, alerts, dismissAlert, setPt }) =
         {filtered.length === 0 && (
           <Cd m={m} ch={<div style={{ textAlign: 'center', padding: 20, fontSize: 13, color: C.txT }}>Nothing in this bucket right now.</div>} />
         )}
-        {filtered.map((pt, i) => {
+        {filtered.map((pt) => {
           const isActive = pt.tx?.reason && !(pt.er?.submittedAt);
           const needsAck = pt.tx?.reason && pt.er?.dx && !pt.er?.ackedAt;
           const isAcked = !!pt.er?.ackedAt;
           const badge = needsAck ? { c: C.red, label: '🔔 Needs ack' } : isActive ? { c: C.amber, label: '⚡ In transfer' } : isAcked ? { c: C.green, label: '✓ Loop closed' } : { c: C.accent, label: '— At facility' };
           return (
-            <Cd key={i} m={m} onClick={() => { setPt && setPt(pt.id); go(needsAck ? 13 : 2); }} style={{ cursor: 'pointer', borderLeft: `3px solid ${badge.c}` }} ch={
+            <Cd key={pt.id} m={m} onClick={() => { setPt && setPt(pt.id); go(needsAck ? 13 : 2); }} style={{ cursor: 'pointer', borderLeft: `3px solid ${badge.c}` }} ch={
               <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                 <Av sz={36} init={pt.init} />
                 <div style={{ flex: 1, minWidth: 0 }}>

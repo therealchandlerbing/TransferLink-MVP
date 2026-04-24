@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { C, Chk, DnA, QR, Bg, Av, Cd, Bt, SL, TB, Bk, FR, TxIn, BellIco, MedSourceBadge, ProgressMeter, SecH } from './components.jsx';
+import { C, Chk, DnA, QR, Bg, Av, Cd, Bt, SL, TB, Bk, FR, ProgressMeter } from './components.jsx';
 import { AllergyB, CodeBanner, PtHd, Steps, TransferTracker, PtSwitcher, POLST, Scanner, Sections, ComfortSection, MedImportModal } from './clinical.jsx';
 
 // ===== S0 — HOME =====
@@ -196,7 +196,7 @@ export const S2 = ({ go, m, p, patients, ptId, setPt, visited, importMedSource }
     <div style={{ minHeight: '100vh', background: C.bg }}>
       <TB m={m} left={<Bk go={go} to={1} label="Patients" />} ctr="Patient Record" right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
       <Steps cur={0} m={m} />
-      <MedImportModal open={medOpen} onClose={() => setMedOpen(false)} onImport={(src) => importMedSource && importMedSource(src)} currentSource={p.medSource} m={m} />
+      {medOpen && <MedImportModal onClose={() => setMedOpen(false)} onImport={(src) => importMedSource && importMedSource(src)} currentSource={p.medSource} m={m} />}
       <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
         <TransferTracker visited={visited} m={m} />
         <PtHd p={p} onQR={() => go(5)} m={m} />
@@ -234,7 +234,7 @@ export const S3 = ({ go, m, p, update, importMedSource }) => {
     <div style={{ minHeight: '100vh', background: C.bg }}>
       <TB m={m} left={<Bk go={go} to={2} label="Cancel" />} ctr="Initiate Transfer" />
       <Steps cur={1} m={m} />
-      <MedImportModal open={medOpen} onClose={() => setMedOpen(false)} onImport={(src) => importMedSource && importMedSource(src)} currentSource={p.medSource} m={m} />
+      {medOpen && <MedImportModal onClose={() => setMedOpen(false)} onImport={(src) => importMedSource && importMedSource(src)} currentSource={p.medSource} m={m} />}
       <div style={{ padding: m ? 14 : 20, maxWidth: 620, margin: '0 auto' }}>
         <ProgressMeter pct={pct} est={est} label="Transfer in under 5 minutes" />
         <div style={{ background: C.lA, border: `1px solid ${C.accent}30`, borderRadius: 10, padding: '8px 12px', marginBottom: 12, fontSize: 11, color: C.accentD, display: 'flex', alignItems: 'center', gap: 6 }}>
