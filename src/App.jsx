@@ -9,6 +9,8 @@ import { LandingPage, OnboardingModule } from './landing.jsx';
 export default function App() {
   const [screen, setScreen] = useState(0);
   const [presentation, setPresentation] = useState('landing');
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [lastAppScreen, setLastAppScreen] = useState(17);
   const [ptId, setPtId] = useState(0);
   const [patients, setPatients] = useState(INIT_PATIENTS);
   const [toasts, setToasts] = useState([]);
@@ -37,11 +39,21 @@ export default function App() {
 
   const go = useCallback((s) => {
     if (s === 'add') { setShowIntake(true); return; }
-    if (s === 'legacy-home') { setPresentation('app'); setScreen(0); return; }
+    if (s === 'legacy-home') { setScreen(0); setPresentation('app'); return; }
     if (s === 0 && presentation === 'app') { setPresentation('landing'); return; }
     setVisited(v => new Set([...v, s]));
-    setScreen(Number(s));
+    const next = Number(s);
+    if (presentation === 'app') setLastAppScreen(next);
+    setScreen(next);
   }, [presentation]);
+
+  const transitionTo = useCallback((cb) => {
+    setIsTransitioning(true);
+    window.setTimeout(() => {
+      cb();
+      setIsTransitioning(false);
+    }, 180);
+  }, []);
 
   const addToast = useCallback((msg, type = 'ok') => {
     const id = Date.now();
@@ -114,7 +126,7 @@ export default function App() {
 
   const unreadCount = notifs.filter(n => n.unread).length;
   const showAny = screen >= 1 && screen !== 5 && screen !== 6 && screen !== 7 && screen !== 9 && screen !== 12 && screen !== 15;
-  const showHomeBtn = screen !== 0 && screen !== 7 && screen !== 9 && screen !== 12;
+  const showHomeBtn = screen !== 7 && screen !== 9 && screen !== 12;
 
   const sharedProps = { go, m, p, patients, ptId, setPt: setPtId, visited, persona, role };
 
@@ -140,9 +152,10 @@ export default function App() {
       {presentation === 'landing' && (
         <LandingPage
           m={m}
-          onStartOnboarding={() => setPresentation('onboarding')}
-          onOpenPrototype={() => { setPresentation('app'); setScreen(17); }}
-          onOpenLegacy={() => { setPresentation('app'); setScreen(0); }}
+          hasResume={lastAppScreen != null}
+          onStartOnboarding={() => transitionTo(() => setPresentation('onboarding'))}
+          onOpenPrototype={() => transitionTo(() => { setPresentation('app'); setScreen(lastAppScreen || 17); })}
+          onOpenLegacy={() => transitionTo(() => { setPresentation('app'); setScreen(0); })}
         />
       )}
       {presentation === 'onboarding' && (
@@ -150,8 +163,8 @@ export default function App() {
           m={m}
           setPersona={setPersona}
           setRole={setRole}
-          onBack={() => setPresentation('landing')}
-          onComplete={() => { setPresentation('app'); setScreen(17); }}
+          onBack={() => transitionTo(() => setPresentation('landing'))}
+          onComplete={() => transitionTo(() => { setPresentation('app'); setScreen(lastAppScreen || 17); })}
         />
       )}
       {presentation === 'app' && (
@@ -192,36 +205,42 @@ export default function App() {
       )}
 
       {showHomeBtn && (
-        <button
-          className="home-btn"
-          onClick={() => go(0)}
-          aria-label="Go to Home"
-          style={{
-            position: 'fixed',
-            top: 58,
-            right: 12,
-            zIndex: 49,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 5,
-            padding: '6px 12px',
-            borderRadius: 20,
-            background: `linear-gradient(135deg,${C.navy},${C.navyL})`,
-            border: `1.5px solid rgba(27,154,170,0.4)`,
-            color: 'rgba(255,255,255,0.85)',
-            fontSize: 12,
-            fontWeight: 700,
-            cursor: 'pointer',
-            boxShadow: '0 2px 10px rgba(15,29,47,.3)',
-            transition: 'transform .18s ease, box-shadow .18s ease',
-            letterSpacing: .2,
-            fontFamily: 'inherit',
-          }}
-        >
-          <span style={{ fontSize: 13 }}>🏠</span>
-          Home
-        </button>
+        <>
+          <button
+            className="home-btn"
+            onClick={() => go(17)}
+            aria-label="Go to Dashboard"
+            style={{
+              position: 'fixed',
+              top: 58,
+              right: 12,
+              zIndex: 49,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+              padding: '6px 12px',
+              borderRadius: 20,
+              background: `linear-gradient(135deg,${C.navy},${C.navyL})`,
+              border: `1.5px solid rgba(27,154,170,0.4)`,
+              color: 'rgba(255,255,255,0.85)',
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: 'pointer',
+              boxShadow: '0 2px 10px rgba(15,29,47,.3)',
+              transition: 'transform .18s ease, box-shadow .18s ease',
+              letterSpacing: .2,
+              fontFamily: 'inherit',
+            }}
+          >
+            <span style={{ fontSize: 13 }}>📊</span>
+            Dashboard
+          </button>
+          <button onClick={() => transitionTo(() => setPresentation('landing'))} style={{ position: 'fixed', top: 94, right: 12, zIndex: 49, border: `1px solid ${C.bdr}`, background: '#fff', color: C.txS, borderRadius: 16, padding: '4px 9px', fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
+            Exit
+          </button>
+        </>
       )}
+      {isTransitioning && <div style={{ position: 'fixed', inset: 0, zIndex: 400, background: 'rgba(15,29,47,.18)', backdropFilter: 'blur(2px)' }} />}
         </>
       )}
     </div>
