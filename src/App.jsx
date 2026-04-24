@@ -104,7 +104,6 @@ export default function App() {
   }, []);
 
   const unreadCount = notifs.filter(n => n.unread).length;
-  const showHeader = screen !== 0 && screen !== 7 && screen !== 9 && !demo;
   const showAny = screen >= 1 && screen !== 5 && screen !== 6 && screen !== 7 && screen !== 9 && screen !== 12 && screen !== 15;
   const showHomeBtn = screen !== 0 && screen !== 7 && screen !== 9 && screen !== 12;
 

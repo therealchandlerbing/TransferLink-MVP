@@ -3,7 +3,7 @@ import { C, Chk, Bg, Av, Cd, Bt, SL, TB, Bk, FR, TxIn } from './components.jsx';
 import { PtSwitcher, TransferTracker } from './clinical.jsx';
 import { INTEGRATION_CONNECTORS } from './data.js';
 
-const Toggle = ({ val, onChange, m }) => (
+const Toggle = ({ val, onChange }) => (
   <div onClick={() => onChange(!val)} style={{ width: 48, height: 26, borderRadius: 13, background: val ? C.green : '#CCC', cursor: 'pointer', position: 'relative', transition: 'background .2s', flexShrink: 0 }}>
     <div style={{ position: 'absolute', top: 3, left: val ? 25 : 3, width: 20, height: 20, borderRadius: 10, background: '#fff', boxShadow: '0 1px 4px rgba(0,0,0,.2)', transition: 'left .2s' }} />
   </div>
@@ -197,7 +197,7 @@ export const S14 = ({ go, m, p, returnStatus }) => {
 };
 
 // ===== S17 — FACILITY DASHBOARD =====
-export const S17 = ({ go, m, p, patients, persona, alerts, dismissAlert, returnTracking }) => {
+export const S17 = ({ go, m, patients, persona, alerts, dismissAlert, returnTracking }) => {
   const stats = [
     { n: patients.length, l: 'Residents', ic: '👥', c: C.accent },
     { n: patients.filter(x => x.tx && x.tx.reason).length, l: 'Transfers Today', ic: '🚑', c: C.amber },

@@ -140,7 +140,7 @@ export const TransferTracker = ({ visited, m }) => {
 };
 
 // ===== PATIENT SWITCHER =====
-export const PtSwitcher = ({ patients, ptId, setPt, m }) => {
+export const PtSwitcher = ({ patients, ptId, setPt }) => {
   const [open, setOpen] = useState(false);
   const p = patients.find(x => x.id === ptId) || patients[0];
   return (
