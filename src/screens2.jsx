@@ -198,10 +198,26 @@ export const S14 = ({ go, m, p, returnStatus }) => {
 
 // ===== S17 — FACILITY DASHBOARD =====
 export const S17 = ({ go, m, patients, persona, alerts, dismissAlert, returnTracking }) => {
+  const [statusFilter, setStatusFilter] = useState('All');
+  const activeTransfers = patients.filter(x => x.tx?.reason && !x.er?.dx);
+  const returnedPendingAck = patients.filter(pt => pt.er?.dx && !returnTracking?.[pt.id]?.nurseAcknowledged);
+  const completedReturns = patients.filter(pt => returnTracking?.[pt.id]?.recordClosed);
+  const pendingEDReturn = patients.filter(x => x.tx?.reason && !x.er?.dx);
+  const followUpDue = patients.filter(pt => pt.er?.ins);
+  const completionRate = patients.filter(x => x.tx?.reason).length
+    ? Math.round((completedReturns.length / patients.filter(x => x.tx?.reason).length) * 100)
+    : 0;
+  const filteredRecent = patients.filter(pt => {
+    if (statusFilter === 'Active') return activeTransfers.some(a => a.id === pt.id);
+    if (statusFilter === 'Pending return') return pendingEDReturn.some(a => a.id === pt.id);
+    if (statusFilter === 'Needs ack') return returnedPendingAck.some(a => a.id === pt.id);
+    if (statusFilter === 'Closed') return completedReturns.some(a => a.id === pt.id);
+    return pt.tx?.reason;
+  });
   const stats = [
     { n: patients.length, l: 'Residents', ic: '👥', c: C.accent },
     { n: patients.filter(x => x.tx && x.tx.reason).length, l: 'Transfers Today', ic: '🚑', c: C.amber },
-    { n: patients.filter(x => x.er && x.er.dx).length, l: 'ED Returns', ic: '✅', c: C.green },
+    { n: returnedPendingAck.length, l: 'Needs Ack', ic: '✍️', c: C.purple },
     { n: patients.filter(x => x.polst).length, l: 'POLST on File', ic: '📋', c: C.purple },
   ];
   return (
@@ -246,6 +262,26 @@ export const S17 = ({ go, m, patients, persona, alerts, dismissAlert, returnTrac
             </div>
           </>} />
         )}
+        <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr', gap: 10, marginBottom: 12 }}>
+          {[
+            ['Active transfers', activeTransfers.length, C.amber],
+            ['Pending ED return', pendingEDReturn.length, C.accent],
+            ['Returned, needs acknowledgement', returnedPendingAck.length, C.purple],
+            ['Follow-up due', followUpDue.length, C.green]
+          ].map(([label, value, color]) => (
+            <Cd key={label} m={m} style={{ borderLeft: `4px solid ${color}` }} ch={<>
+              <div style={{ fontSize: 11, color: C.txS, textTransform: 'uppercase', fontWeight: 700 }}>{label}</div>
+              <div style={{ fontSize: 24, fontWeight: 900, color }}>{value}</div>
+            </>} />
+          ))}
+        </div>
+        <Cd m={m} style={{ borderLeft: `4px solid ${C.green}` }} ch={<>
+          <div style={{ fontSize: 11, color: C.txS, textTransform: 'uppercase', fontWeight: 700 }}>Closed-loop completion rate</div>
+          <div style={{ fontSize: 22, fontWeight: 900, color: C.green }}>{completionRate}%</div>
+          <div style={{ height: 8, background: '#E8ECEF', borderRadius: 6, overflow: 'hidden', marginTop: 8 }}>
+            <div style={{ width: `${completionRate}%`, background: C.green, height: '100%' }} />
+          </div>
+        </>} />
         <SL ch="Quick Actions" ic="⚡" />
         <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr', gap: m ? 8 : 12, marginBottom: 14 }}>
           {[['Patient Roster', '📋', 1], ['Transfer History', '📁', 18], ['SBAR Report', '📊', 19], ['Data Sources', '🔌', 20], ['New Patient', '➕', 'add']].map(([l, ic, s], i) => (
@@ -255,8 +291,13 @@ export const S17 = ({ go, m, patients, persona, alerts, dismissAlert, returnTrac
             </>} />
           ))}
         </div>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 10 }}>
+          {['All', 'Active', 'Pending return', 'Needs ack', 'Closed'].map(f => (
+            <span key={f} onClick={() => setStatusFilter(f)} style={{ padding: '6px 10px', borderRadius: 16, cursor: 'pointer', fontSize: 11, fontWeight: 700, background: statusFilter === f ? C.navy : '#fff', color: statusFilter === f ? '#fff' : C.txS, border: `1px solid ${statusFilter === f ? C.navy : C.bdr}` }}>{f}</span>
+          ))}
+        </div>
         <SL ch="Recent Activity" ic="📊" />
-        {patients.filter(x => x.tx && x.tx.reason).map((pt, i) => (
+        {filteredRecent.map((pt, i) => (
           <Cd key={i} m={m} onClick={() => { go(2); }} style={{ cursor: 'pointer' }} ch={
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

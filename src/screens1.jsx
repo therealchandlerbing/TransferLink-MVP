@@ -397,11 +397,19 @@ export const S9 = ({ go, m }) => <Scanner label="TransferLink | ED Scan" onDone=
 // ===== S8 — EMS VIEW =====
 export const S8 = ({ go, m, p, patients, ptId, setPt }) => {
   const [pol, setPol] = useState(false);
+  const [langView, setLangView] = useState('English');
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
       {pol && p.polst && <POLST p={p} onClose={() => setPol(false)} m={m} />}
       <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr={m ? 'EMS View' : 'TransferLink | EMS'} accent={C.amber} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
       <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
+        <Cd m={m} style={{ borderLeft: `4px solid ${C.purple}` }} ch={<>
+          <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', color: C.txS, marginBottom: 6 }}>Multilingual summary view</div>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 6 }}>
+            {['English', p.lang, 'Spanish'].map(l => <span key={l} onClick={() => setLangView(l)} style={{ padding: '5px 9px', borderRadius: 14, fontSize: 11, cursor: 'pointer', fontWeight: 700, background: langView === l ? C.purple : '#fff', color: langView === l ? '#fff' : C.txS, border: `1px solid ${langView === l ? C.purple : C.bdr}` }}>{l}</span>)}
+          </div>
+          <div style={{ fontSize: 12, color: C.txS }}>Display language: <strong>{langView}</strong> (prototype simulated translation output)</div>
+        </>} />
         <CodeBanner p={p} lg m={m} />
         <AllergyB p={p} m={m} />
         <PtHd p={p} m={m} />
@@ -416,11 +424,19 @@ export const S8 = ({ go, m, p, patients, ptId, setPt }) => {
 // ===== S10 — ED VIEW =====
 export const S10 = ({ go, m, p, patients, ptId, setPt }) => {
   const [pol, setPol] = useState(false);
+  const [langView, setLangView] = useState('English');
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
       {pol && p.polst && <POLST p={p} onClose={() => setPol(false)} m={m} />}
       <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr={m ? 'ED View' : 'TransferLink | ED'} accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
       <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
+        <Cd m={m} style={{ borderLeft: `4px solid ${C.purple}` }} ch={<>
+          <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', color: C.txS, marginBottom: 6 }}>Triage language output</div>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 6 }}>
+            {['English', p.lang, 'Spanish'].map(l => <span key={l} onClick={() => setLangView(l)} style={{ padding: '5px 9px', borderRadius: 14, fontSize: 11, cursor: 'pointer', fontWeight: 700, background: langView === l ? C.purple : '#fff', color: langView === l ? '#fff' : C.txS, border: `1px solid ${langView === l ? C.purple : C.bdr}` }}>{l}</span>)}
+          </div>
+          <div style={{ fontSize: 12, color: C.txS }}>ED view language: <strong>{langView}</strong> (prototype simulation)</div>
+        </>} />
         <EDCriticalSummary p={p} m={m} onOpenPolst={() => setPol(true)} />
         <CodeBanner p={p} lg m={m} />
         <AllergyB p={p} m={m} />
