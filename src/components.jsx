@@ -50,3 +50,80 @@ export const TxIn = ({ value, onChange, placeholder, rows }) => {
   if (rows) return <textarea value={local} onChange={e => setLocal(e.target.value)} onBlur={handleBlur} placeholder={placeholder} rows={rows} style={{ ...style, resize: "vertical" }} />;
   return <input value={local} onChange={e => setLocal(e.target.value)} onBlur={handleBlur} onKeyDown={hKeyDown} placeholder={placeholder} style={style} />;
 };
+
+// ===== MEDICATION SOURCE BADGE =====
+export const MedSourceBadge = ({ src, compact, onClick }) => {
+  if (!src) return (
+    <span onClick={onClick} {...getA11yProps(onClick)} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 16, background: C.lW, color: C.amberD, fontSize: 11, fontWeight: 700, border: `1px dashed ${C.amber}`, cursor: onClick ? "pointer" : "default" }}>
+      <span>📎</span>{compact ? "Attach meds" : "No medication source · attach or import"}
+    </span>
+  );
+  const icons = { pdf: "📄", photo: "📷", pcc_import: "🏥", epic: "🩺", manual: "✍️", csv: "📊" };
+  const verified = !!src.verified;
+  const style = {
+    display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 16,
+    fontSize: 11, fontWeight: 700,
+    background: verified ? "#E6F7FA" : C.lW,
+    color: verified ? C.accentD : C.amberD,
+    border: `1px solid ${verified ? C.accent + "40" : C.amber + "60"}`,
+    cursor: onClick ? "pointer" : "default",
+  };
+  const status = verified ? "verified at transfer" : "unverified";
+  const shortStatus = verified ? "verified" : "unverified";
+  return (
+    <span onClick={onClick} {...getA11yProps(onClick)} style={style}>
+      <span>{icons[src.method] || "📎"}</span>
+      {compact ? `${src.count} meds · ${shortStatus}` : `${src.label} · ${src.count} meds · ${status}`}
+    </span>
+  );
+};
+
+// ===== NOTIFICATION STATES (closed-loop return) =====
+export const ReturnStates = ({ er, m }) => {
+  const states = [
+    { k: "submittedAt", label: "ED submitted return packet", ic: "📤", ts: er?.submittedAt },
+    { k: "notifiedAt", label: "Facility notified", ic: "🔔", ts: er?.notifiedAt },
+    { k: "ackedAt", label: er?.ackedBy ? `Acknowledged by ${er.ackedBy}` : "Awaiting nurse acknowledgement", ic: "✅", ts: er?.ackedAt },
+    { k: "closedAt", label: "Return record closed", ic: "📁", ts: er?.closedAt },
+  ];
+  return (
+    <div style={{ background: "#fff", border: `1px solid ${C.bdr}`, borderRadius: 12, padding: m ? 10 : 14 }}>
+      <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: C.txS, marginBottom: 10 }}>Return Delivery States</div>
+      {states.map((s, i) => {
+        const done = !!s.ts;
+        return (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", borderBottom: i < states.length - 1 ? `1px dashed ${C.bdr}` : "none" }}>
+            <div style={{ width: 26, height: 26, borderRadius: 13, background: done ? C.green : "#F0F2F5", color: done ? "#fff" : C.txT, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, flexShrink: 0 }}>
+              {done ? <Chk s={12} /> : i + 1}
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: done ? C.tx : C.txT }}>{s.ic} {s.label}</div>
+              <div style={{ fontSize: 10, color: C.txT }}>{done ? s.ts : "Pending"}</div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+// ===== PROGRESS METER (used in 5-minute mode) =====
+export const ProgressMeter = ({ pct, est, label, c = C.accent }) => (
+  <div style={{ background: "#fff", border: `1px solid ${C.bdr}`, borderRadius: 12, padding: "10px 14px", marginBottom: 12 }}>
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+      <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: .8, color: C.txS }}>{label || "Transfer Progress"}</span>
+      <span style={{ fontSize: 11, fontWeight: 700, color: c }}>{est || `${Math.round(pct)}%`}</span>
+    </div>
+    <div style={{ height: 6, background: "#F0F2F5", borderRadius: 3, overflow: "hidden" }}>
+      <div style={{ height: "100%", width: `${Math.max(4, Math.min(100, pct))}%`, background: `linear-gradient(90deg,${c},${C.accentD})`, borderRadius: 3, transition: "width .3s" }} />
+    </div>
+  </div>
+);
+
+// ===== SECTION HEADING (semantic, consistent spacing) =====
+export const SecH = ({ title, kicker, m }) => (
+  <div style={{ marginTop: m ? 18 : 22, marginBottom: m ? 8 : 10 }}>
+    {kicker && <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: C.accent, marginBottom: 4 }}>{kicker}</div>}
+    <div style={{ fontSize: m ? 15 : 17, fontWeight: 800, color: C.navy, letterSpacing: -.2 }}>{title}</div>
+  </div>
+);

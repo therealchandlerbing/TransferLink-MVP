@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { C, Chk, DnA, WarnIco, QR, Bg, Av, Cd, Bt, SL, TB, Bk, FR, Chips } from './components.jsx';
+import { C, Chk, DnA, WarnIco, QR, Bg, Av, Cd, Bt, SL, TB, Bk, FR, Chips, MedSourceBadge, getA11yProps } from './components.jsx';
 
 // ===== ALLERGY BANNER =====
 export const AllergyB = ({ p, m }) =>
@@ -87,21 +87,149 @@ export const FScaleSelect = ({ lvl, setLvl, m }) => {
   return <div style={{ display: 'flex', gap: 4, marginTop: 6 }}>{ls.map((l, i) => <div key={i} onClick={() => setLvl(i + 1)} style={{ flex: 1, padding: m ? '8px 4px' : '10px 8px', borderRadius: 8, textAlign: 'center', fontSize: m ? 10 : 11, fontWeight: i === lvl - 1 ? 700 : 500, background: i === lvl - 1 ? C.amber : '#F0F2F5', color: i === lvl - 1 ? '#fff' : C.txT, border: i === lvl - 1 ? `2px solid ${C.amberD}` : '1px solid transparent', cursor: 'pointer' }}>{l}</div>)}</div>;
 };
 
-// ===== COMFORT SECTION =====
+// ===== COMFORT / PERSON-CENTERED CARE SECTION (expanded per committee feedback) =====
 export const ComfortSection = ({ p, m, defaultOpen = false }) => {
-  const items = [{ ic: '💡', l: 'Lighting', v: p.comfort.light }, { ic: '💬', l: 'Communication', v: p.comfort.comm }, { ic: '👨‍👩‍👧', l: 'Family', v: p.comfort.fam }, { ic: '🙏', l: 'Cultural/Spiritual', v: p.comfort.cult }, { ic: '🧘', l: 'Distress Management', v: p.comfort.dist }];
+  const safety = [
+    { ic: '🗣️', l: 'Language & Interpreter', v: (p.lang || 'English') + (p.interpreter ? ' · Interpreter needed' : ' · No interpreter needed') },
+    { ic: '⚠️', l: 'Behavioral Triggers', v: p.comfort?.triggers },
+    { ic: '🤲', l: 'Calming Strategies', v: p.comfort?.calming },
+    { ic: '🍽️', l: 'Dietary Preference', v: p.comfort?.diet },
+  ].filter(x => x.v);
+  const soft = [
+    { ic: '💬', l: 'Communication', v: p.comfort?.comm },
+    { ic: '👨‍👩‍👧', l: 'Family Involvement', v: p.comfort?.fam },
+    { ic: '🙏', l: 'Cultural / Spiritual', v: p.comfort?.cult },
+    { ic: '💡', l: 'Lighting / Environment', v: p.comfort?.light },
+    { ic: '🧘', l: 'Distress Management', v: p.comfort?.dist },
+  ].filter(x => x.v);
   return (
-    <Coll title="Person-Centered Care Preferences" ic="🕊️" open={defaultOpen} m={m} ch={<>
+    <Coll title="Person-Centered Care" ic="💜" open={defaultOpen} m={m} ch={<>
       <div style={{ background: 'linear-gradient(90deg,#F3E5F5,#FCE4EC)', borderRadius: 10, padding: '8px 12px', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span style={{ fontSize: 14 }}>💜</span><span style={{ fontSize: 11, fontWeight: 600, color: '#6A1B9A' }}>These preferences help ensure dignified, person-centered care during transitions</span>
+        <span style={{ fontSize: 14 }}>💜</span><span style={{ fontSize: 11, fontWeight: 600, color: '#6A1B9A' }}>Travels with the patient through every handoff. Does not slow down the transfer.</span>
       </div>
-      {items.map((it, i) => (
-        <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '8px 0', borderBottom: i < items.length - 1 ? `1px solid ${C.bdr}15` : 'none' }}>
-          <span style={{ fontSize: 16, flexShrink: 0, marginTop: 2 }}>{it.ic}</span>
-          <div><div style={{ fontSize: 11, fontWeight: 700, color: C.txS, textTransform: 'uppercase', letterSpacing: .6 }}>{it.l}</div><div style={{ fontSize: 13, color: C.tx, marginTop: 2, lineHeight: 1.5 }}>{it.v}</div></div>
-        </div>
-      ))}
+      {safety.length > 0 && (
+        <>
+          <div style={{ fontSize: 10, fontWeight: 700, color: C.purple, textTransform: 'uppercase', letterSpacing: 1, margin: '4px 0 6px' }}>Operational — surface to EMS / ED</div>
+          {safety.map((it, i) => (
+            <div key={'s' + i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '8px 0', borderBottom: i < safety.length - 1 ? `1px solid ${C.bdr}30` : 'none' }}>
+              <span style={{ fontSize: 16, flexShrink: 0, marginTop: 2 }}>{it.ic}</span>
+              <div><div style={{ fontSize: 11, fontWeight: 700, color: C.purple, textTransform: 'uppercase', letterSpacing: .6 }}>{it.l}</div><div style={{ fontSize: 13, color: C.tx, marginTop: 2, lineHeight: 1.5 }}>{it.v}</div></div>
+            </div>
+          ))}
+        </>
+      )}
+      {soft.length > 0 && (
+        <>
+          <div style={{ fontSize: 10, fontWeight: 700, color: C.txS, textTransform: 'uppercase', letterSpacing: 1, margin: '14px 0 6px' }}>Dignity & Context</div>
+          {soft.map((it, i) => (
+            <div key={'c' + i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '8px 0', borderBottom: i < soft.length - 1 ? `1px solid ${C.bdr}15` : 'none' }}>
+              <span style={{ fontSize: 16, flexShrink: 0, marginTop: 2 }}>{it.ic}</span>
+              <div><div style={{ fontSize: 11, fontWeight: 700, color: C.txS, textTransform: 'uppercase', letterSpacing: .6 }}>{it.l}</div><div style={{ fontSize: 13, color: C.tx, marginTop: 2, lineHeight: 1.5 }}>{it.v}</div></div>
+            </div>
+          ))}
+        </>
+      )}
+      {safety.length === 0 && soft.length === 0 && (
+        <div style={{ padding: '16px 4px', fontSize: 12, color: C.txT, fontStyle: 'italic' }}>No person-centered preferences documented yet. Add at admission for a richer handoff.</div>
+      )}
     </>} />
+  );
+};
+
+// ===== MEDICATION IMPORT MODAL =====
+// Supports the three prototype paths the committee asked for: PDF upload, photograph, EHR/CSV import
+// Always keeps manual entry available for low-resource facilities
+// Callers conditionally render this component so it remounts per open — useState initializers
+// reflect the current patient's source every time, with no sync effect required.
+export const MedImportModal = ({ onClose, onImport, currentSource, m }) => {
+  const [method, setMethod] = useState(currentSource?.method || 'pdf');
+  const [step, setStep] = useState(0); // 0=choose, 1=uploading, 2=success
+  const [file, setFile] = useState(currentSource?.file || '');
+  const count = currentSource?.count || 5;
+  // Simulated upload transition. Effect-owned timeout so close / unmount / pick-again all clean up automatically.
+  useEffect(() => {
+    if (step !== 1) return undefined;
+    const fileMap = { pdf: 'CascadeView_MAR_20260320.pdf', photo: 'IMG_MAR_20260320.jpg', pcc_import: 'PCC_MedList_live.xml', manual: null };
+    const t = setTimeout(() => {
+      setFile(fileMap[method]);
+      setStep(2);
+    }, 900);
+    return () => clearTimeout(t);
+  }, [step, method]);
+  const options = [
+    { id: 'pdf', ic: '📄', label: 'Upload medication report PDF', sub: 'PointClickCare MAR, MatrixCare export, facility PDF' },
+    { id: 'photo', ic: '📷', label: 'Photograph or scan paper list', sub: 'For facilities with no EHR access' },
+    { id: 'pcc_import', ic: '🏥', label: 'Import from EHR (PointClickCare)', sub: 'Connected facility · pulls active meds' },
+    { id: 'manual', ic: '✍️', label: 'Enter manually (no source)', sub: 'Falls back to free-text entry at admission' },
+  ];
+  const handlePick = (id) => {
+    setMethod(id);
+    setStep(1);
+  };
+  const confirm = () => {
+    const labelMap = { pdf: 'Uploaded medication report', photo: 'Photo of paper MAR', pcc_import: 'PointClickCare MAR', manual: 'Manually entered' };
+    onImport({
+      method,
+      label: labelMap[method],
+      file,
+      count,
+      verified: true,
+      importedAt: new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }),
+      importedBy: 'RN Sarah Mitchell',
+    });
+    onClose();
+  };
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.55)', zIndex: 160, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: m ? 10 : 20 }} onClick={onClose}>
+      <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: m ? 14 : 20, width: '100%', maxWidth: 520, maxHeight: '90vh', overflow: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,.3)' }}>
+        <div style={{ padding: m ? '16px 16px 10px' : '22px 24px 14px', borderBottom: `1px solid ${C.bdr}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <div style={{ fontSize: m ? 15 : 17, fontWeight: 800, color: C.navy }}>Import Medication List</div>
+            <div style={{ fontSize: 11, color: C.txS, marginTop: 2 }}>No retyping. Source recorded. Verified at transfer.</div>
+          </div>
+          <button onClick={onClose} aria-label="Close" style={{ fontSize: 18, color: C.txS, minHeight: 36, minWidth: 36, borderRadius: 18, background: '#F5F5F5', border: 'none', cursor: 'pointer' }}>✕</button>
+        </div>
+        <div style={{ padding: m ? 16 : 24 }}>
+          {step === 0 && options.map(o => (
+            <div key={o.id} onClick={() => handlePick(o.id)} {...getA11yProps(() => handlePick(o.id))} className="card-hover" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', border: `1px solid ${method === o.id ? C.accent : C.bdr}`, borderRadius: 12, marginBottom: 8, cursor: 'pointer', background: method === o.id ? C.lA : '#fff', transition: 'all .15s' }}>
+              <div style={{ width: 40, height: 40, borderRadius: 10, background: '#F0F2F5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>{o.ic}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: C.navy }}>{o.label}</div>
+                <div style={{ fontSize: 11, color: C.txS, marginTop: 2 }}>{o.sub}</div>
+              </div>
+              <div style={{ color: C.txT }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg></div>
+            </div>
+          ))}
+          {step === 1 && (
+            <div style={{ textAlign: 'center', padding: '28px 10px' }}>
+              <div style={{ fontSize: 32, marginBottom: 10 }}>⏳</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: C.navy }}>Processing {method === 'photo' ? 'scan' : method === 'pcc_import' ? 'EHR pull' : 'document'}…</div>
+              <div style={{ fontSize: 12, color: C.txS, marginTop: 6 }}>Extracting active medications · verifying against record</div>
+            </div>
+          )}
+          {step === 2 && (
+            <div style={{ padding: '4px 2px' }}>
+              <div style={{ background: C.lG, border: `1px solid ${C.green}40`, borderRadius: 12, padding: 14, marginBottom: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 16, background: C.green, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Chk s={16} /></div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 800, color: C.greenD }}>Medication source attached</div>
+                    <div style={{ fontSize: 11, color: C.txS }}>This record now shows "verified at transfer"</div>
+                  </div>
+                </div>
+                {file && <div style={{ fontSize: 12, color: C.tx }}><strong>File:</strong> {file}</div>}
+                <div style={{ fontSize: 12, color: C.tx, marginTop: 4 }}><strong>Active meds parsed:</strong> {count}</div>
+                <div style={{ fontSize: 12, color: C.tx, marginTop: 4 }}><strong>Source:</strong> {method.replace('_', ' ')}</div>
+              </div>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <Bt full outline ch="Preview document" onClick={() => alert('Document preview is simulated in this prototype.')} m={m} />
+                <Bt full ch="Confirm & verify at transfer" onClick={confirm} bg={C.green} m={m} />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -204,12 +332,31 @@ export const Scanner = ({ label, onDone, m }) => {
 };
 
 // ===== RECORD SECTIONS =====
-export const Sections = ({ p, tx, er, m, comfortOpen }) => (
+export const Sections = ({ p, tx, er, m, comfortOpen, onImportMeds }) => (
   <>
-    {tx && <Cd m={m} hl={C.lW} style={{ border: `1.5px solid ${C.amber}`, borderLeft: `4px solid ${C.amber}` }} ch={<><SL ch="Active Transfer Details" ic="🚨" /><FR l="Reason for Transfer" v={p.tx.reason} hl /><FR l="Symptoms" v={<Chips items={p.tx.symp} bg={C.amber} color="#fff" />} /><FR l="Interventions" v={p.tx.intv} /><FR l="Recent Changes (72h)" v={p.tx.chg} /><FR l="Destination" v={p.tx.dest} /><div style={{ fontSize: 12, color: C.txS, marginTop: 6, paddingTop: 6, borderTop: `1px solid ${C.amber}30` }}>Initiated: {p.tx.time} by {p.tx.nurse}</div></>} />}
+    {tx && <Cd m={m} hl={C.lW} style={{ border: `1.5px solid ${C.amber}`, borderLeft: `4px solid ${C.amber}` }} ch={<><SL ch="Active Transfer Details" ic="🚨" /><FR l="Reason for Transfer" v={p.tx.reason} hl /><FR l="Symptoms" v={<Chips items={p.tx.symp} bg={C.amber} color="#fff" />} /><FR l="Interventions" v={p.tx.intv} /><FR l="Recent Changes (72h)" v={p.tx.chg} /><FR l="Destination" v={p.tx.dest} /><div style={{ fontSize: 12, color: C.txS, marginTop: 6, paddingTop: 6, borderTop: `1px solid ${C.amber}30` }}>Initiated: {p.tx.time} by {p.tx.nurse}{p.tx.eventId ? ` · Event ${p.tx.eventId}` : ''}</div></>} />}
     <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr', gap: m ? 10 : 14 }}>
       <Coll title="Contacts & Facility" ic="👥" m={m} ch={<><FR l="Contact" v={<span><strong>{p.contact}</strong> ({p.contactRel})</span>} /><FR l="Phone" v={<span style={{ color: C.accent, fontWeight: 600 }}>{p.contactPh}</span>} /><div style={{ height: 1, background: C.bdr, margin: '8px 0' }} /><FR l="Facility" v={<strong>{p.fac}</strong>} /><FR l="Address" v={p.facAddr} /><FR l="Phone" v={p.facPh} /></>} />
-      <Coll title="Medications" ic="💊" m={m} ch={<><div style={{ fontSize: 12, color: C.txS, marginBottom: 8 }}>{p.meds.length} active medications</div>{p.meds.length === 0 ? <div style={{ padding: '12px 0', color: C.txT, fontSize: 13, fontStyle: 'italic' }}>No active medications listed.</div> : p.meds.map((med, i) => <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 0', borderBottom: `1px solid ${C.bdr}15` }}><span style={{ fontSize: 13 }}>{med.n}</span><div style={{ display: 'flex', gap: 4 }}><Bg ch={med.f} bg={C.lA} color={C.accent} style={{ fontSize: 10, padding: '2px 7px' }} /><Bg ch={med.t} bg="#F0F0F0" color={C.txS} style={{ fontSize: 10, padding: '2px 7px' }} /></div></div>)}</>} />
+      <Coll title="Medications" ic="💊" m={m} ch={<>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 6, marginBottom: 8, flexWrap: 'wrap' }}>
+          <div style={{ fontSize: 12, color: C.txS }}>{p.meds.length} active medications</div>
+          <MedSourceBadge src={p.medSource} compact onClick={onImportMeds} />
+        </div>
+        {p.medSource && (
+          <div style={{ background: '#F4FAFB', border: `1px solid ${C.accent}30`, borderRadius: 8, padding: '8px 10px', marginBottom: 8, fontSize: 11, color: C.txS }}>
+            <strong style={{ color: C.accentD }}>Source:</strong> {p.medSource.label}{p.medSource.file ? ` · ${p.medSource.file}` : ''}<br />
+            <strong style={{ color: C.accentD }}>Imported:</strong> {p.medSource.importedAt} by {p.medSource.importedBy}
+          </div>
+        )}
+        {p.meds.length === 0 ? <div style={{ padding: '12px 0', color: C.txT, fontSize: 13, fontStyle: 'italic' }}>No active medications listed.</div> : p.meds.map((med, i) => <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 0', borderBottom: `1px solid ${C.bdr}15` }}><span style={{ fontSize: 13 }}>{med.n}</span><div style={{ display: 'flex', gap: 4 }}><Bg ch={med.f} bg={C.lA} color={C.accent} style={{ fontSize: 10, padding: '2px 7px' }} /><Bg ch={med.t} bg="#F0F0F0" color={C.txS} style={{ fontSize: 10, padding: '2px 7px' }} /></div></div>)}
+        {onImportMeds && (
+          <div style={{ marginTop: 10 }}>
+            <button onClick={onImportMeds} style={{ fontSize: 12, fontWeight: 700, color: C.accent, background: 'transparent', border: `1px dashed ${C.accent}`, borderRadius: 8, padding: '8px 12px', cursor: 'pointer', width: '100%', fontFamily: 'inherit' }}>
+              📎 {p.medSource ? 'Re-import / update medication source' : 'Import or attach medication list'}
+            </button>
+          </div>
+        )}
+      </>} />
     </div>
     <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr', gap: m ? 10 : 14 }}>
       <Coll title="History & Baselines" ic="📋" m={m} ch={<><FR l="Conditions" v={<Chips items={p.hx} />} /><div style={{ marginTop: 12 }}><span style={{ fontSize: 11, fontWeight: 700, color: C.txS, textTransform: 'uppercase' }}>Baseline Mentation</span><MScale lvl={p.mLvl} m={m} /></div><div style={{ marginTop: 12 }}><span style={{ fontSize: 11, fontWeight: 700, color: C.txS, textTransform: 'uppercase' }}>Functional Status</span><FScale lvl={p.fLvl} m={m} /></div></>} />

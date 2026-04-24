@@ -3,7 +3,7 @@ import { C, BellIco } from './components.jsx';
 import { INIT_PATIENTS, NEW_PT_TEMPLATE, DEMO_SCREEN_MAP } from './data.js';
 import { ToastContainer, NotificationCenter, GuidedDemo, IntakeModal, S15 } from './modals.jsx';
 import { S0, S1, S2, S3, S4, S5, S6, S7, S9, S8, S10 } from './screens1.jsx';
-import { S11, S12, S13, S14, S17, S18, S19 } from './screens2.jsx';
+import { S11, S12, S13, S14, S17, S18, S19, S20 } from './screens2.jsx';
 
 export default function App() {
   const [screen, setScreen] = useState(0);
@@ -53,11 +53,33 @@ export default function App() {
   }, [ptId, persona]);
 
   const updateER = useCallback((erData) => {
-    setPatients(ps => ps.map(x => x.id === ptId ? { ...x, er: { ...x.er, ...erData, time: x.er.time || 'March 20, 2026 at 6:15 PM' } } : x));
+    const now = new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+    setPatients(ps => ps.map(x => x.id === ptId ? {
+      ...x,
+      er: {
+        ...x.er,
+        ...erData,
+        time: x.er.time || now,
+        submittedAt: now,
+        notifiedAt: now,
+        // ackedAt intentionally null — nurse ack happens on S13
+      },
+    } : x));
     const pt = patients.find(x => x.id === ptId);
-    if (pt) addNotification(`${pt.short} has returned from ${pt.tx.dest?.split(',')[0] || 'the ED'}`, ptId);
-    addToast('ED return documented. Facility notified!', 'ok');
+    if (pt) addNotification(`${pt.short} has returned from ${pt.tx.dest?.split(',')[0] || 'the ED'} · ack required`, ptId);
+    addToast('ED return submitted. Facility push notification sent.', 'ok');
   }, [ptId, patients, addNotification, addToast]);
+
+  const ackReturn = useCallback(() => {
+    const now = new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+    setPatients(ps => ps.map(x => x.id === ptId ? { ...x, er: { ...x.er, ackedAt: now, ackedBy: persona ? persona.name : 'RN Sarah Mitchell', closedAt: now } } : x));
+    addToast('Return loop closed. Acknowledgement recorded.', 'ok');
+  }, [ptId, persona, addToast]);
+
+  const importMedSource = useCallback((src) => {
+    setPatients(ps => ps.map(x => x.id === ptId ? { ...x, medSource: src } : x));
+    addToast(`Medication source attached · ${src.count} meds verified at transfer`, 'ok');
+  }, [ptId, addToast]);
 
   const handleNewPatient = useCallback((data) => {
     const newId = Date.now();
@@ -79,7 +101,7 @@ export default function App() {
   const showAny = screen >= 1 && screen !== 5 && screen !== 6 && screen !== 7 && screen !== 9 && screen !== 12 && screen !== 15;
   const showHomeBtn = screen !== 0 && screen !== 7 && screen !== 9 && screen !== 12;
 
-  const sharedProps = { go, m, p, patients, ptId, setPt: setPtId, visited, persona, role };
+  const sharedProps = { go, m, p, patients, ptId, setPt: setPtId, visited, persona, role, importMedSource };
 
   return (
     <div style={{ maxWidth: 680, margin: '0 auto', minHeight: '100vh', position: 'relative', fontFamily: "'Inter',system-ui,sans-serif", color: C.tx }}>
@@ -108,12 +130,13 @@ export default function App() {
       {screen === 0 && <S0 go={go} m={m} onStartDemo={() => { setDemo(true); setDemoStep(0); go(0); }} />}
       <div style={{ paddingBottom: demo ? (m ? 180 : 110) : 0 }}>
         {screen === 15 && <S15 go={go} m={m} setPersona={setPersona} setRole={setRole} />}
-        {screen === 17 && <S17 {...sharedProps} alerts={dashAlerts} dismissAlert={dismissAlert} />}
+        {screen === 17 && <S17 go={go} m={m} patients={patients} persona={persona} setPt={setPtId} alerts={dashAlerts} dismissAlert={dismissAlert} ackReturn={ackReturn} />}
         {screen === 18 && <S18 go={go} m={m} patients={patients} setPt={setPtId} />}
-        {screen === 19 && <S19 go={go} m={m} patients={patients} />}
+        {screen === 19 && <S19 go={go} m={m} patients={patients} persona={persona} />}
+        {screen === 20 && <S20 go={go} m={m} />}
         {screen === 1 && <S1 go={go} m={m} setPt={setPtId} patients={patients} onAddPt={() => setShowIntake(true)} />}
         {screen === 2 && <S2 {...sharedProps} />}
-        {screen === 3 && <S3 go={go} m={m} p={p} update={update} />}
+        {screen === 3 && <S3 go={go} m={m} p={p} update={update} importMedSource={importMedSource} />}
         {screen === 4 && <S4 {...sharedProps} />}
         {screen === 5 && <S5 go={go} m={m} p={p} />}
         {screen === 6 && <S6 go={go} m={m} p={p} />}
@@ -123,7 +146,7 @@ export default function App() {
         {screen === 10 && <S10 {...sharedProps} />}
         {screen === 11 && <S11 go={go} m={m} p={p} updateER={updateER} />}
         {screen === 12 && <S12 go={go} m={m} p={p} />}
-        {screen === 13 && <S13 {...sharedProps} />}
+        {screen === 13 && <S13 {...sharedProps} ackReturn={ackReturn} />}
         {screen === 14 && <S14 go={go} m={m} p={p} />}
       </div>
 

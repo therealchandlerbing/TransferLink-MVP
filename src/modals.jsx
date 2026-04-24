@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { C, Chk, WarnIco, Bg, Av, Cd, Bt, SL, TB, Bk, TxIn } from './components.jsx';
-import { DEMO_SCREEN_MAP, NEW_PT_TEMPLATE, PERSONAS } from './data.js';
-import { MScaleSelect, FScaleSelect } from './clinical.jsx';
+import { DEMO_SCREEN_MAP, NEW_PT_TEMPLATE, PERSONAS, FACILITY_MODES, FACILITY_INFO } from './data.js';
+import { MScaleSelect, FScaleSelect, MedImportModal } from './clinical.jsx';
 
 // ===== TOAST SYSTEM =====
 const Toast = ({ t, remove }) => {
@@ -111,6 +111,7 @@ export const GuidedDemo = ({ onExit, demoStep, setDemoStep, navigate, selectPati
 export const IntakeModal = ({ onClose, onDone, m }) => {
   const [step, setStep] = useState(0);
   const [d, setD] = useState({ ...NEW_PT_TEMPLATE });
+  const [medOpen, setMedOpen] = useState(false);
   const upd = (k, v) => setD(prev => ({ ...prev, [k]: v }));
   const updComfort = (k, v) => setD(prev => ({ ...prev, comfort: { ...prev.comfort, [k]: v } }));
   const allHx = ['A-FIB', 'CHF', 'COPD', 'DM (Type 2)', 'CKD', 'Hypertension', 'CVA/Stroke', 'Prior MI', 'Osteoarthritis', 'Osteoporosis', 'Depression', 'Anxiety', 'Dementia', 'Cancer'];
@@ -121,6 +122,7 @@ export const IntakeModal = ({ onClose, onDone, m }) => {
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 100, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: m ? 0 : 20, paddingTop: m ? 0 : 40, overflow: 'auto' }} onClick={onClose}>
+      {medOpen && <MedImportModal onClose={() => setMedOpen(false)} onImport={src => upd('medSource', src)} currentSource={d.medSource} m={m} />}
       <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: m ? 0 : 20, width: m ? '100%' : '95%', maxWidth: 620, maxHeight: m ? '100vh' : '90vh', overflow: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,.25)' }}>
         <div style={{ position: 'sticky', top: 0, background: '#fff', zIndex: 5, borderBottom: `1px solid ${C.bdr}`, padding: '16px 20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
@@ -158,6 +160,16 @@ export const IntakeModal = ({ onClose, onDone, m }) => {
           </>}
 
           {step === 1 && <>
+            <SL ch="Medication source" ic="💊" />
+            <div style={{ background: d.medSource ? C.lG : C.lW, border: `1px solid ${d.medSource ? C.green + '40' : C.amber + '60'}`, borderRadius: 10, padding: '10px 12px', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+              <span style={{ fontSize: 18 }}>{d.medSource ? '✅' : '📎'}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                {d.medSource
+                  ? <><div style={{ fontSize: 12, fontWeight: 700, color: C.greenD }}>{d.medSource.label} · {d.medSource.count} meds</div><div style={{ fontSize: 11, color: C.txS }}>{d.medSource.file || 'Manual entry'}</div></>
+                  : <><div style={{ fontSize: 12, fontWeight: 700, color: C.amberD }}>Import at admission — never retype under pressure</div><div style={{ fontSize: 11, color: C.txS }}>Supports PDF, photo, PointClickCare, and manual entry</div></>}
+              </div>
+              <button onClick={() => setMedOpen(true)} style={{ fontSize: 12, fontWeight: 700, padding: '6px 10px', background: d.medSource ? '#fff' : C.amber, color: d.medSource ? C.accentD : '#fff', border: `1px solid ${d.medSource ? C.accent : C.amberD}`, borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit' }}>{d.medSource ? 'Update' : 'Attach'}</button>
+            </div>
             <SL ch="Allergies" ic="⚠️" />
             <TxIn value={d.allergy.join(', ')} onChange={v => upd('allergy', v.split(',').map(x => x.trim()).filter(Boolean))} placeholder="Comma-separated (e.g. Morphine, Latex)" />
             <div style={{ marginTop: 16 }}><SL ch="Medical History" ic="📋" /></div>
@@ -200,10 +212,28 @@ export const IntakeModal = ({ onClose, onDone, m }) => {
           {step === 3 && <>
             <div style={{ background: 'linear-gradient(90deg,#F3E5F5,#FCE4EC)', borderRadius: 12, padding: '12px 16px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ fontSize: 20 }}>💜</span>
-              <div><div style={{ fontSize: 13, fontWeight: 700, color: '#6A1B9A' }}>Person-Centered Care Preferences</div><div style={{ fontSize: 11, color: '#8E24AA' }}>These travel with the patient to every handoff point</div></div>
+              <div><div style={{ fontSize: 13, fontWeight: 700, color: '#6A1B9A' }}>Person-Centered Care</div><div style={{ fontSize: 11, color: '#8E24AA' }}>Language, triggers, calming strategies, and diet surface at every handoff</div></div>
             </div>
-            {[['light', 'Lighting Preferences', '💡', 'e.g. Prefers dim lighting at night'], ['comm', 'Communication Needs', '💬', 'e.g. Responds to calm, slow speech'], ['fam', 'Family Involvement', '👨‍👩‍👧', 'e.g. Daughter visits daily, involved in decisions'], ['cult', 'Cultural/Spiritual', '🙏', 'e.g. Catholic faith, rosary at bedside'], ['dist', 'Distress Management', '🧘', 'e.g. Gentle conversation helps when in pain']].map(([k, label, ic, ph], i) => (
-              <div key={i} style={{ marginBottom: 14 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, padding: '8px 12px', background: '#F8F9FB', borderRadius: 10, border: `1px solid ${C.bdr}` }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: C.navy }}>Preferred language</div>
+                <div style={{ fontSize: 11, color: C.txS }}>{d.lang}</div>
+              </div>
+              <label style={{ fontSize: 12, fontWeight: 600, color: C.txS, display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
+                <input type="checkbox" checked={!!d.interpreter} onChange={e => upd('interpreter', e.target.checked)} style={{ transform: 'scale(1.2)' }} />
+                Interpreter needed
+              </label>
+            </div>
+            <div style={{ fontSize: 10, fontWeight: 700, color: C.purple, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Operational — surface to EMS / ED</div>
+            {[['triggers', 'Behavioral Triggers', '⚠️', 'e.g. Loud voices, being rushed, bright lights'], ['calming', 'Calming Strategies', '🤲', 'e.g. Hold hand, speak slowly, play familiar music'], ['diet', 'Dietary Preference', '🍽️', 'e.g. Mechanical soft, thickened liquids, no dairy']].map(([k, label, ic, ph], i) => (
+              <div key={i} style={{ marginBottom: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}><span style={{ fontSize: 14 }}>{ic}</span><label style={{ fontSize: 12, fontWeight: 600, color: C.txS }}>{label}</label></div>
+                <TxIn value={d.comfort[k]} onChange={v => updComfort(k, v)} placeholder={ph} rows={2} />
+              </div>
+            ))}
+            <div style={{ fontSize: 10, fontWeight: 700, color: C.txS, textTransform: 'uppercase', letterSpacing: 1, margin: '14px 0 6px' }}>Dignity & context (optional)</div>
+            {[['comm', 'Communication Needs', '💬', 'e.g. Responds to calm, slow speech'], ['fam', 'Family Involvement', '👨‍👩‍👧', 'e.g. Daughter visits daily, involved in decisions'], ['cult', 'Cultural/Spiritual', '🙏', 'e.g. Catholic faith, rosary at bedside'], ['light', 'Lighting Preferences', '💡', 'e.g. Prefers dim lighting at night'], ['dist', 'Distress Management', '🧘', 'e.g. Gentle conversation helps when in pain']].map(([k, label, ic, ph], i) => (
+              <div key={i} style={{ marginBottom: 10 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}><span style={{ fontSize: 14 }}>{ic}</span><label style={{ fontSize: 12, fontWeight: 600, color: C.txS }}>{label}</label></div>
                 <TxIn value={d.comfort[k]} onChange={v => updComfort(k, v)} placeholder={ph} rows={2} />
               </div>
@@ -294,23 +324,45 @@ export const S15 = ({ go, m, setPersona, setRole }) => {
 
   const persona = PERSONAS[selPersona];
   const obs = [
-    { ic: '📋', t: 'Build Patient Records', d: 'Enter baseline data once at admission. Medications, code status, comfort preferences travel with the patient.' },
-    { ic: '📱', t: 'Generate QR Codes', d: 'One scan gives EMS and ED staff the complete picture. No packets, no faxes, no phone tag.' },
-    { ic: '🔄', t: 'Close the Loop', d: 'ED staff update the record before discharge. Your facility sees exactly what happened, automatically.' },
-    { ic: '📊', t: 'Track Everything', d: 'Full audit trail of every handoff. Dashboard shows facility-wide transfer patterns and outcomes.' },
+    { ic: '💊', t: 'Import — Don\'t Retype', d: 'Medication list comes in from PDF, photo, or PointClickCare. Source and timestamp travel with the record. "Verified at transfer" appears in every view.' },
+    { ic: '⏱️', t: 'Under Five Minutes', d: 'Five essential fields up front. Secondary detail expandable. Baseline reused from admission. Progress meter shows the nurse where the time is going.' },
+    { ic: '📱', t: 'QR in Three Formats', d: 'Print, wristband, mobile display. Short-link fallback for tough scans. EMS and ED get read-only access. ED return is the only write action.' },
+    { ic: '🔄', t: 'Closed Loop, Tracked', d: 'ED submits → facility notified → nurse acknowledges → record closed. Four visible states. Banner persists until ack.' },
   ];
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
       <TB ctr="Welcome to TransferLink" m={m} />
-      <div style={{ padding: m ? 14 : 20, maxWidth: 600, margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: 24 }}>
+      <div style={{ padding: m ? 14 : 20, maxWidth: 620, margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: 18 }}>
           <div style={{ fontSize: m ? 20 : 24, fontWeight: 800, color: C.navy, marginBottom: 4 }}>Welcome, {persona.name.split(' ')[0]}</div>
-          <div style={{ fontSize: 14, color: C.txS }}>Here's how TransferLink works at Cascade View</div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 8 }}>
+          <div style={{ fontSize: 13, color: C.txS }}>{FACILITY_INFO.name} · {FACILITY_INFO.modeLabel}</div>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 8, flexWrap: 'wrap' }}>
             <Bg ch={roles[selRole]} bg={C.accent} />
             <Bg ch={shifts[selShift]} bg={C.lA} color={C.accent} />
           </div>
         </div>
+
+        {/* Facility mode picker */}
+        <Cd m={m} style={{ marginBottom: 14 }} ch={<>
+          <SL ch="This facility's mode" ic="🏥" />
+          <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr 1fr', gap: 8 }}>
+            {FACILITY_MODES.map(mm => {
+              const isCurrent = mm.id === FACILITY_INFO.mode;
+              return (
+                <div key={mm.id} style={{ background: isCurrent ? C.lA : '#F8F9FB', border: `1.5px solid ${isCurrent ? mm.color : C.bdr}`, borderRadius: 10, padding: '10px 10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ fontSize: 18 }}>{mm.ic}</span>
+                    {isCurrent && <Bg ch="Current" bg={mm.color} style={{ fontSize: 9, padding: '2px 6px' }} />}
+                  </div>
+                  <div style={{ fontSize: 12, fontWeight: 800, color: C.navy, marginTop: 6 }}>{mm.label}</div>
+                  <div style={{ fontSize: 10, color: C.txS, marginTop: 2, lineHeight: 1.4 }}>{mm.sub}</div>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ fontSize: 11, color: C.txT, marginTop: 8, fontStyle: 'italic' }}>Same product works for adult family homes, mid-size AL, and EHR-connected SNFs.</div>
+        </>} />
+
         {obs.map((o, i) => (
           <Cd key={i} m={m} style={{ borderLeft: `4px solid ${C.accent}` }} ch={
             <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
@@ -319,7 +371,10 @@ export const S15 = ({ go, m, setPersona, setRole }) => {
             </div>
           } />
         ))}
-        <Bt full ch="Go to Dashboard" onClick={() => go(17)} m={m} style={{ marginTop: 8 }} />
+        <div style={{ display: 'flex', gap: m ? 8 : 10, marginTop: 8, flexDirection: m ? 'column' : 'row' }}>
+          <Bt outline ch="View Integrations" onClick={() => go(20)} m={m} full />
+          <Bt ch="Go to Dashboard →" onClick={() => go(17)} m={m} full />
+        </div>
         <div style={{ textAlign: 'center', marginTop: 12 }}>
           <span onClick={() => go(0)} style={{ fontSize: 13, color: C.accent, cursor: 'pointer', fontWeight: 600 }}>Skip to Role Selector</span>
         </div>
