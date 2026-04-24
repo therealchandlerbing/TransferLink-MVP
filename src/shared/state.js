@@ -3,8 +3,9 @@
 // same state — a patient edited in the tour stays edited when the user exits
 // into the free-form prototype.
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { INIT_PATIENTS, NEW_PT_TEMPLATE } from '../data.js';
+import { useWindowWidth } from './hooks.js';
 
 const INITIAL_DASH_ALERTS = [
   { text: 'Maggie Tanaka — Transfer in Progress', sub: 'Awaiting ED return documentation', type: 'warning' },
@@ -20,13 +21,7 @@ export function useTransferLinkState() {
   const [role, setRole] = useState(null);
   const [dashAlerts, setDashAlerts] = useState(INITIAL_DASH_ALERTS);
 
-  const [winW, setWinW] = useState(window.innerWidth);
-  useEffect(() => {
-    const handler = () => setWinW(window.innerWidth);
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
-  }, []);
-  const m = winW < 520;
+  const m = useWindowWidth() < 520;
 
   const p = patients.find(x => x.id === ptId) || patients[0];
 

@@ -6,17 +6,19 @@ import { DEMO_SCREEN_MAP } from '../data.js';
 import Prototype from './Prototype.jsx';
 import { navigate } from '../shared/routing.js';
 
+const clampStep = (idx) => Math.max(0, Math.min(idx, DEMO_SCREEN_MAP.length - 1));
+
 export default function Tour({ route, exitToLanding, ...state }) {
   const step = useMemo(() => {
     const raw = route?.segments?.[0];
     if (!raw) return 0;
     const n = parseInt(raw, 10);
     if (Number.isNaN(n)) return 0;
-    return Math.max(0, Math.min(n, DEMO_SCREEN_MAP.length - 1));
+    return clampStep(n);
   }, [route]);
 
   const setDemoStep = (idx) => {
-    const clamped = Math.max(0, Math.min(idx, DEMO_SCREEN_MAP.length - 1));
+    const clamped = clampStep(idx);
     navigate('tour', clamped === 0 ? [] : [String(clamped)]);
   };
 

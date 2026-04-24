@@ -2,8 +2,9 @@
 // the fold; committee stories, problem stats, and the transfer loop diagram
 // live below.
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { C } from '../components.jsx';
+import { useWindowWidth } from '../shared/hooks.js';
 import { navigate } from '../shared/routing.js';
 
 const globalStyles = `
@@ -282,13 +283,7 @@ function Footer({ m }) {
 }
 
 export default function Landing() {
-  const [winW, setWinW] = useState(window.innerWidth);
-  useEffect(() => {
-    const handler = () => setWinW(window.innerWidth);
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
-  }, []);
-  const m = winW < 760;
+  const m = useWindowWidth() < 760;
 
   return (
     <div style={{ minHeight: '100vh', background: `radial-gradient(ellipse at top,${C.navy}, #0c1424 70%)`, color: '#fff', fontFamily: "'Inter',system-ui,sans-serif", position: 'relative', overflow: 'hidden' }}>
