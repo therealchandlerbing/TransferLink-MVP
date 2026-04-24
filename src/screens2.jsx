@@ -148,9 +148,9 @@ export const S13 = ({ go, m, p, patients, ptId, setPt, returnStatus, onAcknowled
       </>} />
       <div style={{ display: 'flex', gap: m ? 8 : 12, marginTop: 8, flexDirection: m ? 'column' : 'row' }}>
         <Bt full outline ch="View Full Timeline" onClick={() => go(14)} m={m} />
-        <Bt full outline ch="Download Return Summary" onClick={() => {}} m={m} />
-        <Bt full outline ch="Copy Instructions" onClick={() => {}} m={m} />
-        <Bt full ch="✓ Acknowledge" onClick={() => { onAcknowledge(); go(0); }} m={m} bg={C.green} />
+        <Bt full outline ch="Download Summary (Soon)" disabled m={m} />
+        <Bt full outline ch="Copy Instructions (Soon)" disabled m={m} />
+        <Bt full ch="✓ Acknowledge" onClick={() => { onAcknowledge(); go(17); }} m={m} bg={C.green} />
       </div>
     </div>
   </div>
@@ -167,7 +167,7 @@ export const S14 = ({ go, m, p, returnStatus }) => {
     { ic: '✅', col: C.green, time: returnStatus?.edSubmitted || p.er.time || '—', label: 'ED Documentation Complete', sub: p.er.dx || '—' },
     { ic: '🔔', col: C.accent, time: returnStatus?.facilityNotified || p.er.rpt || '—', label: 'Facility Notified', sub: 'Push notification delivered' },
     { ic: '✍️', col: C.purple, time: returnStatus?.nurseAcknowledged || 'Pending', label: 'Nurse Acknowledged', sub: returnStatus?.nurseAcknowledged ? 'Instructions acknowledged by facility nurse' : 'Awaiting facility acknowledgment' },
-    { ic: '🏠', col: C.green, time: returnStatus?.recordClosed || 'Current', label: 'Return Record Closed', sub: returnStatus?.recordClosed ? 'Closed-loop complete' : 'Open until acknowledged' },
+    { ic: '🏠', col: C.green, time: returnStatus?.recordClosed || 'Open', label: 'Return Record Closed', sub: returnStatus?.recordClosed ? 'Closed-loop complete' : 'Open until acknowledged' },
   ];
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
@@ -254,11 +254,11 @@ export const S17 = ({ go, m, patients, persona, alerts, dismissAlert, returnTrac
             } />
           ))}
         </>}
-        {patients.filter(pt => pt.er?.dx && !returnTracking?.[pt.id]?.nurseAcknowledged).length > 0 && (
+        {returnedPendingAck.length > 0 && (
           <Cd m={m} style={{ borderLeft: `4px solid ${C.amber}`, background: C.lW }} ch={<>
             <div style={{ fontSize: 13, fontWeight: 700, color: C.navy }}>Returned patients need acknowledgement</div>
             <div style={{ fontSize: 12, color: C.txS, marginTop: 2 }}>
-              {patients.filter(pt => pt.er?.dx && !returnTracking?.[pt.id]?.nurseAcknowledged).map(pt => pt.short).join(', ')}
+              {returnedPendingAck.map(pt => pt.short).join(', ')}
             </div>
           </>} />
         )}

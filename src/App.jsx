@@ -53,26 +53,29 @@ export default function App() {
   }, []);
 
   const p = patients.find(x => x.id === ptId) || patients[0];
+  const fmtTime = useCallback((d) => d.toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }).replace(', ', ' at '), []);
 
   const update = useCallback((txData) => {
     setPatients(ps => ps.map(x => x.id === ptId ? { ...x, tx: { ...x.tx, ...txData, time: x.tx.time || 'March 20, 2026 at 2:47 AM', nurse: x.tx.nurse || (persona ? persona.name : 'RN Sarah Mitchell') } } : x));
   }, [ptId, persona]);
 
   const updateER = useCallback((erData) => {
+    const submittedAt = new Date();
+    const notifiedAt = new Date(submittedAt.getTime() + 60 * 1000);
     setPatients(ps => ps.map(x => x.id === ptId ? { ...x, er: { ...x.er, ...erData, time: x.er.time || 'March 20, 2026 at 6:15 PM' } } : x));
     setReturnTracking(prev => ({
       ...prev,
       [ptId]: {
-        edSubmitted: 'March 20, 2026 at 6:15 PM',
-        facilityNotified: 'March 20, 2026 at 6:16 PM',
-        nurseAcknowledged: prev[ptId]?.nurseAcknowledged || null,
-        recordClosed: prev[ptId]?.recordClosed || null
+        edSubmitted: fmtTime(submittedAt),
+        facilityNotified: fmtTime(notifiedAt),
+        nurseAcknowledged: null,
+        recordClosed: null
       }
     }));
     const pt = patients.find(x => x.id === ptId);
     if (pt) addNotification(`${pt.short} has returned from ${pt.tx.dest?.split(',')[0] || 'the ED'}`, ptId);
     addToast('ED return documented. Facility notified!', 'ok');
-  }, [ptId, patients, addNotification, addToast]);
+  }, [ptId, patients, addNotification, addToast, fmtTime]);
 
   const updateMedicationAttachment = useCallback((medAttachment) => {
     setPatients(ps => ps.map(x => x.id === ptId ? { ...x, medAttachment } : x));
@@ -81,16 +84,18 @@ export default function App() {
   }, [ptId, addToast]);
 
   const acknowledgeReturn = useCallback(() => {
+    const now = new Date();
+    const closeAt = new Date(now.getTime() + 60 * 1000);
     setReturnTracking(prev => ({
       ...prev,
       [ptId]: {
         ...prev[ptId],
-        nurseAcknowledged: 'March 20, 2026 at 7:22 AM',
-        recordClosed: 'March 20, 2026 at 7:23 AM'
+        nurseAcknowledged: fmtTime(now),
+        recordClosed: fmtTime(closeAt)
       }
     }));
     addToast('Return instructions acknowledged. Record closed.', 'ok');
-  }, [ptId, addToast]);
+  }, [ptId, addToast, fmtTime]);
 
   const handleNewPatient = useCallback((data) => {
     const newId = Date.now();
