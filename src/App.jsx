@@ -1,16 +1,29 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { C, BellIco } from './components.jsx';
-import { INIT_PATIENTS, NEW_PT_TEMPLATE, DEMO_SCREEN_MAP } from './data.js';
+import { INIT_PATIENTS, NEW_PT_TEMPLATE } from './data.js';
 import { ToastContainer, NotificationCenter, GuidedDemo, IntakeModal, MedicationImportModal, S15 } from './modals.jsx';
 import { S0, S1, S2, S3, S4, S5, S6, S7, S9, S8, S10 } from './screens1.jsx';
 import { S11, S12, S13, S14, S17, S18, S19, S20 } from './screens2.jsx';
 import { LandingPage, OnboardingModule } from './landing.jsx';
 
 export default function App() {
-  const [screen, setScreen] = useState(0);
-  const [presentation, setPresentation] = useState('landing');
+  const APP_STATE_KEY = 'transferlink_presentation_state_v1';
+  const storedState = (() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      return JSON.parse(window.localStorage.getItem(APP_STATE_KEY) || 'null');
+    } catch {
+      return null;
+    }
+  })();
+  const [screen, setScreen] = useState(typeof storedState?.screen === 'number' ? storedState.screen : 0);
+  const [presentation, setPresentation] = useState(
+    storedState?.presentation === 'app' || storedState?.presentation === 'landing' || storedState?.presentation === 'onboarding'
+      ? storedState.presentation
+      : 'landing'
+  );
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [lastAppScreen, setLastAppScreen] = useState(17);
+  const [lastAppScreen, setLastAppScreen] = useState(typeof storedState?.lastAppScreen === 'number' ? storedState.lastAppScreen : 17);
   const [ptId, setPtId] = useState(0);
   const [patients, setPatients] = useState(INIT_PATIENTS);
   const [toasts, setToasts] = useState([]);
@@ -28,6 +41,7 @@ export default function App() {
     { text: 'Robert Chen — INR follow-up due today', sub: 'Scheduled for 3:00 PM', type: 'info' },
   ]);
   const [returnTracking, setReturnTracking] = useState({});
+  const transitionTimerRef = useRef(null);
 
   const [winW, setWinW] = useState(window.innerWidth);
   useEffect(() => {
@@ -36,6 +50,12 @@ export default function App() {
     return () => window.removeEventListener('resize', handler);
   }, []);
   const m = winW < 520;
+  useEffect(() => {
+    window.localStorage.setItem(APP_STATE_KEY, JSON.stringify({ presentation, screen, lastAppScreen }));
+  }, [presentation, screen, lastAppScreen]);
+  useEffect(() => () => {
+    if (transitionTimerRef.current) window.clearTimeout(transitionTimerRef.current);
+  }, []);
 
   const go = useCallback((s) => {
     if (s === 'add') { setShowIntake(true); return; }
@@ -43,17 +63,21 @@ export default function App() {
     if (s === 0 && presentation === 'app') { setPresentation('landing'); return; }
     setVisited(v => new Set([...v, s]));
     const next = Number(s);
+    if (Number.isNaN(next)) return;
     if (presentation === 'app') setLastAppScreen(next);
     setScreen(next);
   }, [presentation]);
 
   const transitionTo = useCallback((cb) => {
     setIsTransitioning(true);
-    window.setTimeout(() => {
+    if (transitionTimerRef.current) window.clearTimeout(transitionTimerRef.current);
+    transitionTimerRef.current = window.setTimeout(() => {
       cb();
       setIsTransitioning(false);
+      transitionTimerRef.current = null;
     }, 180);
   }, []);
+  const screenLabels = { 0: 'Legacy Home', 1: 'Patient Roster', 2: 'Patient Record', 3: 'Initiate Transfer', 5: 'QR Ready', 10: 'ED View', 11: 'ED Return Form', 13: 'Facility Return', 17: 'Dashboard', 18: 'Transfer History', 19: 'SBAR', 20: 'Data Sources' };
 
   const addToast = useCallback((msg, type = 'ok') => {
     const id = Date.now();
@@ -154,6 +178,7 @@ export default function App() {
         <LandingPage
           m={m}
           hasResume={lastAppScreen != null}
+          resumeLabel={screenLabels[lastAppScreen] || 'Workspace'}
           onStartOnboarding={() => transitionTo(() => setPresentation('onboarding'))}
           onOpenPrototype={() => transitionTo(() => { setPresentation('app'); setScreen(lastAppScreen || 17); })}
           onOpenLegacy={() => transitionTo(() => { setPresentation('app'); setScreen(0); })}
