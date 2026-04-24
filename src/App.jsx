@@ -3,7 +3,7 @@ import { C, BellIco } from './components.jsx';
 import { INIT_PATIENTS, NEW_PT_TEMPLATE, DEMO_SCREEN_MAP } from './data.js';
 import { ToastContainer, NotificationCenter, GuidedDemo, IntakeModal, MedicationImportModal, S15 } from './modals.jsx';
 import { S0, S1, S2, S3, S4, S5, S6, S7, S9, S8, S10 } from './screens1.jsx';
-import { S11, S12, S13, S14, S17, S18, S19 } from './screens2.jsx';
+import { S11, S12, S13, S14, S17, S18, S19, S20 } from './screens2.jsx';
 
 export default function App() {
   const [screen, setScreen] = useState(0);
@@ -141,6 +141,7 @@ export default function App() {
         {screen === 17 && <S17 {...sharedProps} alerts={dashAlerts} dismissAlert={dismissAlert} returnTracking={returnTracking} />}
         {screen === 18 && <S18 go={go} m={m} patients={patients} setPt={setPtId} />}
         {screen === 19 && <S19 go={go} m={m} patients={patients} />}
+        {screen === 20 && <S20 go={go} m={m} />}
         {screen === 1 && <S1 go={go} m={m} setPt={setPtId} patients={patients} onAddPt={() => setShowIntake(true)} />}
         {screen === 2 && <S2 {...sharedProps} onOpenMedImport={() => setShowMedImport(true)} />}
         {screen === 3 && <S3 go={go} m={m} p={p} update={update} onOpenMedImport={() => setShowMedImport(true)} />}

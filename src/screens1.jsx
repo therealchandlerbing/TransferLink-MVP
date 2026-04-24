@@ -296,6 +296,9 @@ export const S4 = ({ go, m, p, patients, ptId, setPt }) => (
 // ===== S5 — QR READY =====
 export const S5 = ({ go, m, p }) => {
   const [shared, setShared] = useState(false);
+  const [format, setFormat] = useState('Mobile display');
+  const eventId = `TL-${String(p.id).padStart(3, '0')}-0320`;
+  const fallbackLink = `transfer.link/e/${eventId.toLowerCase()}`;
   return (
   <div style={{ minHeight: '100vh', background: C.bg }}>
     <TB m={m} left={<Bk go={go} to={2} label="Record" />} ctr="QR Code Ready" />
@@ -322,6 +325,20 @@ export const S5 = ({ go, m, p }) => {
           <strong>Transfer to:</strong> {p.tx.dest}<br />
           <strong>Initiated:</strong> {p.tx.time}<br />
           <strong>By:</strong> {p.tx.nurse}
+        </div>
+        <div style={{ marginTop: 12, textAlign: 'left' }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.txS, textTransform: 'uppercase', marginBottom: 6 }}>Handoff toolkit format</div>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            {['Print transfer sheet', 'Wristband label', 'Mobile display'].map(opt => (
+              <span key={opt} onClick={() => setFormat(opt)} style={{ padding: '6px 10px', borderRadius: 18, fontSize: 11, fontWeight: 700, cursor: 'pointer', background: format === opt ? C.accent : '#fff', color: format === opt ? '#fff' : C.txS, border: `1px solid ${format === opt ? C.accent : C.bdr}` }}>{opt}</span>
+            ))}
+          </div>
+          <div style={{ marginTop: 8, fontSize: 11, color: C.txS }}>Selected: <strong>{format}</strong></div>
+          <div style={{ marginTop: 6, background: '#fff', border: `1px dashed ${C.bdr}`, borderRadius: 8, padding: 8, fontSize: 11, color: C.txS, lineHeight: 1.6 }}>
+            <div><strong>Backup short link:</strong> {fallbackLink}</div>
+            <div><strong>Transfer event ID:</strong> {eventId}</div>
+            <div><strong>Access:</strong> EMS + ED read-only, ED return form write access only.</div>
+          </div>
         </div>
       </>} />
       <div style={{ display: 'flex', flexDirection: m ? 'column' : 'row', gap: m ? 8 : 12, marginTop: 4 }}>

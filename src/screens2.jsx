@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { C, Chk, Bg, Av, Cd, Bt, SL, TB, Bk, FR, TxIn } from './components.jsx';
 import { PtSwitcher, TransferTracker } from './clinical.jsx';
+import { INTEGRATION_CONNECTORS } from './data.js';
 
 const Toggle = ({ val, onChange, m }) => (
   <div onClick={() => onChange(!val)} style={{ width: 48, height: 26, borderRadius: 13, background: val ? C.green : '#CCC', cursor: 'pointer', position: 'relative', transition: 'background .2s', flexShrink: 0 }}>
@@ -247,7 +248,7 @@ export const S17 = ({ go, m, p, patients, persona, alerts, dismissAlert, returnT
         )}
         <SL ch="Quick Actions" ic="⚡" />
         <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr', gap: m ? 8 : 12, marginBottom: 14 }}>
-          {[['Patient Roster', '📋', 1], ['Transfer History', '📁', 18], ['SBAR Report', '📊', 19], ['New Patient', '➕', 'add']].map(([l, ic, s], i) => (
+          {[['Patient Roster', '📋', 1], ['Transfer History', '📁', 18], ['SBAR Report', '📊', 19], ['Data Sources', '🔌', 20], ['New Patient', '➕', 'add']].map(([l, ic, s], i) => (
             <Cd key={i} m={m} onClick={() => go(s)} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 12 }} ch={<>
               <div style={{ width: 40, height: 40, borderRadius: 12, background: C.lA, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>{ic}</div>
               <span style={{ fontSize: 14, fontWeight: 600, color: C.navy }}>{l}</span>
@@ -319,13 +320,15 @@ export const S18 = ({ go, m, patients, setPt }) => {
 // ===== S19 — SBAR REPORT =====
 export const S19 = ({ go, m, patients }) => {
   const [ptIdx, setPtIdx] = useState(0);
+  const [variant, setVariant] = useState('EMS handoff');
   const pt = patients[ptIdx];
   const [copied, setCopied] = useState(false);
+  const sourceMeds = pt.medAttachment ? `${pt.medAttachment.method} (${pt.medAttachment.fileName})` : 'Manual entry';
   const sbar = [
-    { label: 'S — Situation', color: C.red, ic: '🔴', content: `I am calling about ${pt.name}, room ${pt.room}. The reason for this communication is: ${pt.tx.reason || '[Transfer reason]'}. Symptoms include: ${(pt.tx.symp || []).join(', ') || '[symptoms]'}.` },
-    { label: 'B — Background', color: C.amber, ic: '🟡', content: `Code Status: ${pt.code}. ${pt.polst ? 'POLST on file.' : ''} Allergies: ${pt.allergy.length > 0 ? pt.allergy.join(', ') : 'NKA'}. Conditions: ${pt.hx.join(', ')}. Current medications: ${pt.meds.map(x => x.n + ' ' + x.f).join('; ')}.` },
-    { label: 'A — Assessment', color: C.accent, ic: '🔵', content: `Recent changes: ${pt.tx.chg || '[Recent changes]'}. Interventions taken: ${pt.tx.intv || '[Interventions]'}.` },
-    { label: 'R — Recommendation', color: C.green, ic: '🟢', content: `Patient is being transferred to ${pt.tx.dest || '[Destination]'}. Family contact: ${pt.contact} (${pt.contactRel}) ${pt.contactPh}. ${pt.comfort.comm}` },
+    { label: 'S — Situation', color: C.red, ic: '🔴', content: `(${variant}) ${pt.name}, room ${pt.room}. Reason: ${pt.tx.reason || '[Transfer reason]'}. Symptoms: ${(pt.tx.symp || []).join(', ') || '[symptoms]'}.` },
+    { label: 'B — Background', color: C.amber, ic: '🟡', content: `Code: ${pt.code}. ${pt.polst ? 'POLST on file.' : ''} Allergies: ${pt.allergy.length > 0 ? pt.allergy.join(', ') : 'NKA'}. Conditions: ${pt.hx.join(', ')}. Medication source: ${sourceMeds}.` },
+    { label: 'A — Assessment', color: C.accent, ic: '🔵', content: `Recent changes: ${pt.tx.chg || '[Recent changes]'}. Interventions: ${pt.tx.intv || '[Interventions]'}. Last status: ${(pt.vitalsHistory || []).slice(-1).map(v => `${v.time} BP ${v.bp} HR ${v.hr} SPO2 ${v.sp}%`).join('') || 'No current vitals'}.` },
+    { label: 'R — Recommendation', color: C.green, ic: '🟢', content: `Destination: ${pt.tx.dest || '[Destination]'}. Family: ${pt.contact} (${pt.contactRel}) ${pt.contactPh}. Person-centered flags: ${pt.personCentered?.languageNeed || pt.lang}, ${pt.personCentered?.calmingStrategies || pt.comfort.dist}.` },
   ];
   const fullText = sbar.map(s => `${s.label}:\n${s.content}`).join('\n\n');
   return (
@@ -335,6 +338,17 @@ export const S19 = ({ go, m, patients }) => {
         <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
           {patients.map((p, i) => <span key={i} onClick={() => setPtIdx(i)} style={{ padding: '8px 16px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: ptIdx === i ? C.accent : '#fff', color: ptIdx === i ? '#fff' : C.txS, cursor: 'pointer', border: `1px solid ${ptIdx === i ? C.accent : C.bdr}` }}>{p.init} — {p.short}</span>)}
         </div>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+          {['EMS handoff', 'ED triage', 'Facility return'].map(v => (
+            <span key={v} onClick={() => setVariant(v)} style={{ padding: '6px 12px', borderRadius: 18, fontSize: 12, fontWeight: 700, background: variant === v ? C.purple : '#fff', color: variant === v ? '#fff' : C.txS, border: `1px solid ${variant === v ? C.purple : C.bdr}`, cursor: 'pointer' }}>{v}</span>
+          ))}
+        </div>
+        <Cd m={m} style={{ borderLeft: `4px solid ${C.purple}`, marginBottom: 12 }} ch={<>
+          <FR l="Generated" v="March 20, 2026 at 6:18 PM" />
+          <FR l="Author" v={pt.tx.nurse || 'RN Sarah Mitchell'} />
+          <FR l="Destination" v={pt.tx.dest || 'Not selected'} />
+          <FR l="Medication Source" v={sourceMeds} />
+        </>} />
         {sbar.map((s, i) => (
           <Cd key={i} m={m} style={{ borderLeft: `4px solid ${s.color}`, marginBottom: m ? 8 : 12 }} ch={<>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
@@ -347,8 +361,35 @@ export const S19 = ({ go, m, patients }) => {
         <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
           <Bt full ch={copied ? '✓ Copied!' : '📋 Copy SBAR'} bg={copied ? C.green : C.accent} onClick={() => { navigator.clipboard.writeText(fullText).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 2000); }} m={m} />
           <Bt full outline ch="🖨 Print" onClick={() => window.print()} m={m} />
+          <Bt full outline ch="⬇ Download" onClick={() => {}} m={m} />
         </div>
       </div>
     </div>
   );
 };
+
+// ===== S20 — DATA SOURCES / INTEGRATIONS =====
+export const S20 = ({ go, m }) => (
+  <div style={{ minHeight: '100vh', background: C.bg }}>
+    <TB m={m} left={<Bk go={go} to={17} label="Dashboard" />} ctr="Data Sources & Integrations" />
+    <div style={{ padding: m ? 14 : 20, maxWidth: 720, margin: '0 auto' }}>
+      <Cd m={m} style={{ borderLeft: `4px solid ${C.accent}` }} ch={<>
+        <div style={{ fontSize: 14, fontWeight: 700, color: C.navy, marginBottom: 4 }}>Prototype architecture story</div>
+        <div style={{ fontSize: 12, color: C.txS, lineHeight: 1.6 }}>
+          TransferLink supports standalone facilities, document upload workflows, and API-connected organizations without becoming a full EHR module.
+        </div>
+      </>} />
+      {INTEGRATION_CONNECTORS.map((conn) => (
+        <Cd key={conn.name} m={m} style={{ borderLeft: `4px solid ${conn.mode === 'Connected' ? C.green : conn.mode === 'Pilot-ready' ? C.accent : C.amber}` }} ch={<>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <div style={{ fontSize: 15, fontWeight: 800, color: C.navy }}>{conn.name}</div>
+            <Bg ch={`${conn.mode} · ${conn.status}`} bg={conn.mode === 'Connected' ? C.green : conn.mode === 'Pilot-ready' ? C.accent : C.amber} />
+          </div>
+          <div style={{ display: 'grid', gap: 5 }}>
+            {conn.scope.map((sc) => <div key={sc} style={{ fontSize: 12, color: C.txS }}>• {sc}</div>)}
+          </div>
+        </>} />
+      ))}
+    </div>
+  </div>
+);

@@ -133,6 +133,18 @@ export const PERSONAS = [
   {name:"Mark Johnson", role:"Administrator", shift:"Day (7a-7p)"},
 ];
 
+export const FACILITY_MODES = [
+  { key: "standalone", label: "Standalone Facility", desc: "No EHR required. Manual baseline + medication attachment workflow." },
+  { key: "upload", label: "Document Upload Facility", desc: "Upload PDFs/photos/exports while keeping TransferLink as the handoff source." },
+  { key: "api", label: "API-Connected Facility", desc: "Bi-directional data flow with enterprise EHR platforms." },
+];
+
+export const INTEGRATION_CONNECTORS = [
+  { name: "PointClickCare", mode: "Connected", status: "Active", scope: ["Pull demographics", "Pull active medications", "Pull code status / advance directives", "Push transfer event summary", "Receive ED return update"] },
+  { name: "Epic", mode: "Pilot-ready", status: "Simulated", scope: ["Pull demographics", "Pull active medications", "Pull code status / advance directives", "Push transfer event summary", "Receive ED return update"] },
+  { name: "Other EHR / CSV Export", mode: "Document + file import", status: "Available", scope: ["Import demographics via CSV", "Import active medications", "Push transfer summary PDF"] },
+];
+
 export const DEMO_SCREEN_MAP = [
   {
     screen: 0,
