@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { C, Cd, Bt, Bg } from './components.jsx';
 import { PERSONAS, FACILITY_MODES } from './data.js';
 
-export const LandingPage = ({ m, onStartOnboarding, onOpenPrototype }) => (
+export const LandingPage = ({ m, onStartOnboarding, onOpenPrototype, onOpenLegacy }) => (
   <div style={{ minHeight: '100vh', background: `radial-gradient(circle at 12% 10%,rgba(27,154,170,.2),transparent 32%), radial-gradient(circle at 88% 18%,rgba(124,77,255,.18),transparent 28%), linear-gradient(164deg,${C.navy},#1A2E47 42%,#223C5D)`, color: '#fff', padding: m ? '24px 14px 34px' : '34px 26px 44px' }}>
     <div style={{ maxWidth: 1160, margin: '0 auto' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: m ? 18 : 26 }}>
@@ -46,6 +46,9 @@ export const LandingPage = ({ m, onStartOnboarding, onOpenPrototype }) => (
       </div>
       <footer style={{ marginTop: 14, textAlign: m ? 'left' : 'right', fontSize: 11, color: 'rgba(255,255,255,.45)' }}>
         TransferLink prototype · For review, demos, and usability sessions
+        <button onClick={onOpenLegacy} style={{ marginLeft: 10, border: '1px solid rgba(255,255,255,.25)', background: 'transparent', color: 'rgba(255,255,255,.75)', borderRadius: 12, padding: '3px 8px', fontSize: 10, cursor: 'pointer' }}>
+          Open legacy role selector
+        </button>
       </footer>
     </div>
   </div>

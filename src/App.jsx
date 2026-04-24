@@ -37,9 +37,11 @@ export default function App() {
 
   const go = useCallback((s) => {
     if (s === 'add') { setShowIntake(true); return; }
+    if (s === 'legacy-home') { setPresentation('app'); setScreen(0); return; }
+    if (s === 0 && presentation === 'app') { setPresentation('landing'); return; }
     setVisited(v => new Set([...v, s]));
     setScreen(Number(s));
-  }, []);
+  }, [presentation]);
 
   const addToast = useCallback((msg, type = 'ok') => {
     const id = Date.now();
@@ -135,6 +137,7 @@ export default function App() {
           m={m}
           onStartOnboarding={() => setPresentation('onboarding')}
           onOpenPrototype={() => { setPresentation('app'); setScreen(17); }}
+          onOpenLegacy={() => { setPresentation('app'); setScreen(0); }}
         />
       )}
       {presentation === 'onboarding' && (
