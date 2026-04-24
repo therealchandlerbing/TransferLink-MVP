@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { C, Chk, DnA, QR, Bg, Av, Cd, Bt, SL, TB, Bk, FR, TxIn, BellIco } from './components.jsx';
-import { AllergyB, CodeBanner, PtHd, Steps, TransferTracker, PtSwitcher, POLST, Scanner, Sections, ComfortSection } from './clinical.jsx';
+import { AllergyB, CodeBanner, PtHd, Steps, TransferTracker, PtSwitcher, POLST, Scanner, Sections, ComfortSection, EDCriticalSummary } from './clinical.jsx';
 
 // ===== S0 — HOME =====
 export const S0 = ({ go, m, onStartDemo }) => {
@@ -190,7 +190,7 @@ export const S1 = ({ go, m, setPt, patients, onAddPt }) => {
 };
 
 // ===== S2 — PATIENT RECORD =====
-export const S2 = ({ go, m, p, patients, ptId, setPt, visited }) => (
+export const S2 = ({ go, m, p, patients, ptId, setPt, visited, onOpenMedImport }) => (
   <div style={{ minHeight: '100vh', background: C.bg }}>
     <TB m={m} left={<Bk go={go} to={1} label="Patients" />} ctr="Patient Record" right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
     <Steps cur={0} m={m} />
@@ -199,6 +199,7 @@ export const S2 = ({ go, m, p, patients, ptId, setPt, visited }) => (
       <PtHd p={p} onQR={() => go(5)} m={m} />
       <AllergyB p={p} m={m} />
       <Sections p={p} m={m} />
+      <Bt full outline ch="Import / Attach Medication Source" onClick={onOpenMedImport} m={m} />
       <div style={{ marginTop: 8 }}>
         <Bt full ch="Initiate Transfer to ED" onClick={() => go(3)} m={m} />
       </div>
@@ -207,12 +208,13 @@ export const S2 = ({ go, m, p, patients, ptId, setPt, visited }) => (
 );
 
 // ===== S3 — INITIATE TRANSFER =====
-export const S3 = ({ go, m, p, update }) => {
+export const S3 = ({ go, m, p, update, onOpenMedImport }) => {
   const allSymp = ['Shortness of Breath', 'Chest Pain', 'Altered Mental Status', 'Fall/Injury', 'GI Distress', 'Fever', 'Pain', 'Other'];
   const [reason, setReason] = useState(p.tx.reason);
   const [symp, setSymp] = useState([...p.tx.symp]);
   const [intv, setIntv] = useState(p.tx.intv);
   const [chg, setChg] = useState(p.tx.chg);
+  const [showSecondary, setShowSecondary] = useState(false);
   const [dest, setDest] = useState(p.tx.dest || 'Providence Regional Medical Center, Everett');
   const [showDest, setShowDest] = useState(false);
   const dests = ['Providence Regional Medical Center, Everett', 'Swedish Edmonds', 'EvergreenHealth Monroe', 'Harborview Medical Center, Seattle'];
@@ -225,7 +227,15 @@ export const S3 = ({ go, m, p, update }) => {
       <Steps cur={1} m={m} />
       <div style={{ padding: m ? 14 : 20, maxWidth: 600, margin: '0 auto' }}>
         <Cd m={m} style={{ borderLeft: `4px solid ${C.amber}` }} ch={<>
-          <div style={{ fontSize: 12, color: C.txS, marginBottom: 16 }}>Transfer: {p.tx.time || 'March 20, 2026'} · {p.tx.nurse || 'RN Sarah Mitchell'}</div>
+          <div style={{ fontSize: 12, color: C.txS, marginBottom: 12 }}>Transfer: {p.tx.time || 'March 20, 2026'} · {p.tx.nurse || 'RN Sarah Mitchell'}</div>
+          <div style={{ background: C.lG, border: `1px solid ${C.green}30`, borderRadius: 10, padding: '8px 10px', marginBottom: 12, fontSize: 12, color: C.greenD }}>
+            <strong>Under 5 minute mode:</strong> baseline data is already in record. Complete essentials now, add optional details only if needed.
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 6, marginBottom: 16 }}>
+            {[reason.trim(), symp.length > 0, chg.trim(), dest.trim(), !!p.medAttachment]?.map((done, idx) => (
+              <div key={idx} style={{ height: 6, borderRadius: 3, background: done ? C.green : C.bdr }} />
+            ))}
+          </div>
           <SL ch="Reason for Transfer" ic="📝" />
           <textarea value={reason} onChange={e => setReason(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: '#F8F9FB', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 16 }} />
           <SL ch="Current Symptoms" ic="🩺" />
@@ -235,8 +245,6 @@ export const S3 = ({ go, m, p, update }) => {
               return <span key={i} onClick={() => toggleSymp(s)} style={{ padding: m ? '10px 14px' : '8px 14px', borderRadius: 20, fontSize: 13, fontWeight: 600, background: sel ? C.amber : '#F0F0F0', color: sel ? '#fff' : C.txS, border: sel ? `2px solid ${C.amberD}` : `1px solid ${C.bdr}`, cursor: 'pointer', transition: 'all .15s' }}>{sel ? '✓ ' : ''}{s}</span>;
             })}
           </div>
-          <SL ch="Interventions Already Taken" ic="💉" />
-          <textarea value={intv} onChange={e => setIntv(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: '#F8F9FB', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 16 }} />
           <SL ch="Recent Changes (72h)" ic="📊" />
           <textarea value={chg} onChange={e => setChg(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: '#F8F9FB', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 16 }} />
           <SL ch="Destination" ic="🏥" />
@@ -250,6 +258,16 @@ export const S3 = ({ go, m, p, update }) => {
               </div>
             )}
           </div>
+          <div style={{ marginTop: 12, marginBottom: 16 }}>
+            <Bt full outline ch={p.medAttachment ? 'Update Medication Attachment' : 'Import / Attach Medication List'} onClick={onOpenMedImport} m={m} />
+          </div>
+          <div onClick={() => setShowSecondary(!showSecondary)} style={{ fontSize: 12, fontWeight: 700, color: C.accent, cursor: 'pointer', marginBottom: 10 }}>
+            {showSecondary ? 'Hide secondary fields ▲' : 'Show secondary fields ▼'}
+          </div>
+          {showSecondary && <>
+            <SL ch="Interventions Already Taken" ic="💉" />
+            <textarea value={intv} onChange={e => setIntv(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: '#F8F9FB', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 16 }} />
+          </>}
         </>} />
         <Bt full ch="Generate QR Code and Continue" onClick={handleContinue} m={m} disabled={!isValid} />
         {!isValid && <div style={{ textAlign: 'center', fontSize: 12, color: C.amber, marginTop: 8 }}>Please complete reason and select at least one symptom</div>}
@@ -386,6 +404,7 @@ export const S10 = ({ go, m, p, patients, ptId, setPt }) => {
       {pol && p.polst && <POLST p={p} onClose={() => setPol(false)} m={m} />}
       <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr={m ? 'ED View' : 'TransferLink | ED'} accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
       <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
+        <EDCriticalSummary p={p} m={m} onOpenPolst={() => setPol(true)} />
         <CodeBanner p={p} lg m={m} />
         <AllergyB p={p} m={m} />
         <PtHd p={p} m={m} />

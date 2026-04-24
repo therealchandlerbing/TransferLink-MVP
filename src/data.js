@@ -8,6 +8,15 @@ export const INIT_PATIENTS = [
     allergy:["Penicillin","Sulfa drugs"],
     hx:["A-FIB","CHF","COPD","DM (Type 2)"],
     meds:[{n:"Metoprolol 50mg",f:"BID",t:"Cardiac"},{n:"Lasix 40mg",f:"Daily",t:"Cardiac"},{n:"Metformin 500mg",f:"BID",t:"Endocrine"},{n:"Eliquis 5mg",f:"BID",t:"Anticoag"},{n:"Albuterol",f:"PRN",t:"Respiratory"}],
+    medAttachment:{
+      method:"Upload medication report PDF",
+      source:"PointClickCare export",
+      fileName:"maggie_tanaka_mar20_med_report.pdf",
+      importedAt:"March 20, 2026 at 2:41 AM",
+      activeCount:5,
+      verifiedAtTransfer:true,
+      preview:["Medication Administration Record (MAR) export","Resident: Margaret Tanaka","Reviewed and reconciled by RN Sarah Mitchell"]
+    },
     mLvl:2, fLvl:2, dev:["O2 at 2 L/min","CPAP"], risks:["Falls","Aspiration","Needs Meds Crushed"], iso:"None",
     belongings: ["Hearing Aid (Right)", "Glasses"],
     vitalsHistory: [
@@ -16,6 +25,15 @@ export const INIT_PATIENTS = [
       { time: "14:00", bp: "138/82", hr: 96, sp: 84 }
     ],
     comfort:{light:"Prefers dim lighting at night",comm:"Responds to calm, slow speech in Japanese",fam:"Son David visits daily, involved in all care decisions",cult:"Buddhist traditions. Prefers rice-based meals",dist:"Agitated in loud environments. Calms with traditional Japanese music"},
+    personCentered:{
+      languageNeed:"Japanese",
+      interpreterNeeded:true,
+      culturalPractices:"Buddhist traditions respected during care transitions",
+      behavioralTriggers:"Loud environments and rapid verbal instructions",
+      calmingStrategies:"Traditional Japanese music and calm pacing",
+      familyInvolvement:"Son David is POA and should be contacted for major updates",
+      dietaryPreference:"Prefers rice-based meals and warm tea"
+    },
     tx:{reason:"Acute shortness of breath, O2 sat dropped to 84%, not responding to PRN albuterol",symp:["Shortness of Breath"],intv:"Administered PRN albuterol nebulizer, increased O2 to 4 L/min, placed in high Fowler's position",chg:"Increased confusion at night, decreased appetite x2 days, new productive cough",dest:"Providence Regional Medical Center, Everett",time:"March 20, 2026 at 2:47 AM",nurse:"RN Sarah Mitchell", belongingsSent: ["Hearing Aid (Right)", "Glasses"]},
     er:{dx:"Acute exacerbation of COPD with hypoxemia",bp:"138/82",hr:"96",rr:"22",sp:"93% on 3L",rx:"Prednisone 40mg x5 days, Azithromycin 250mg x5 days",rpt:"Called RN Mitchell at Cascade View, 6:12 PM",ins:"Follow up with pulmonology within 7 days. Continue O2 at 2 L/min. Monitor for worsening cough or fever. Return to ED if O2 sat drops below 90%.",dr:"Dr. James Park, MD",time:"March 20, 2026 at 6:15 PM"},
   },
@@ -89,10 +107,20 @@ export const NEW_PT_TEMPLATE = {
   allergy:[],
   hx:[],
   meds:[],
+  medAttachment:null,
   mLvl:1, fLvl:1, dev:[], risks:[], iso:"None",
   belongings: [],
   vitalsHistory: [],
   comfort:{light:"",comm:"",fam:"",cult:"",dist:""},
+  personCentered:{
+    languageNeed:"",
+    interpreterNeeded:false,
+    culturalPractices:"",
+    behavioralTriggers:"",
+    calmingStrategies:"",
+    familyInvolvement:"",
+    dietaryPreference:""
+  },
   tx:{reason:"",symp:[],intv:"",chg:"",dest:"",time:"",nurse:"", belongingsSent: []},
   er:{dx:"",bp:"",hr:"",rr:"",sp:"",rx:"",rpt:"",ins:"",dr:"",time:""},
 };

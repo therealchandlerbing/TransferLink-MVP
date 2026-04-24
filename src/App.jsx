@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { C, BellIco } from './components.jsx';
 import { INIT_PATIENTS, NEW_PT_TEMPLATE, DEMO_SCREEN_MAP } from './data.js';
-import { ToastContainer, NotificationCenter, GuidedDemo, IntakeModal, S15 } from './modals.jsx';
+import { ToastContainer, NotificationCenter, GuidedDemo, IntakeModal, MedicationImportModal, S15 } from './modals.jsx';
 import { S0, S1, S2, S3, S4, S5, S6, S7, S9, S8, S10 } from './screens1.jsx';
 import { S11, S12, S13, S14, S17, S18, S19 } from './screens2.jsx';
 
@@ -13,6 +13,7 @@ export default function App() {
   const [notifs, setNotifs] = useState([]);
   const [showNotif, setShowNotif] = useState(false);
   const [showIntake, setShowIntake] = useState(false);
+  const [showMedImport, setShowMedImport] = useState(false);
   const [demo, setDemo] = useState(false);
   const [demoStep, setDemoStep] = useState(0);
   const [visited, setVisited] = useState(new Set([0]));
@@ -22,6 +23,7 @@ export default function App() {
     { text: 'Maggie Tanaka — Transfer in Progress', sub: 'Awaiting ED return documentation', type: 'warning' },
     { text: 'Robert Chen — INR follow-up due today', sub: 'Scheduled for 3:00 PM', type: 'info' },
   ]);
+  const [returnTracking, setReturnTracking] = useState({});
 
   const [winW, setWinW] = useState(window.innerWidth);
   useEffect(() => {
@@ -54,10 +56,37 @@ export default function App() {
 
   const updateER = useCallback((erData) => {
     setPatients(ps => ps.map(x => x.id === ptId ? { ...x, er: { ...x.er, ...erData, time: x.er.time || 'March 20, 2026 at 6:15 PM' } } : x));
+    setReturnTracking(prev => ({
+      ...prev,
+      [ptId]: {
+        edSubmitted: 'March 20, 2026 at 6:15 PM',
+        facilityNotified: 'March 20, 2026 at 6:16 PM',
+        nurseAcknowledged: prev[ptId]?.nurseAcknowledged || null,
+        recordClosed: prev[ptId]?.recordClosed || null
+      }
+    }));
     const pt = patients.find(x => x.id === ptId);
     if (pt) addNotification(`${pt.short} has returned from ${pt.tx.dest?.split(',')[0] || 'the ED'}`, ptId);
     addToast('ED return documented. Facility notified!', 'ok');
   }, [ptId, patients, addNotification, addToast]);
+
+  const updateMedicationAttachment = useCallback((medAttachment) => {
+    setPatients(ps => ps.map(x => x.id === ptId ? { ...x, medAttachment } : x));
+    setShowMedImport(false);
+    addToast('Medication source attached and verified for transfer.', 'ok');
+  }, [ptId, addToast]);
+
+  const acknowledgeReturn = useCallback(() => {
+    setReturnTracking(prev => ({
+      ...prev,
+      [ptId]: {
+        ...prev[ptId],
+        nurseAcknowledged: 'March 20, 2026 at 7:22 AM',
+        recordClosed: 'March 20, 2026 at 7:23 AM'
+      }
+    }));
+    addToast('Return instructions acknowledged. Record closed.', 'ok');
+  }, [ptId, addToast]);
 
   const handleNewPatient = useCallback((data) => {
     const newId = Date.now();
@@ -103,17 +132,18 @@ export default function App() {
       <ToastContainer toasts={toasts} setToasts={setToasts} />
       {showNotif && <NotificationCenter notifications={notifs} onClose={() => setShowNotif(false)} onSelect={(n) => { setNotifs(ns => ns.map(x => x.id === n.id ? { ...x, unread: false } : x)); if (n.ptId != null) { setPtId(n.ptId); go(2); } setShowNotif(false); }} m={m} />}
       {showIntake && <IntakeModal onClose={() => setShowIntake(false)} onDone={handleNewPatient} m={m} />}
+      {showMedImport && <MedicationImportModal p={p} m={m} onClose={() => setShowMedImport(false)} onImport={updateMedicationAttachment} />}
       {demo && <GuidedDemo onExit={() => setDemo(false)} demoStep={demoStep} setDemoStep={setDemoStep} navigate={go} selectPatient={setPtId} m={m} />}
 
       {screen === 0 && <S0 go={go} m={m} onStartDemo={() => { setDemo(true); setDemoStep(0); go(0); }} />}
       <div style={{ paddingBottom: demo ? (m ? 180 : 110) : 0 }}>
         {screen === 15 && <S15 go={go} m={m} setPersona={setPersona} setRole={setRole} />}
-        {screen === 17 && <S17 {...sharedProps} alerts={dashAlerts} dismissAlert={dismissAlert} />}
+        {screen === 17 && <S17 {...sharedProps} alerts={dashAlerts} dismissAlert={dismissAlert} returnTracking={returnTracking} />}
         {screen === 18 && <S18 go={go} m={m} patients={patients} setPt={setPtId} />}
         {screen === 19 && <S19 go={go} m={m} patients={patients} />}
         {screen === 1 && <S1 go={go} m={m} setPt={setPtId} patients={patients} onAddPt={() => setShowIntake(true)} />}
-        {screen === 2 && <S2 {...sharedProps} />}
-        {screen === 3 && <S3 go={go} m={m} p={p} update={update} />}
+        {screen === 2 && <S2 {...sharedProps} onOpenMedImport={() => setShowMedImport(true)} />}
+        {screen === 3 && <S3 go={go} m={m} p={p} update={update} onOpenMedImport={() => setShowMedImport(true)} />}
         {screen === 4 && <S4 {...sharedProps} />}
         {screen === 5 && <S5 go={go} m={m} p={p} />}
         {screen === 6 && <S6 go={go} m={m} p={p} />}
@@ -122,9 +152,9 @@ export default function App() {
         {screen === 9 && <S9 go={go} m={m} />}
         {screen === 10 && <S10 {...sharedProps} />}
         {screen === 11 && <S11 go={go} m={m} p={p} updateER={updateER} />}
-        {screen === 12 && <S12 go={go} m={m} p={p} />}
-        {screen === 13 && <S13 {...sharedProps} />}
-        {screen === 14 && <S14 go={go} m={m} p={p} />}
+        {screen === 12 && <S12 go={go} m={m} p={p} returnStatus={returnTracking[ptId]} />}
+        {screen === 13 && <S13 {...sharedProps} returnStatus={returnTracking[ptId]} onAcknowledge={acknowledgeReturn} />}
+        {screen === 14 && <S14 go={go} m={m} p={p} returnStatus={returnTracking[ptId]} />}
       </div>
 
       {showAny && (

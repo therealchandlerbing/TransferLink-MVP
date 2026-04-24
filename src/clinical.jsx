@@ -89,7 +89,17 @@ export const FScaleSelect = ({ lvl, setLvl, m }) => {
 
 // ===== COMFORT SECTION =====
 export const ComfortSection = ({ p, m, defaultOpen = false }) => {
-  const items = [{ ic: '💡', l: 'Lighting', v: p.comfort.light }, { ic: '💬', l: 'Communication', v: p.comfort.comm }, { ic: '👨‍👩‍👧', l: 'Family', v: p.comfort.fam }, { ic: '🙏', l: 'Cultural/Spiritual', v: p.comfort.cult }, { ic: '🧘', l: 'Distress Management', v: p.comfort.dist }];
+  const pc = p.personCentered || {};
+  const items = [
+    { ic: '💡', l: 'Lighting', v: p.comfort.light },
+    { ic: '💬', l: 'Communication', v: p.comfort.comm },
+    { ic: '🗣️', l: 'Language / Interpreter', v: `${pc.languageNeed || p.lang}${pc.interpreterNeeded ? ' · Interpreter requested' : ''}` },
+    { ic: '👨‍👩‍👧', l: 'Family', v: pc.familyInvolvement || p.comfort.fam },
+    { ic: '🙏', l: 'Cultural/Spiritual', v: pc.culturalPractices || p.comfort.cult },
+    { ic: '⚠️', l: 'Behavioral Triggers', v: pc.behavioralTriggers || p.comfort.dist },
+    { ic: '🧘', l: 'Calming Strategies', v: pc.calmingStrategies || p.comfort.dist },
+    { ic: '🍽️', l: 'Dietary Preference', v: pc.dietaryPreference || 'No specific preference documented' }
+  ];
   return (
     <Coll title="Person-Centered Care Preferences" ic="🕊️" open={defaultOpen} m={m} ch={<>
       <div style={{ background: 'linear-gradient(90deg,#F3E5F5,#FCE4EC)', borderRadius: 10, padding: '8px 12px', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -176,6 +186,23 @@ export const POLST = ({ p, onClose, m }) => (
   </div>
 );
 
+export const EDCriticalSummary = ({ p, m, onOpenPolst }) => (
+  <Cd m={m} style={{ border: `2px solid ${C.red}55`, borderLeft: `4px solid ${C.red}` }} ch={<>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 10 }}>
+      <div style={{ fontSize: 12, fontWeight: 800, color: C.red, letterSpacing: .7, textTransform: 'uppercase' }}>ED First 30 Seconds</div>
+      {p.polst && <button onClick={onOpenPolst} style={{ border: 'none', background: C.red, color: '#fff', borderRadius: 16, padding: '6px 10px', fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>View POLST</button>}
+    </div>
+    <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr', gap: 8 }}>
+      <div style={{ background: '#FAFAFA', borderRadius: 8, padding: '8px 10px' }}><strong>{p.name}</strong><div style={{ fontSize: 12, color: C.txS }}>DOB {p.dob} · Age {p.age}</div></div>
+      <div style={{ background: '#FAFAFA', borderRadius: 8, padding: '8px 10px' }}><strong>Code:</strong> {p.code}<div style={{ fontSize: 12, color: C.txS }}>{p.polst ? 'POLST on file' : 'No POLST on file'}</div></div>
+      <div style={{ background: '#FFF5F3', borderRadius: 8, padding: '8px 10px' }}><strong>Allergies:</strong> {p.allergy?.join(', ') || 'NKA'}</div>
+      <div style={{ background: '#F0FAFB', borderRadius: 8, padding: '8px 10px' }}><strong>Language:</strong> {p.lang}{p.personCentered?.interpreterNeeded ? ' (Interpreter needed)' : ''}</div>
+      <div style={{ background: '#FFF9E8', borderRadius: 8, padding: '8px 10px', gridColumn: '1 / -1' }}><strong>Reason:</strong> {p.tx.reason || 'Not documented'} </div>
+      <div style={{ background: '#FAFAFA', borderRadius: 8, padding: '8px 10px', gridColumn: '1 / -1' }}><strong>Recent Vitals/Status:</strong> {(p.vitalsHistory || []).slice(-1).map(v => `${v.time} · BP ${v.bp}, HR ${v.hr}, SPO2 ${v.sp}%`).join('') || p.tx.chg || 'No recent vitals entered'}</div>
+    </div>
+  </>} />
+);
+
 // ===== SCANNER =====
 export const Scanner = ({ label, onDone, m }) => {
   const [done, setDone] = useState(false);
@@ -209,7 +236,18 @@ export const Sections = ({ p, tx, er, m, comfortOpen }) => (
     {tx && <Cd m={m} hl={C.lW} style={{ border: `1.5px solid ${C.amber}`, borderLeft: `4px solid ${C.amber}` }} ch={<><SL ch="Active Transfer Details" ic="🚨" /><FR l="Reason for Transfer" v={p.tx.reason} hl /><FR l="Symptoms" v={<Chips items={p.tx.symp} bg={C.amber} color="#fff" />} /><FR l="Interventions" v={p.tx.intv} /><FR l="Recent Changes (72h)" v={p.tx.chg} /><FR l="Destination" v={p.tx.dest} /><div style={{ fontSize: 12, color: C.txS, marginTop: 6, paddingTop: 6, borderTop: `1px solid ${C.amber}30` }}>Initiated: {p.tx.time} by {p.tx.nurse}</div></>} />}
     <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr', gap: m ? 10 : 14 }}>
       <Coll title="Contacts & Facility" ic="👥" m={m} ch={<><FR l="Contact" v={<span><strong>{p.contact}</strong> ({p.contactRel})</span>} /><FR l="Phone" v={<span style={{ color: C.accent, fontWeight: 600 }}>{p.contactPh}</span>} /><div style={{ height: 1, background: C.bdr, margin: '8px 0' }} /><FR l="Facility" v={<strong>{p.fac}</strong>} /><FR l="Address" v={p.facAddr} /><FR l="Phone" v={p.facPh} /></>} />
-      <Coll title="Medications" ic="💊" m={m} ch={<><div style={{ fontSize: 12, color: C.txS, marginBottom: 8 }}>{p.meds.length} active medications</div>{p.meds.length === 0 ? <div style={{ padding: '12px 0', color: C.txT, fontSize: 13, fontStyle: 'italic' }}>No active medications listed.</div> : p.meds.map((med, i) => <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 0', borderBottom: `1px solid ${C.bdr}15` }}><span style={{ fontSize: 13 }}>{med.n}</span><div style={{ display: 'flex', gap: 4 }}><Bg ch={med.f} bg={C.lA} color={C.accent} style={{ fontSize: 10, padding: '2px 7px' }} /><Bg ch={med.t} bg="#F0F0F0" color={C.txS} style={{ fontSize: 10, padding: '2px 7px' }} /></div></div>)}</>} />
+      <Coll title="Medications" ic="💊" m={m} ch={<>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginBottom: 8, flexWrap: 'wrap' }}>
+          <div style={{ fontSize: 12, color: C.txS }}>{p.meds.length} active medications</div>
+          {p.medAttachment?.verifiedAtTransfer && <Bg ch="✓ Verified at transfer" bg={C.green} style={{ fontSize: 10 }} />}
+        </div>
+        {p.medAttachment && <div style={{ background: '#F8F9FB', border: `1px solid ${C.bdr}`, borderRadius: 10, padding: '8px 10px', marginBottom: 10, fontSize: 11, color: C.txS, lineHeight: 1.5 }}>
+          <div><strong>Source:</strong> {p.medAttachment.method} · {p.medAttachment.source}</div>
+          <div><strong>Attachment:</strong> {p.medAttachment.fileName}</div>
+          <div><strong>Imported:</strong> {p.medAttachment.importedAt}</div>
+        </div>}
+        {p.meds.length === 0 ? <div style={{ padding: '12px 0', color: C.txT, fontSize: 13, fontStyle: 'italic' }}>No active medications listed. Manual entry available for standalone facilities.</div> : p.meds.map((med, i) => <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 0', borderBottom: `1px solid ${C.bdr}15` }}><span style={{ fontSize: 13 }}>{med.n}</span><div style={{ display: 'flex', gap: 4 }}><Bg ch={med.f} bg={C.lA} color={C.accent} style={{ fontSize: 10, padding: '2px 7px' }} /><Bg ch={med.t} bg="#F0F0F0" color={C.txS} style={{ fontSize: 10, padding: '2px 7px' }} /></div></div>)}
+      </>} />
     </div>
     <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr', gap: m ? 10 : 14 }}>
       <Coll title="History & Baselines" ic="📋" m={m} ch={<><FR l="Conditions" v={<Chips items={p.hx} />} /><div style={{ marginTop: 12 }}><span style={{ fontSize: 11, fontWeight: 700, color: C.txS, textTransform: 'uppercase' }}>Baseline Mentation</span><MScale lvl={p.mLvl} m={m} /></div><div style={{ marginTop: 12 }}><span style={{ fontSize: 11, fontWeight: 700, color: C.txS, textTransform: 'uppercase' }}>Functional Status</span><FScale lvl={p.fLvl} m={m} /></div></>} />
