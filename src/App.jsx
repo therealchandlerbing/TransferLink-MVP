@@ -143,6 +143,7 @@ export default function App() {
         @keyframes slideUp { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
         @keyframes confirmBounce { 0%{opacity:0;transform:scale(.4)}60%{transform:scale(1.12)}100%{opacity:1;transform:scale(1)} }
         @keyframes sc { 0%,100%{top:0}50%{top:calc(100% - 3px)} }
+        @keyframes spin { to { transform: rotate(360deg); } }
         .home-btn:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(27,154,170,.5) !important; }
         .home-btn:active { transform: scale(0.96); }
         input,textarea,button { font-family: inherit; }
@@ -240,7 +241,14 @@ export default function App() {
           </button>
         </>
       )}
-      {isTransitioning && <div style={{ position: 'fixed', inset: 0, zIndex: 400, background: 'rgba(15,29,47,.18)', backdropFilter: 'blur(2px)' }} />}
+      {isTransitioning && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 400, background: 'rgba(15,29,47,.24)', backdropFilter: 'blur(3px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: 'rgba(255,255,255,.92)', borderRadius: 14, padding: '14px 16px', minWidth: 180, textAlign: 'center', boxShadow: '0 14px 40px rgba(0,0,0,.2)' }}>
+            <div style={{ width: 20, height: 20, borderRadius: 10, border: `2px solid ${C.accent}40`, borderTopColor: C.accent, margin: '0 auto', animation: 'spin .9s linear infinite' }} />
+            <div style={{ fontSize: 12, color: C.txS, marginTop: 8, fontWeight: 700 }}>Loading workspace…</div>
+          </div>
+        </div>
+      )}
         </>
       )}
     </div>

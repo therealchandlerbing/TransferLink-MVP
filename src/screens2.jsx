@@ -117,10 +117,34 @@ export const S12 = ({ go, m, p, returnStatus }) => (
 
 
 // ===== S13 — FACILITY RETURN =====
-export const S13 = ({ go, m, p, patients, ptId, setPt, returnStatus, onAcknowledge }) => (
-  <div style={{ minHeight: '100vh', background: C.bg }}>
-    <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr="Patient Returned" accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
-    <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
+export const S13 = ({ go, m, p, patients, ptId, setPt, returnStatus, onAcknowledge }) => {
+  const [actionMsg, setActionMsg] = useState('');
+  const returnSummary = `${p.short} ED Return Summary\nDiagnosis: ${p.er.dx}\nProvider: ${p.er.dr}\nInstructions: ${p.er.ins}\nMedication changes: ${p.er.rx || 'None listed'}\n`;
+  const downloadSummary = () => {
+    const blob = new Blob([returnSummary], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${p.short.toLowerCase().replace(/\s+/g, '_')}_return_summary.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setActionMsg('Return summary downloaded');
+    setTimeout(() => setActionMsg(''), 1800);
+  };
+  const copyInstructions = async () => {
+    try {
+      await navigator.clipboard.writeText(p.er.ins || '');
+      setActionMsg('Instructions copied');
+      setTimeout(() => setActionMsg(''), 1800);
+    } catch {
+      setActionMsg('Copy not available in this browser');
+      setTimeout(() => setActionMsg(''), 1800);
+    }
+  };
+  return (
+    <div style={{ minHeight: '100vh', background: C.bg }}>
+      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr="Patient Returned" accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
+      <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
       <div style={{ background: `linear-gradient(90deg,${C.lG},#F0FFF4)`, border: `1.5px solid ${C.green}`, borderLeft: `4px solid ${C.green}`, borderRadius: 12, padding: m ? '12px 14px' : '14px 20px', marginBottom: m ? 10 : 14, display: 'flex', alignItems: 'center', gap: 10 }}>
         <span style={{ fontSize: 20 }}>✅</span>
         <div><div style={{ fontWeight: 700, fontSize: 14, color: C.greenD }}>{p.short} has returned from the ED</div><div style={{ fontSize: 12, color: C.txS }}>{p.er.time || 'Today'} · via {p.tx.dest?.split(',')[0]}</div></div>
@@ -148,13 +172,15 @@ export const S13 = ({ go, m, p, patients, ptId, setPt, returnStatus, onAcknowled
       </>} />
       <div style={{ display: 'flex', gap: m ? 8 : 12, marginTop: 8, flexDirection: m ? 'column' : 'row' }}>
         <Bt full outline ch="View Full Timeline" onClick={() => go(14)} m={m} />
-        <Bt full outline ch="Download Summary (Soon)" disabled m={m} />
-        <Bt full outline ch="Copy Instructions (Soon)" disabled m={m} />
+        <Bt full outline ch="Download Return Summary" onClick={downloadSummary} m={m} />
+        <Bt full outline ch="Copy Instructions" onClick={copyInstructions} m={m} />
         <Bt full ch="✓ Acknowledge" onClick={() => { onAcknowledge(); go(17); }} m={m} bg={C.green} />
       </div>
+      {actionMsg && <div style={{ marginTop: 8, fontSize: 12, color: C.greenD, fontWeight: 700 }}>{actionMsg}</div>}
     </div>
   </div>
-);
+  );
+};
 
 // ===== S14 — TIMELINE =====
 export const S14 = ({ go, m, p, returnStatus }) => {

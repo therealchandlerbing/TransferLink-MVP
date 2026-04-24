@@ -44,6 +44,18 @@ export const LandingPage = ({ m, onStartOnboarding, onOpenPrototype, onOpenLegac
           ))}
         </>} />
       </div>
+      <div style={{ marginTop: 12, display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr 1fr', gap: 10 }}>
+        {[
+          ['Demo Arc', 'Onboard → Transfer → ED return → Facility acknowledgement'],
+          ['Audience Ready', 'Built for review meetings, advocacy demos, and pilot discussions'],
+          ['High-Fidelity', 'Clinically grounded content with polished visual storytelling'],
+        ].map(([title, text]) => (
+          <Cd key={title} m={m} style={{ background: 'rgba(255,255,255,.05)', border: '1px solid rgba(255,255,255,.1)' }} ch={<>
+            <div style={{ fontSize: 12, fontWeight: 800, color: '#fff', marginBottom: 4 }}>{title}</div>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,.66)', lineHeight: 1.5 }}>{text}</div>
+          </>} />
+        ))}
+      </div>
       <footer style={{ marginTop: 14, textAlign: m ? 'left' : 'right', fontSize: 11, color: 'rgba(255,255,255,.45)' }}>
         TransferLink prototype · For review, demos, and usability sessions
         <button onClick={onOpenLegacy} style={{ marginLeft: 10, border: '1px solid rgba(255,255,255,.25)', background: 'transparent', color: 'rgba(255,255,255,.75)', borderRadius: 12, padding: '3px 8px', fontSize: 10, cursor: 'pointer' }}>
@@ -100,9 +112,16 @@ export const OnboardingModule = ({ m, onBack, onComplete, setPersona, setRole })
               ))}
             </div>
           </div>
+          <div style={{ border: `1px solid ${C.bdr}`, borderRadius: 10, padding: '10px 12px', background: '#FBFCFE', marginBottom: 12 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: C.txS, textTransform: 'uppercase', marginBottom: 6 }}>Session preview</div>
+            <div style={{ fontSize: 13, color: C.navy, lineHeight: 1.7 }}>
+              <strong>{PERSONAS[selectedPersona].name}</strong> · {selectedRole}<br />
+              {FACILITY_MODES[selectedMode].label}
+            </div>
+          </div>
           <Bt
             full
-            ch="Continue to Dashboard"
+            ch="Enter Prototype Dashboard"
             onClick={() => {
               setPersona(PERSONAS[selectedPersona]);
               setRole(selectedRole);
