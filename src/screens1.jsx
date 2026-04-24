@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { C, Chk, DnA, QR, Bg, Av, Cd, Bt, SL, TB, Bk, FR, TxIn, BellIco } from './components.jsx';
-import { AllergyB, CodeBanner, PtHd, Steps, TransferTracker, PtSwitcher, POLST, Scanner, Sections, ComfortSection } from './clinical.jsx';
+import { C, Chk, DnA, QR, Bg, Av, Cd, Bt, SL, TB, Bk, FR, TxIn, BellIco, MedSourceBadge, ProgressMeter, SecH } from './components.jsx';
+import { AllergyB, CodeBanner, PtHd, Steps, TransferTracker, PtSwitcher, POLST, Scanner, Sections, ComfortSection, MedImportModal } from './clinical.jsx';
 
 // ===== S0 — HOME =====
 export const S0 = ({ go, m, onStartDemo }) => {
@@ -11,30 +11,30 @@ export const S0 = ({ go, m, onStartDemo }) => {
     { s: 13, i: '🏠', t: 'Facility Return',   d: 'Patient is back',       c: C.purple },
   ];
   const nav2 = [
-    { s: 15, i: '🔐', t: 'Login',     c: '#546E7A' },
-    { s: 17, i: '📊', t: 'Dashboard', c: '#0097A7' },
-    { s: 18, i: '📁', t: 'History',   c: '#5C6BC0' },
-    { s: 19, i: '📋', t: 'SBAR',      c: '#7B1FA2' },
+    { s: 15, i: '🔐', t: 'Login',       c: '#546E7A' },
+    { s: 17, i: '📊', t: 'Dashboard',   c: '#0097A7' },
+    { s: 19, i: '📋', t: 'SBAR',        c: '#7B1FA2' },
+    { s: 20, i: '🔌', t: 'Integrations', c: '#2A9D8F' },
   ];
 
   const stats = [
-    { n: '47',   label: 'Clinicians Surveyed',     sub: 'Across Washington State'       },
-    { n: '81%',  label: 'Prefer Electronic Forms',  sub: 'Over paper-based transfer'     },
-    { n: '61%',  label: 'Want QR for POLST',        sub: 'Plus 28% said maybe'           },
+    { n: '88%',  label: 'Want 3–5 minute completion', sub: 'Time was the top barrier' },
+    { n: '9–50+', label: 'Active meds per resident', sub: 'Why transcription fails' },
+    { n: '100%', label: 'Return loops tracked',       sub: 'Submitted → Ack → Closed' },
   ];
 
   const stories = [
     {
-      tag: 'Language & Communication',
+      tag: 'Committee Priority · Medication Accuracy',
       color: C.accent,
-      body: 'A patient was identified as Korean-speaking instead of Japanese-speaking at transfer — a documented pattern in LTC-to-ED handoffs where language information is absent or buried. The correct interpreter resolved communication immediately upon arrival.',
-      resolution: 'Language is now the first field on every record, visible at every handoff point.',
+      body: 'Brenda on the workgroup flagged medication transcription as the largest error source — facilities may have 9 to 50+ active meds per resident. This build imports the medication list from PDF, photo, or PointClickCare. Every record shows a verified source and timestamp.',
+      resolution: 'No retyping under pressure. Source travels with the patient.',
     },
     {
-      tag: 'Advance Directives',
-      color: C.red,
-      body: 'Survey respondents reported cases where POLST forms and advance directive documents were unavailable at the point of transfer, creating risk that a resident\'s documented wishes would not be honored during a crisis.',
-      resolution: 'The POLST is now one tap away from the QR code — at every point in the care chain.',
+      tag: 'Committee Priority · Closed-Loop Return',
+      color: C.green,
+      body: 'Donald pushed back on the return being a "nice-to-have screen." The ED return now moves through four tracked states — submitted, notified, acknowledged, closed — with an acknowledgement action at the facility and a push-notification banner until the nurse taps ack.',
+      resolution: 'Return documentation is automatic, not passive.',
     },
   ];
 
@@ -190,24 +190,28 @@ export const S1 = ({ go, m, setPt, patients, onAddPt }) => {
 };
 
 // ===== S2 — PATIENT RECORD =====
-export const S2 = ({ go, m, p, patients, ptId, setPt, visited }) => (
-  <div style={{ minHeight: '100vh', background: C.bg }}>
-    <TB m={m} left={<Bk go={go} to={1} label="Patients" />} ctr="Patient Record" right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
-    <Steps cur={0} m={m} />
-    <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
-      <TransferTracker visited={visited} m={m} />
-      <PtHd p={p} onQR={() => go(5)} m={m} />
-      <AllergyB p={p} m={m} />
-      <Sections p={p} m={m} />
-      <div style={{ marginTop: 8 }}>
-        <Bt full ch="Initiate Transfer to ED" onClick={() => go(3)} m={m} />
+export const S2 = ({ go, m, p, patients, ptId, setPt, visited, importMedSource }) => {
+  const [medOpen, setMedOpen] = useState(false);
+  return (
+    <div style={{ minHeight: '100vh', background: C.bg }}>
+      <TB m={m} left={<Bk go={go} to={1} label="Patients" />} ctr="Patient Record" right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
+      <Steps cur={0} m={m} />
+      <MedImportModal open={medOpen} onClose={() => setMedOpen(false)} onImport={(src) => importMedSource && importMedSource(src)} currentSource={p.medSource} m={m} />
+      <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
+        <TransferTracker visited={visited} m={m} />
+        <PtHd p={p} onQR={() => go(5)} m={m} />
+        <AllergyB p={p} m={m} />
+        <Sections p={p} m={m} onImportMeds={() => setMedOpen(true)} />
+        <div style={{ marginTop: 8 }}>
+          <Bt full ch="Initiate Transfer to ED" onClick={() => go(3)} m={m} />
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
-// ===== S3 — INITIATE TRANSFER =====
-export const S3 = ({ go, m, p, update }) => {
+// ===== S3 — INITIATE TRANSFER (5-minute mode) =====
+export const S3 = ({ go, m, p, update, importMedSource }) => {
   const allSymp = ['Shortness of Breath', 'Chest Pain', 'Altered Mental Status', 'Fall/Injury', 'GI Distress', 'Fever', 'Pain', 'Other'];
   const [reason, setReason] = useState(p.tx.reason);
   const [symp, setSymp] = useState([...p.tx.symp]);
@@ -215,33 +219,44 @@ export const S3 = ({ go, m, p, update }) => {
   const [chg, setChg] = useState(p.tx.chg);
   const [dest, setDest] = useState(p.tx.dest || 'Providence Regional Medical Center, Everett');
   const [showDest, setShowDest] = useState(false);
+  const [safetyOk, setSafetyOk] = useState(false);
+  const [showSecondary, setShowSecondary] = useState(false);
+  const [medOpen, setMedOpen] = useState(false);
   const dests = ['Providence Regional Medical Center, Everett', 'Swedish Edmonds', 'EvergreenHealth Monroe', 'Harborview Medical Center, Seattle'];
   const toggleSymp = s => setSymp(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
-  const isValid = reason.trim() && symp.length > 0;
+  const isValid = reason.trim() && symp.length > 0 && chg.trim() && safetyOk;
+  // progress meter: five essential fields
+  const filled = [reason.trim(), symp.length > 0, chg.trim(), dest.trim(), safetyOk].filter(Boolean).length;
+  const pct = (filled / 5) * 100;
+  const est = filled === 5 ? 'Ready in under 5 min' : filled >= 3 ? '< 2 min remaining' : filled >= 1 ? '< 4 min remaining' : 'Starts now';
   const handleContinue = () => { if (isValid) { update({ reason, symp, intv, chg, dest }); go(4); } };
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
       <TB m={m} left={<Bk go={go} to={2} label="Cancel" />} ctr="Initiate Transfer" />
       <Steps cur={1} m={m} />
-      <div style={{ padding: m ? 14 : 20, maxWidth: 600, margin: '0 auto' }}>
+      <MedImportModal open={medOpen} onClose={() => setMedOpen(false)} onImport={(src) => importMedSource && importMedSource(src)} currentSource={p.medSource} m={m} />
+      <div style={{ padding: m ? 14 : 20, maxWidth: 620, margin: '0 auto' }}>
+        <ProgressMeter pct={pct} est={est} label="Transfer in under 5 minutes" />
+        <div style={{ background: C.lA, border: `1px solid ${C.accent}30`, borderRadius: 10, padding: '8px 12px', marginBottom: 12, fontSize: 11, color: C.accentD, display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span>ℹ️</span><span>Baseline already in record: <strong>{p.meds.length} meds</strong> · {p.hx.slice(0, 3).join(' · ')} · {p.code}</span>
+        </div>
         <Cd m={m} style={{ borderLeft: `4px solid ${C.amber}` }} ch={<>
-          <div style={{ fontSize: 12, color: C.txS, marginBottom: 16 }}>Transfer: {p.tx.time || 'March 20, 2026'} · {p.tx.nurse || 'RN Sarah Mitchell'}</div>
+          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, color: C.amberD, textTransform: 'uppercase', marginBottom: 4 }}>Essential · add only what changed</div>
+          <div style={{ fontSize: 12, color: C.txS, marginBottom: 16 }}>Transfer: {p.tx.time || 'now'} · {p.tx.nurse || 'RN Sarah Mitchell'}</div>
           <SL ch="Reason for Transfer" ic="📝" />
-          <textarea value={reason} onChange={e => setReason(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: '#F8F9FB', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 16 }} />
+          <textarea value={reason} onChange={e => setReason(e.target.value)} rows={2} placeholder="One sentence — what's happening right now" style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: '#F8F9FB', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 16 }} />
           <SL ch="Current Symptoms" ic="🩺" />
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
             {allSymp.map((s, i) => {
               const sel = symp.includes(s);
-              return <span key={i} onClick={() => toggleSymp(s)} style={{ padding: m ? '10px 14px' : '8px 14px', borderRadius: 20, fontSize: 13, fontWeight: 600, background: sel ? C.amber : '#F0F0F0', color: sel ? '#fff' : C.txS, border: sel ? `2px solid ${C.amberD}` : `1px solid ${C.bdr}`, cursor: 'pointer', transition: 'all .15s' }}>{sel ? '✓ ' : ''}{s}</span>;
+              return <span key={i} onClick={() => toggleSymp(s)} role="button" tabIndex={0} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSymp(s); } }} style={{ padding: m ? '10px 14px' : '8px 14px', borderRadius: 20, fontSize: 13, fontWeight: 600, background: sel ? C.amber : '#F0F0F0', color: sel ? '#fff' : C.txS, border: sel ? `2px solid ${C.amberD}` : `1px solid ${C.bdr}`, cursor: 'pointer', transition: 'all .15s' }}>{sel ? '✓ ' : ''}{s}</span>;
             })}
           </div>
-          <SL ch="Interventions Already Taken" ic="💉" />
-          <textarea value={intv} onChange={e => setIntv(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: '#F8F9FB', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 16 }} />
-          <SL ch="Recent Changes (72h)" ic="📊" />
-          <textarea value={chg} onChange={e => setChg(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: '#F8F9FB', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 16 }} />
+          <SL ch="Recent Change (72h)" ic="📊" />
+          <textarea value={chg} onChange={e => setChg(e.target.value)} rows={2} placeholder="What's different in the last 72 hours" style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: '#F8F9FB', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 16 }} />
           <SL ch="Destination" ic="🏥" />
-          <div style={{ position: 'relative' }}>
-            <div onClick={() => setShowDest(!showDest)} style={{ background: '#F8F9FB', borderRadius: 10, padding: '12px 16px', fontSize: 14, border: `1px solid ${showDest ? C.accent : C.bdr}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
+          <div style={{ position: 'relative', marginBottom: 16 }}>
+            <div onClick={() => setShowDest(!showDest)} role="button" tabIndex={0} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setShowDest(!showDest); } }} style={{ background: '#F8F9FB', borderRadius: 10, padding: '12px 16px', fontSize: 14, border: `1px solid ${showDest ? C.accent : C.bdr}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
               <span style={{ fontWeight: 600 }}>{dest}</span><DnA />
             </div>
             {showDest && (
@@ -250,9 +265,48 @@ export const S3 = ({ go, m, p, update }) => {
               </div>
             )}
           </div>
+
+          {/* Medication source verification */}
+          <SL ch="Medications — source" ic="💊" />
+          <div style={{ background: p.medSource ? C.lG : C.lW, border: `1px solid ${p.medSource ? C.green + '40' : C.amber + '60'}`, borderRadius: 10, padding: '10px 12px', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+            <span style={{ fontSize: 18 }}>{p.medSource ? '✅' : '⚠️'}</span>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              {p.medSource
+                ? <><div style={{ fontSize: 12, fontWeight: 700, color: C.greenD }}>{p.medSource.label} · {p.medSource.count} meds</div><div style={{ fontSize: 11, color: C.txS }}>{p.medSource.file ? p.medSource.file + ' · ' : ''}Imported {p.medSource.importedAt}</div></>
+                : <><div style={{ fontSize: 12, fontWeight: 700, color: C.amberD }}>No medication source attached</div><div style={{ fontSize: 11, color: C.txS }}>Committee priority: do not retype under pressure</div></>}
+            </div>
+            <button onClick={() => setMedOpen(true)} style={{ fontSize: 12, fontWeight: 700, padding: '6px 10px', background: p.medSource ? '#fff' : C.amber, color: p.medSource ? C.accentD : '#fff', border: `1px solid ${p.medSource ? C.accent : C.amberD}`, borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit' }}>{p.medSource ? 'Update' : 'Attach'}</button>
+          </div>
+
+          {/* Safety confirmation */}
+          <SL ch="Confirm critical safety data" ic="🛡️" />
+          <div onClick={() => setSafetyOk(!safetyOk)} role="button" tabIndex={0} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSafetyOk(!safetyOk); } }} style={{ cursor: 'pointer', border: `1.5px solid ${safetyOk ? C.green : C.bdr}`, background: safetyOk ? C.lG : '#F8F9FB', borderRadius: 10, padding: '10px 12px', display: 'flex', gap: 10, alignItems: 'center', marginBottom: 12 }}>
+            <div style={{ width: 22, height: 22, borderRadius: 6, border: `2px solid ${safetyOk ? C.green : C.bdr}`, background: safetyOk ? C.green : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{safetyOk && <Chk s={14} />}</div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: C.navy }}>I confirm {p.code} · {p.polst ? 'POLST on file · ' : ''}{p.lang}{p.interpreter ? ' (interpreter needed) · ' : ' · '}{p.allergy.length ? p.allergy.join(', ') : 'NKA'}</div>
+              <div style={{ fontSize: 11, color: C.txS, marginTop: 2 }}>Tap to confirm these travel with the patient. Edit in the record if wrong.</div>
+            </div>
+          </div>
         </>} />
-        <Bt full ch="Generate QR Code and Continue" onClick={handleContinue} m={m} disabled={!isValid} />
-        {!isValid && <div style={{ textAlign: 'center', fontSize: 12, color: C.amber, marginTop: 8 }}>Please complete reason and select at least one symptom</div>}
+
+        <Cd m={m} ch={<>
+          <div onClick={() => setShowSecondary(!showSecondary)} role="button" tabIndex={0} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setShowSecondary(!showSecondary); } }} style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: C.navy }}>Optional · interventions and details</div>
+              <div style={{ fontSize: 11, color: C.txS, marginTop: 2 }}>Not required for transfer. Add if helpful for EMS / ED.</div>
+            </div>
+            <span style={{ color: C.txS, fontWeight: 700, fontSize: 13 }}>{showSecondary ? '− Hide' : '+ Expand'}</span>
+          </div>
+          {showSecondary && (
+            <div style={{ marginTop: 12 }}>
+              <SL ch="Interventions Already Taken" ic="💉" />
+              <textarea value={intv} onChange={e => setIntv(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: '#F8F9FB', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 4 }} />
+              <div style={{ fontSize: 11, color: C.txT, marginTop: 6 }}>Baseline mentation, functional status, devices, risks, and person-centered preferences all travel automatically from the record.</div>
+            </div>
+          )}
+        </>} />
+
+        <Bt full ch={isValid ? 'Generate QR and Continue' : `Complete ${5 - filled} more field${5 - filled === 1 ? '' : 's'}`} onClick={handleContinue} m={m} disabled={!isValid} />
       </div>
     </div>
   );
@@ -275,40 +329,118 @@ export const S4 = ({ go, m, p, patients, ptId, setPt }) => (
   </div>
 );
 
-// ===== S5 — QR READY =====
+// ===== S5 — QR HANDOFF TOOLKIT =====
 export const S5 = ({ go, m, p }) => {
+  const [fmt, setFmt] = useState('mobile');
   const [shared, setShared] = useState(false);
+  const eventId = p.tx.eventId || 'TXF-2026-0320-' + (p.init || 'XX');
+  const shortLink = 'tl.link/' + (p.init || 'xx') + eventId.slice(-4);
+  const formats = [
+    { id: 'mobile', label: 'Mobile / Tablet', ic: '📱', sub: 'Display on nurse or medic device' },
+    { id: 'print', label: 'Printed Sheet', ic: '🖨️', sub: 'Paper hand-off with QR in corner' },
+    { id: 'wristband', label: 'Wristband Label', ic: '⌚', sub: 'Travels on the patient' },
+  ];
   return (
   <div style={{ minHeight: '100vh', background: C.bg }}>
-    <TB m={m} left={<Bk go={go} to={2} label="Record" />} ctr="QR Code Ready" />
+    <TB m={m} left={<Bk go={go} to={2} label="Record" />} ctr="QR Handoff Toolkit" />
     <Steps cur={3} m={m} />
-    <div style={{ padding: m ? 14 : 20, maxWidth: 520, margin: '0 auto', textAlign: 'center' }}>
-      <Cd m={m} style={{ padding: m ? '24px 16px' : '36px 28px' }} ch={<>
-        <Bg ch="⚡ Active Transfer" bg={C.amber} pulse style={{ fontSize: 13, padding: '6px 18px', marginBottom: 24 }} />
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24, position: 'relative' }}>
-          <div style={{ position: 'absolute', inset: -20, borderRadius: 999, background: `radial-gradient(circle,${C.accentG},transparent 70%)`, animation: 'qp 2s ease infinite' }} />
-          <div style={{ background: '#fff', padding: m ? 14 : 18, borderRadius: 20, border: `2px solid ${C.bdr}`, boxShadow: '0 8px 32px rgba(15,29,47,.1)', position: 'relative' }}>
-            <QR sz={m ? 180 : 220} />
+    <div style={{ padding: m ? 14 : 20, maxWidth: 620, margin: '0 auto' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: m ? 6 : 10, marginBottom: m ? 12 : 16 }}>
+        {formats.map(f => (
+          <div key={f.id} onClick={() => setFmt(f.id)} role="button" tabIndex={0} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setFmt(f.id); } }} style={{ background: fmt === f.id ? C.navy : '#fff', color: fmt === f.id ? '#fff' : C.tx, border: `1.5px solid ${fmt === f.id ? C.navy : C.bdr}`, borderRadius: 12, padding: m ? '10px 8px' : '14px 10px', textAlign: 'center', cursor: 'pointer', transition: 'all .2s' }}>
+            <div style={{ fontSize: m ? 18 : 22 }}>{f.ic}</div>
+            <div style={{ fontSize: m ? 11 : 12, fontWeight: 700, marginTop: 4 }}>{f.label}</div>
+            {!m && <div style={{ fontSize: 10, color: fmt === f.id ? 'rgba(255,255,255,.65)' : C.txT, marginTop: 2 }}>{f.sub}</div>}
           </div>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 6 }}>
-          <Av sz={32} init={p.init} /><span style={{ fontSize: m ? 16 : 18, fontWeight: 800, color: C.navy }}>{p.short}</span>
-        </div>
-        <div style={{ fontSize: 14, color: C.txS, marginBottom: 16 }}>DOB: {p.dob} · Age {p.age}</div>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
-          <Bg ch={p.code} bg={p.codeType === 'dnr' ? C.red : C.green} pulse style={{ fontSize: m ? 13 : 14, padding: '6px 14px' }} />
-          {p.polst && <Bg ch="✓ POLST" bg={C.green} />}
-          <Bg ch={p.flag + ' ' + p.lang} bg={C.accent} />
-        </div>
-        <div style={{ background: C.lA, borderRadius: 10, padding: 12, fontSize: 13, color: C.txS, lineHeight: 1.7, textAlign: 'left' }}>
-          <strong>Transfer to:</strong> {p.tx.dest}<br />
-          <strong>Initiated:</strong> {p.tx.time}<br />
-          <strong>By:</strong> {p.tx.nurse}
-        </div>
-      </>} />
-      <div style={{ display: 'flex', flexDirection: m ? 'column' : 'row', gap: m ? 8 : 12, marginTop: 4 }}>
-        <Bt full outline ch="Print Summary" onClick={() => go(6)} m={m} />
-        <Bt full ch={shared ? '✓ Link Copied!' : 'Share Link'} bg={shared ? C.green : C.accent} onClick={() => { setShared(true); setTimeout(() => setShared(false), 2000); }} m={m} />
+        ))}
+      </div>
+
+      {fmt === 'mobile' && (
+        <Cd m={m} style={{ padding: m ? '20px 14px' : '32px 24px', textAlign: 'center' }} ch={<>
+          <Bg ch="⚡ Active Transfer" bg={C.amber} pulse style={{ fontSize: 13, padding: '6px 18px', marginBottom: 18 }} />
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 18, position: 'relative' }}>
+            <div style={{ position: 'absolute', inset: -20, borderRadius: 999, background: `radial-gradient(circle,${C.accentG},transparent 70%)`, animation: 'qp 2s ease infinite' }} />
+            <div style={{ background: '#fff', padding: m ? 14 : 18, borderRadius: 20, border: `2px solid ${C.bdr}`, boxShadow: '0 8px 32px rgba(15,29,47,.1)', position: 'relative' }}>
+              <QR sz={m ? 180 : 220} />
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 6 }}>
+            <Av sz={32} init={p.init} /><span style={{ fontSize: m ? 16 : 18, fontWeight: 800, color: C.navy }}>{p.short}</span>
+          </div>
+          <div style={{ fontSize: 13, color: C.txS, marginBottom: 12 }}>DOB: {p.dob} · Age {p.age}</div>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 14 }}>
+            <Bg ch={p.code} bg={p.codeType === 'dnr' ? C.red : C.green} pulse style={{ fontSize: m ? 13 : 14, padding: '6px 14px' }} />
+            {p.polst && <Bg ch="✓ POLST" bg={C.green} />}
+            <Bg ch={p.flag + ' ' + p.lang + (p.interpreter ? ' · interpreter' : '')} bg={C.accent} />
+          </div>
+        </>} />
+      )}
+
+      {fmt === 'print' && (
+        <Cd m={m} style={{ padding: m ? '14px 10px' : '18px 16px', background: '#FAFAF8' }} ch={<>
+          <div style={{ background: '#fff', padding: m ? 14 : 18, borderRadius: 6, border: `1px solid ${C.bdr}`, fontFamily: "'Courier New',monospace", fontSize: m ? 11 : 12, position: 'relative' }}>
+            <div style={{ position: 'absolute', top: m ? 10 : 14, right: m ? 10 : 14 }}><QR sz={m ? 60 : 80} /></div>
+            <div style={{ fontWeight: 900, fontSize: m ? 12 : 14, textAlign: 'center', borderBottom: '2px solid #000', paddingBottom: 6, marginBottom: 10, paddingRight: m ? 66 : 92 }}>LTC → ED TRANSFER SHEET</div>
+            <div><b>Resident:</b> {p.name}</div>
+            <div><b>DOB:</b> {p.dob} · <b>Age:</b> {p.age} · <b>Room:</b> {p.room}</div>
+            <div><b>Language:</b> {p.lang}{p.interpreter ? ' · Interpreter needed' : ''}</div>
+            <div><b>Code:</b> {p.code}{p.polst ? ' · POLST on file' : ''}</div>
+            <div><b>Allergies:</b> <span style={{ color: 'red' }}>{p.allergy.join(', ') || 'NKA'}</span></div>
+            <div><b>Reason:</b> {p.tx.reason}</div>
+            <div><b>Destination:</b> {p.tx.dest}</div>
+            <div style={{ marginTop: 6, paddingTop: 6, borderTop: '1px dashed #999', fontSize: m ? 9 : 10 }}>Event {eventId} · fallback: {shortLink}</div>
+          </div>
+          <Bt full ch="Full print preview" onClick={() => go(6)} m={m} style={{ marginTop: 10 }} outline />
+        </>} />
+      )}
+
+      {fmt === 'wristband' && (
+        <Cd m={m} style={{ padding: m ? '14px 10px' : '18px 14px' }} ch={<>
+          <div style={{ background: `linear-gradient(180deg,#fff,#FAFAF8)`, border: `1.5px solid ${C.bdr}`, borderRadius: 12, padding: m ? 12 : 16, display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ flexShrink: 0 }}><QR sz={m ? 64 : 84} /></div>
+            <div style={{ flex: 1, minWidth: 0, borderLeft: `2px solid ${C.bdr}`, paddingLeft: 12 }}>
+              <div style={{ fontSize: m ? 13 : 15, fontWeight: 800, color: C.navy, lineHeight: 1.15 }}>{p.name}</div>
+              <div style={{ fontSize: m ? 11 : 12, color: C.txS, marginTop: 2 }}>DOB {p.dob}</div>
+              <div style={{ display: 'flex', gap: 4, marginTop: 6, flexWrap: 'wrap' }}>
+                <span style={{ fontSize: 9, fontWeight: 800, padding: '2px 6px', borderRadius: 4, background: p.codeType === 'dnr' ? C.red : C.green, color: '#fff' }}>{p.code}</span>
+                {p.allergy.length > 0 && <span style={{ fontSize: 9, fontWeight: 800, padding: '2px 6px', borderRadius: 4, background: C.red, color: '#fff' }}>ALLERGY</span>}
+                <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 4, background: '#333', color: '#fff' }}>{p.lang.slice(0, 3).toUpperCase()}</span>
+              </div>
+              <div style={{ fontSize: 8, color: C.txT, marginTop: 6, fontFamily: 'monospace' }}>{eventId}</div>
+            </div>
+          </div>
+          <div style={{ fontSize: 11, color: C.txS, textAlign: 'center', marginTop: 10 }}>Wristband prints to Zebra ZD410 or similar. QR stays with the patient through EMS and ED.</div>
+        </>} />
+      )}
+
+      {/* Backup + access story */}
+      <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr', gap: 10, marginTop: 12 }}>
+        <Cd m={m} ch={<>
+          <SL ch="Scanning fallback" ic="🔗" />
+          <div style={{ fontSize: 12, color: C.txS, marginBottom: 6 }}>If the camera cannot read the QR on the first try:</div>
+          <div style={{ background: C.lA, borderRadius: 10, padding: '8px 10px', fontFamily: 'monospace', fontSize: 13, fontWeight: 700, color: C.accentD, textAlign: 'center' }}>{shortLink}</div>
+          <div style={{ fontSize: 11, color: C.txT, marginTop: 6 }}>Event ID <code style={{ fontSize: 11 }}>{eventId}</code> can also be typed on any TransferLink sign-in.</div>
+        </>} />
+        <Cd m={m} ch={<>
+          <SL ch="Access scope" ic="🔐" />
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 6 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 10, background: C.lA, color: C.accentD }}>🚑 EMS</span>
+            <span style={{ fontSize: 12, color: C.txS }}>read-only</span>
+          </div>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 6 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 10, background: C.lA, color: C.accentD }}>🏥 ED triage</span>
+            <span style={{ fontSize: 12, color: C.txS }}>read-only</span>
+          </div>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 10, background: C.lG, color: C.greenD }}>🏥 ED return</span>
+            <span style={{ fontSize: 12, color: C.txS }}>write — closes the loop</span>
+          </div>
+        </>} />
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: m ? 'column' : 'row', gap: m ? 8 : 12, marginTop: 12 }}>
+        <Bt full outline ch="QR scan test" onClick={() => go(7)} m={m} />
+        <Bt full ch={shared ? '✓ Link copied' : 'Copy fallback link'} bg={shared ? C.green : C.accent} onClick={() => { try { navigator.clipboard && navigator.clipboard.writeText(shortLink); } catch { /* clipboard not available */ } setShared(true); setTimeout(() => setShared(false), 1800); }} m={m} />
       </div>
     </div>
   </div>
@@ -359,6 +491,43 @@ export const S6 = ({ go, m, p }) => {
 export const S7 = ({ go, m }) => <Scanner label="TransferLink | EMS Scan" onDone={() => go(8)} m={m} />;
 export const S9 = ({ go, m }) => <Scanner label="TransferLink | ED Scan" onDone={() => go(10)} m={m} />;
 
+// ===== EMS / ED "first 30 seconds" triage panel =====
+const TriagePanel = ({ p, m, tone = 'amber' }) => {
+  const c = tone === 'green' ? C.green : C.amber;
+  const cD = tone === 'green' ? C.greenD : C.amberD;
+  return (
+    <div style={{ background: '#fff', border: `2px solid ${c}`, borderRadius: 14, padding: m ? 12 : 16, marginBottom: m ? 10 : 14, boxShadow: `0 4px 16px ${c}22` }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+        <div style={{ fontSize: 10, fontWeight: 800, color: cD, letterSpacing: 1.4, textTransform: 'uppercase' }}>First 30 Seconds</div>
+        <span style={{ fontSize: 10, color: C.txT, fontFamily: 'monospace' }}>{p.tx?.eventId || ''}</span>
+      </div>
+      <div style={{ display: 'flex', gap: m ? 10 : 14, alignItems: 'center', marginBottom: 10 }}>
+        <Av sz={m ? 44 : 52} init={p.init} />
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: m ? 16 : 19, fontWeight: 900, color: C.navy, letterSpacing: -.3 }}>{p.name}</div>
+          <div style={{ fontSize: 12, color: C.txS }}>DOB {p.dob} · Age {p.age} · Room {p.room}</div>
+        </div>
+      </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 10 }}>
+        <Bg ch={p.code} bg={p.codeType === 'dnr' ? C.red : C.green} pulse style={{ fontSize: 12, padding: '5px 12px' }} />
+        {p.polst && <Bg ch="✓ POLST" bg={C.green} />}
+        <Bg ch={p.flag + ' ' + p.lang + (p.interpreter ? ' · interpreter' : '')} bg={C.accent} />
+        {p.allergy.length > 0 ? <Bg ch={'⚠ ' + p.allergy.join(', ')} bg={C.red} /> : <Bg ch="NKA" bg={C.green} />}
+      </div>
+      <div style={{ background: C.lW, borderRadius: 10, padding: '8px 12px', marginBottom: 8 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: C.amberD, textTransform: 'uppercase', letterSpacing: .8, marginBottom: 2 }}>Reason for transfer</div>
+        <div style={{ fontSize: 13, color: C.tx, lineHeight: 1.5 }}>{p.tx?.reason || '—'}</div>
+      </div>
+      {p.tx?.lastVitals && (
+        <div style={{ background: C.lA, borderRadius: 10, padding: '8px 12px' }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: C.accentD, textTransform: 'uppercase', letterSpacing: .8, marginBottom: 2 }}>Last known vitals / status</div>
+          <div style={{ fontSize: 13, color: C.tx, fontWeight: 600 }}>{p.tx.lastVitals}</div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ===== S8 — EMS VIEW =====
 export const S8 = ({ go, m, p, patients, ptId, setPt }) => {
   const [pol, setPol] = useState(false);
@@ -367,33 +536,51 @@ export const S8 = ({ go, m, p, patients, ptId, setPt }) => {
       {pol && p.polst && <POLST p={p} onClose={() => setPol(false)} m={m} />}
       <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr={m ? 'EMS View' : 'TransferLink | EMS'} accent={C.amber} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
       <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
-        <CodeBanner p={p} lg m={m} />
-        <AllergyB p={p} m={m} />
-        <PtHd p={p} m={m} />
-        <Sections p={p} tx m={m} comfortOpen={true} />
+        <TriagePanel p={p} m={m} tone="amber" />
+        {/* Person-centered operational surface: triggers + calming */}
+        {(p.comfort?.triggers || p.comfort?.calming) && (
+          <Cd m={m} style={{ borderLeft: `4px solid ${C.purple}`, background: '#FCFAFF' }} ch={<>
+            <SL ch="Behavior notes for transport" ic="💜" />
+            {p.comfort?.triggers && <FR l="Triggers to avoid" v={p.comfort.triggers} />}
+            {p.comfort?.calming && <FR l="Calming strategies" v={p.comfort.calming} />}
+          </>} />
+        )}
         {p.polst && <Bt full bg={C.red} ch="View POLST" onClick={() => setPol(true)} m={m} />}
-        <div style={{ textAlign: 'center', fontSize: 12, color: C.dis, marginTop: 16 }}>📡 QR scan access · Read-only</div>
+        <Sections p={p} tx m={m} comfortOpen={false} />
+        <div style={{ textAlign: 'center', fontSize: 12, color: C.dis, marginTop: 16 }}>📡 QR scan access · Read-only · Event {p.tx?.eventId}</div>
       </div>
     </div>
   );
 };
 
-// ===== S10 — ED VIEW =====
+// ===== S10 — ED TRIAGE VIEW =====
 export const S10 = ({ go, m, p, patients, ptId, setPt }) => {
   const [pol, setPol] = useState(false);
+  const [deep, setDeep] = useState(false);
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
       {pol && p.polst && <POLST p={p} onClose={() => setPol(false)} m={m} />}
-      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr={m ? 'ED View' : 'TransferLink | ED'} accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
+      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr={m ? 'ED Triage' : 'TransferLink | ED Triage'} accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
       <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
-        <CodeBanner p={p} lg m={m} />
-        <AllergyB p={p} m={m} />
-        <PtHd p={p} m={m} />
-        <Sections p={p} tx m={m} comfortOpen={true} />
-        <div style={{ display: 'flex', flexDirection: m ? 'column' : 'row', gap: m ? 8 : 12, marginTop: 8 }}>
-          {p.polst && <Bt full outline bg={C.red} ch="View POLST" onClick={() => setPol(true)} m={m} />}
+        <TriagePanel p={p} m={m} tone="green" />
+
+        <div style={{ display: 'flex', flexDirection: m ? 'column' : 'row', gap: m ? 8 : 10, marginBottom: 12 }}>
+          {p.polst && <Bt full outline bg={C.red} ch="📄 View POLST" onClick={() => setPol(true)} m={m} />}
           <Bt full ch="Complete ED Return Info" onClick={() => go(11)} m={m} />
         </div>
+
+        {/* Second layer toggle */}
+        <div onClick={() => setDeep(!deep)} role="button" tabIndex={0} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setDeep(!deep); } }} style={{ cursor: 'pointer', background: '#fff', border: `1px solid ${C.bdr}`, borderRadius: 12, padding: '12px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: C.navy }}>{deep ? 'Hide' : 'Show'} full record</div>
+            <div style={{ fontSize: 11, color: C.txS, marginTop: 2 }}>Medications with source · history · devices · person-centered detail</div>
+          </div>
+          <span style={{ color: C.txS, fontSize: 14, fontWeight: 700 }}>{deep ? '−' : '+'}</span>
+        </div>
+
+        {deep && <Sections p={p} tx m={m} comfortOpen={false} />}
+
+        <div style={{ textAlign: 'center', fontSize: 12, color: C.dis, marginTop: 12 }}>📡 QR scan access · Read-only until ED return is filed · Event {p.tx?.eventId}</div>
       </div>
     </div>
   );
