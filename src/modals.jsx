@@ -7,6 +7,17 @@ import { MScaleSelect, FScaleSelect, MedImportModal } from './clinical.jsx';
 // Common preferred-language → flag, used when intake creates a patient.
 const LANG_FLAGS = { english: '🇺🇸', spanish: '🇲🇽', japanese: '🇯🇵', chinese: '🇨🇳', mandarin: '🇨🇳', cantonese: '🇨🇳', korean: '🇰🇷', vietnamese: '🇻🇳', tagalog: '🇵🇭', russian: '🇷🇺', french: '🇫🇷', arabic: '🇸🇦', german: '🇩🇪', portuguese: '🇧🇷' };
 
+// Journey phase for the guided-tour tray — colour-codes the LTC → handoff →
+// EMS → ED → return arc so the walkthrough reads as a journey.
+const tourPhase = (screen) => {
+  if (screen === 5) return { label: 'QR Handoff', ic: '⚡', c: C.amber };
+  if (screen === 7 || screen === 8) return { label: 'EMS Transport', ic: '🚑', c: C.amber };
+  if (screen >= 9 && screen <= 12) return { label: 'Emergency Dept', ic: '🏥', c: C.green };
+  if (screen === 13 || screen === 14) return { label: 'Back to Facility', ic: '🏠', c: C.purple };
+  if ([15, 17, 1, 2, 3, 4].includes(screen)) return { label: 'LTC Facility', ic: '📋', c: C.accent };
+  return { label: 'Overview', ic: '🧭', c: C.accent };
+};
+
 // ===== TOAST SYSTEM =====
 const Toast = ({ t, remove }) => {
   useEffect(() => { const timer = setTimeout(() => remove(t.id), 3000); return () => clearTimeout(timer); }, [t.id, remove]);
@@ -68,6 +79,7 @@ export const GuidedDemo = ({ onExit, demoStep, setDemoStep, navigate, selectPati
   const steps = DEMO_SCREEN_MAP;
   const s = steps[demoStep];
   if (!s) return null;
+  const ph = tourPhase(s.screen);
   const goToStep = (idx) => {
     const st = steps[idx];
     if (!st) return;
@@ -78,9 +90,9 @@ export const GuidedDemo = ({ onExit, demoStep, setDemoStep, navigate, selectPati
 
   // ── Slim bar when collapsed ──────────────────────────────────────────
   if (collapsed) return (
-    <div ref={trayRef} style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200, background: 'rgba(15,29,47,0.97)', backdropFilter: 'blur(12px)', borderTop: '2px solid rgba(27,154,170,0.4)', height: 44, display: 'flex', alignItems: 'center', padding: '0 14px', gap: 10 }}>
+    <div ref={trayRef} style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200, background: 'rgba(15,29,47,0.97)', backdropFilter: 'blur(12px)', borderTop: `2px solid ${ph.c}`, height: 44, display: 'flex', alignItems: 'center', padding: '0 14px', gap: 10 }}>
       <div style={{ display: 'flex', gap: 3, flexShrink: 0 }}>
-        {steps.map((_, i) => <div key={i} style={{ width: i === demoStep ? 12 : 5, height: 5, borderRadius: 3, background: i < demoStep ? C.green : i === demoStep ? C.accent : 'rgba(255,255,255,.2)', transition: 'all .3s' }} />)}
+        {steps.map((_, i) => <div key={i} style={{ width: i === demoStep ? 12 : 5, height: 5, borderRadius: 3, background: i < demoStep ? C.green : i === demoStep ? ph.c : 'rgba(255,255,255,.2)', transition: 'all .3s' }} />)}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,.9)' }}>{s.title}</span>
@@ -94,28 +106,30 @@ export const GuidedDemo = ({ onExit, demoStep, setDemoStep, navigate, selectPati
 
   // ── Full tray ────────────────────────────────────────────────────────
   return (
-    <div ref={trayRef} style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200, background: 'linear-gradient(180deg,rgba(15,29,47,0.96),rgba(15,29,47,0.99))', backdropFilter: 'blur(12px)', borderTop: '2px solid rgba(27,154,170,0.4)', padding: m ? '10px 14px 12px' : '14px 24px 16px', animation: 'slideUp .3s ease', maxHeight: m ? '55vh' : '44vh', overflowY: 'auto' }}>
+    <div ref={trayRef} style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200, background: 'linear-gradient(180deg,rgba(15,29,47,0.96),rgba(15,29,47,0.99))', backdropFilter: 'blur(12px)', borderTop: `2px solid ${ph.c}`, padding: m ? '10px 14px 12px' : '14px 24px 16px', animation: 'slideUp .3s ease', maxHeight: m ? '55vh' : '44vh', overflowY: 'auto' }}>
       <div style={{ maxWidth: 700, margin: '0 auto' }}>
-        {/* Header row: dots + step counter + collapse */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-          <div style={{ display: 'flex', gap: 3 }}>
-            {steps.map((_, i) => <div key={i} style={{ width: i === demoStep ? 14 : 5, height: 5, borderRadius: 3, background: i < demoStep ? C.green : i === demoStep ? C.accent : 'rgba(255,255,255,.2)', transition: 'all .3s' }} />)}
-          </div>
+        {/* Header row: phase chip + step counter + collapse */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, gap: 8 }}>
+          <span style={{ fontSize: m ? 9 : 10, fontWeight: 800, letterSpacing: 1, textTransform: 'uppercase', color: '#fff', background: ph.c, padding: '4px 11px', borderRadius: 20, whiteSpace: 'nowrap' }}>{ph.ic} {ph.label}</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,.45)' }}>Step {demoStep + 1} of {steps.length}</span>
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,.45)', whiteSpace: 'nowrap' }}>Step {demoStep + 1} of {steps.length}</span>
             <button onClick={() => setCollapsed(true)} title="Minimize" style={{ background: 'rgba(255,255,255,.08)', border: 'none', borderRadius: 6, color: 'rgba(255,255,255,.6)', fontSize: 11, fontWeight: 700, padding: '3px 8px', cursor: 'pointer', fontFamily: 'inherit' }}>▼ Hide</button>
           </div>
+        </div>
+        {/* Phase-coloured progress bar */}
+        <div style={{ height: 3, background: 'rgba(255,255,255,.1)', borderRadius: 2, marginBottom: 10, overflow: 'hidden' }}>
+          <div style={{ height: '100%', width: `${Math.round(((demoStep + 1) / steps.length) * 100)}%`, background: ph.c, borderRadius: 2, transition: 'width .35s ease' }} />
         </div>
         {/* Step info */}
         <div style={{ fontSize: m ? 12 : 13, fontWeight: 800, color: '#fff', marginBottom: 4, lineHeight: 1.3, letterSpacing: -.1 }}>{s.title}</div>
         {s.scene && <div style={{ fontSize: m ? 11 : 12, color: 'rgba(255,255,255,.82)', marginBottom: s.note ? 7 : 10, lineHeight: 1.6 }}>{s.scene}</div>}
-        {s.note && <div style={{ fontSize: m ? 10 : 11, color: C.accent, marginBottom: 10, lineHeight: 1.5, borderLeft: `2px solid rgba(27,154,170,.4)`, paddingLeft: 8 }}>{s.note}</div>}
+        {s.note && <div style={{ fontSize: m ? 10 : 11, color: ph.c, marginBottom: 10, lineHeight: 1.5, borderLeft: `2px solid ${ph.c}66`, paddingLeft: 8 }}>{s.note}</div>}
         {!s.scene && <div style={{ fontSize: m ? 11 : 12, color: 'rgba(255,255,255,.5)', marginBottom: 10, lineHeight: 1.4 }}>{s.desc}</div>}
         {/* Controls */}
         <div style={{ display: 'flex', gap: 8 }}>
           <button onClick={() => goToStep(demoStep - 1)} disabled={demoStep === 0} style={{ padding: m ? '7px 12px' : '8px 16px', borderRadius: 8, border: '1px solid rgba(255,255,255,.2)', background: 'transparent', color: '#fff', fontSize: m ? 12 : 13, fontWeight: 600, cursor: demoStep === 0 ? 'not-allowed' : 'pointer', opacity: demoStep === 0 ? .3 : 1, fontFamily: 'inherit' }}>← Prev</button>
           {demoStep < steps.length - 1
-            ? <button onClick={() => goToStep(demoStep + 1)} style={{ padding: m ? '7px 16px' : '8px 20px', borderRadius: 8, border: 'none', background: C.accent, color: '#fff', fontSize: m ? 12 : 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Next →</button>
+            ? <button onClick={() => goToStep(demoStep + 1)} style={{ padding: m ? '7px 16px' : '8px 20px', borderRadius: 8, border: 'none', background: ph.c, color: '#fff', fontSize: m ? 12 : 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Next →</button>
             : <button onClick={onExit} style={{ padding: m ? '7px 16px' : '8px 20px', borderRadius: 8, border: 'none', background: C.green, color: '#fff', fontSize: m ? 12 : 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>✓ Finish</button>}
           <button onClick={onExit} style={{ marginLeft: 'auto', padding: m ? '7px 10px' : '8px 12px', borderRadius: 8, border: 'none', background: 'rgba(255,255,255,.07)', color: 'rgba(255,255,255,.5)', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>Exit</button>
         </div>

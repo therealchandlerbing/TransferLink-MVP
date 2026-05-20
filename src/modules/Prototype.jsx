@@ -142,10 +142,14 @@ export default function Prototype({
     setVisited(v => v.has(n) ? v : new Set([...v, n]));
     if (mode === 'app') {
       navigate('app', n === HOME_SCREEN ? [] : [String(n)]);
+    } else if (mode === 'tour' && setDemoStep) {
+      // Clicking a screen control that leads to the tour's next step advances
+      // the tour with the user — a hands-on walkthrough, not a slideshow.
+      // The guided-demo tray's Next/Prev still work as the explicit path.
+      const next = DEMO_SCREEN_MAP[demoStep + 1];
+      if (next && next.screen === n) setDemoStep(demoStep + 1);
     }
-    // Tour mode: setDemoStep (called by GuidedDemo right before go()) drives
-    // the URL change; screen is derived from that via useMemo above.
-  }, [mode]);
+  }, [mode, demoStep, setDemoStep]);
 
   const handleNewPatient = useCallback((data) => {
     addPatient(data);
