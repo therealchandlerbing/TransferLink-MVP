@@ -130,6 +130,9 @@ export const S13 = ({ go, m, p, patients, ptId, setPt, ackReturn }) => {
   const [copied, setCopied] = useState(false);
   const [dl, setDl] = useState(false);
   const [returned, setReturned] = useState([]);
+  // Reset the belongings checklist when the user switches patients.
+  const [syncedPt, setSyncedPt] = useState(ptId);
+  if (ptId !== syncedPt) { setSyncedPt(ptId); setReturned([]); }
   const toggleReturned = b => setReturned(prev => prev.includes(b) ? prev.filter(x => x !== b) : [...prev, b]);
   const sentItems = p.tx?.belongingsSent || [];
   const allReturned = sentItems.length > 0 && returned.length === sentItems.length;
