@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Chk, Bg, Av, Cd, Bt, SL, TB, Bk, FR, TxIn, MedSourceBadge, ReturnStates } from './components.jsx';
-import { C } from './tokens.js';
+import { C, getA11yProps } from './tokens.js';
 import { PtSwitcher, TransferTracker } from './clinical.jsx';
 import { INTEGRATIONS, FACILITY_MODES, FACILITY_INFO } from './data.js';
 
 const Toggle = ({ val, onChange }) => (
-  <div onClick={() => onChange(!val)} style={{ width: 48, height: 26, borderRadius: 13, background: val ? C.green : '#CCC', cursor: 'pointer', position: 'relative', transition: 'background .2s', flexShrink: 0 }}>
+  <div onClick={() => onChange(!val)} {...getA11yProps(() => onChange(!val))} aria-pressed={val} style={{ width: 48, height: 26, borderRadius: 13, background: val ? C.green : '#CCC', cursor: 'pointer', position: 'relative', transition: 'background .2s', flexShrink: 0 }}>
     <div style={{ position: 'absolute', top: 3, left: val ? 25 : 3, width: 20, height: 20, borderRadius: 10, background: '#fff', boxShadow: '0 1px 4px rgba(0,0,0,.2)', transition: 'left .2s' }} />
   </div>
 );
@@ -41,7 +41,7 @@ export const S11 = ({ go, m, p, updateER }) => {
         <Cd m={m} ch={<>
           <SL ch="Provider" ic="👨‍⚕️" />
           <div style={{ position: 'relative', marginBottom: 16 }}>
-            <div onClick={() => setShowDr(!showDr)} style={{ background: '#F8F9FB', borderRadius: 10, padding: '12px 16px', border: `1px solid ${showDr ? C.accent : C.bdr}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
+            <div onClick={() => setShowDr(!showDr)} {...getA11yProps(() => setShowDr(!showDr))} aria-expanded={showDr} style={{ background: '#F8F9FB', borderRadius: 10, padding: '12px 16px', border: `1px solid ${showDr ? C.accent : C.bdr}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
               <span style={{ fontWeight: 600 }}>{dr}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.txS} strokeWidth="2"><path d="M6 9l6 6 6-6" /></svg>
             </div>
@@ -64,16 +64,16 @@ export const S11 = ({ go, m, p, updateER }) => {
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, padding: '12px 14px', background: '#F8F9FB', borderRadius: 10 }}>
             <span style={{ fontSize: 14, fontWeight: 600, color: C.tx }}>Prescriptions / Med changes?</span>
-            <Toggle val={hasRx} onChange={setHasRx} m={m} />
+            <Toggle val={hasRx} onChange={setHasRx} />
           </div>
           {hasRx && <div style={{ marginBottom: 16 }}><TxIn value={rx} onChange={setRx} placeholder="List medication changes, new prescriptions..." rows={3} /></div>}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, padding: '12px 14px', background: '#F8F9FB', borderRadius: 10 }}>
             <div><span style={{ fontSize: 14, fontWeight: 600, color: C.tx }}>report called to facility?</span>{rptCalled && <span style={{ fontSize: 12, color: C.txS, display: 'block' }}>Called {p.er.rpt || 'Cascade View'}</span>}</div>
-            <Toggle val={rptCalled} onChange={setRptCalled} m={m} />
+            <Toggle val={rptCalled} onChange={setRptCalled} />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, padding: '12px 14px', background: '#F8F9FB', borderRadius: 10 }}>
             <div><span style={{ fontSize: 14, fontWeight: 600, color: C.tx }}>Follow-up appointment required?</span><span style={{ fontSize: 12, color: C.txS, display: 'block' }}>Surfaces this patient on the dashboard follow-up queue</span></div>
-            <Toggle val={followUpRequired} onChange={setFollowUpRequired} m={m} />
+            <Toggle val={followUpRequired} onChange={setFollowUpRequired} />
           </div>
           <SL ch="Discharge Instructions" ic="📋" />
           <textarea value={ins} onChange={e => setIns(e.target.value)} rows={4} placeholder="Follow-up instructions for facility staff and family..." style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, fontFamily: 'inherit', background: C.lG, color: C.tx, resize: 'vertical', boxSizing: 'border-box' }} />
