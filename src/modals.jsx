@@ -1,7 +1,22 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { C, Chk, WarnIco, Bg, Av, Cd, Bt, SL, TB, Bk, TxIn } from './components.jsx';
-import { DEMO_SCREEN_MAP, NEW_PT_TEMPLATE, PERSONAS, FACILITY_MODES, FACILITY_INFO } from './data.js';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { Chk, WarnIco, Bg, Av, Cd, Bt, SL, TB, Bk, TxIn } from './components.jsx';
+import { C } from './tokens.js';
+import { DEMO_SCREEN_MAP, NEW_PT_TEMPLATE, PERSONAS, FACILITY_MODES, FACILITY_INFO, ALL_BELONGINGS } from './data.js';
 import { MScaleSelect, FScaleSelect, MedImportModal } from './clinical.jsx';
+
+// Common preferred-language → flag, used when intake creates a patient.
+const LANG_FLAGS = { english: '🇺🇸', spanish: '🇲🇽', japanese: '🇯🇵', chinese: '🇨🇳', mandarin: '🇨🇳', cantonese: '🇨🇳', korean: '🇰🇷', vietnamese: '🇻🇳', tagalog: '🇵🇭', russian: '🇷🇺', french: '🇫🇷', arabic: '🇸🇦', german: '🇩🇪', portuguese: '🇧🇷' };
+
+// Journey phase for the guided-tour tray — colour-codes the LTC → handoff →
+// EMS → ED → return arc so the walkthrough reads as a journey.
+const tourPhase = (screen) => {
+  if (screen === 5) return { label: 'QR Handoff', ic: '⚡', c: C.amber };
+  if (screen === 7 || screen === 8) return { label: 'EMS Transport', ic: '🚑', c: C.amber };
+  if (screen >= 9 && screen <= 12) return { label: 'Emergency Dept', ic: '🏥', c: C.green };
+  if (screen === 13 || screen === 14) return { label: 'Back to Facility', ic: '🏠', c: C.purple };
+  if ([15, 17, 1, 2, 3, 4].includes(screen)) return { label: 'LTC Facility', ic: '📋', c: C.accent };
+  return { label: 'Overview', ic: '🧭', c: C.accent };
+};
 
 // ===== TOAST SYSTEM =====
 const Toast = ({ t, remove }) => {
@@ -19,7 +34,7 @@ const Toast = ({ t, remove }) => {
 export const ToastContainer = ({ toasts, setToasts }) => {
   const remove = useCallback((id) => setToasts(ts => ts.filter(x => x.id !== id)), [setToasts]);
   return (
-    <div style={{ position: 'fixed', top: 64, left: 16, right: 16, zIndex: 1000, display: 'flex', flexDirection: 'column', gap: 10, pointerEvents: 'none' }}>
+    <div style={{ position: 'fixed', top: 64, left: '50%', transform: 'translateX(-50%)', width: 'calc(100% - 32px)', maxWidth: 648, zIndex: 1000, display: 'flex', flexDirection: 'column', gap: 10, pointerEvents: 'none' }}>
       {toasts.map(t => <Toast key={t.id} t={t} remove={remove} />)}
     </div>
   );
@@ -46,11 +61,25 @@ export const NotificationCenter = ({ notifications, onClose, onSelect, m }) => (
 );
 
 // ===== GUIDED DEMO =====
-export const GuidedDemo = ({ onExit, demoStep, setDemoStep, navigate, selectPatient, m }) => {
+export const GuidedDemo = ({ onExit, demoStep, setDemoStep, navigate, selectPatient, m, onHeight }) => {
   const [collapsed, setCollapsed] = useState(false);
+  // Report the tray's actual height so the screen reserves exactly that much
+  // space below its content — action buttons then always scroll clear of the
+  // tray, with no need to collapse it to reach them.
+  const trayRef = useRef(null);
+  useEffect(() => {
+    const node = trayRef.current;
+    if (!node || !onHeight) return undefined;
+    const report = () => onHeight(node.offsetHeight);
+    report();
+    const ro = new ResizeObserver(report);
+    ro.observe(node);
+    return () => ro.disconnect();
+  }, [collapsed, demoStep, onHeight, m]);
   const steps = DEMO_SCREEN_MAP;
   const s = steps[demoStep];
   if (!s) return null;
+  const ph = tourPhase(s.screen);
   const goToStep = (idx) => {
     const st = steps[idx];
     if (!st) return;
@@ -61,9 +90,9 @@ export const GuidedDemo = ({ onExit, demoStep, setDemoStep, navigate, selectPati
 
   // ── Slim bar when collapsed ──────────────────────────────────────────
   if (collapsed) return (
-    <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200, background: 'rgba(15,29,47,0.97)', backdropFilter: 'blur(12px)', borderTop: '2px solid rgba(27,154,170,0.4)', height: 44, display: 'flex', alignItems: 'center', padding: '0 14px', gap: 10 }}>
+    <div ref={trayRef} style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200, background: 'rgba(15,29,47,0.97)', backdropFilter: 'blur(12px)', borderTop: `2px solid ${ph.c}`, height: 44, display: 'flex', alignItems: 'center', padding: '0 14px', gap: 10 }}>
       <div style={{ display: 'flex', gap: 3, flexShrink: 0 }}>
-        {steps.map((_, i) => <div key={i} style={{ width: i === demoStep ? 12 : 5, height: 5, borderRadius: 3, background: i < demoStep ? C.green : i === demoStep ? C.accent : 'rgba(255,255,255,.2)', transition: 'all .3s' }} />)}
+        {steps.map((_, i) => <div key={i} style={{ width: i === demoStep ? 12 : 5, height: 5, borderRadius: 3, background: i < demoStep ? C.green : i === demoStep ? ph.c : 'rgba(255,255,255,.2)', transition: 'all .3s' }} />)}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,.9)' }}>{s.title}</span>
@@ -77,28 +106,30 @@ export const GuidedDemo = ({ onExit, demoStep, setDemoStep, navigate, selectPati
 
   // ── Full tray ────────────────────────────────────────────────────────
   return (
-    <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200, background: 'linear-gradient(180deg,rgba(15,29,47,0.96),rgba(15,29,47,0.99))', backdropFilter: 'blur(12px)', borderTop: '2px solid rgba(27,154,170,0.4)', padding: m ? '10px 14px 12px' : '14px 24px 16px', animation: 'slideUp .3s ease', maxHeight: m ? '55vh' : '44vh', overflowY: 'auto' }}>
+    <div ref={trayRef} style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200, background: 'linear-gradient(180deg,rgba(15,29,47,0.96),rgba(15,29,47,0.99))', backdropFilter: 'blur(12px)', borderTop: `2px solid ${ph.c}`, padding: m ? '10px 14px 12px' : '14px 24px 16px', animation: 'slideUp .3s ease', maxHeight: m ? '55vh' : '44vh', overflowY: 'auto' }}>
       <div style={{ maxWidth: 700, margin: '0 auto' }}>
-        {/* Header row: dots + step counter + collapse */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-          <div style={{ display: 'flex', gap: 3 }}>
-            {steps.map((_, i) => <div key={i} style={{ width: i === demoStep ? 14 : 5, height: 5, borderRadius: 3, background: i < demoStep ? C.green : i === demoStep ? C.accent : 'rgba(255,255,255,.2)', transition: 'all .3s' }} />)}
-          </div>
+        {/* Header row: phase chip + step counter + collapse */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, gap: 8 }}>
+          <span style={{ fontSize: m ? 9 : 10, fontWeight: 800, letterSpacing: 1, textTransform: 'uppercase', color: '#fff', background: ph.c, padding: '4px 11px', borderRadius: 20, whiteSpace: 'nowrap' }}>{ph.ic} {ph.label}</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,.45)' }}>Step {demoStep + 1} of {steps.length}</span>
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,.45)', whiteSpace: 'nowrap' }}>Step {demoStep + 1} of {steps.length}</span>
             <button onClick={() => setCollapsed(true)} title="Minimize" style={{ background: 'rgba(255,255,255,.08)', border: 'none', borderRadius: 6, color: 'rgba(255,255,255,.6)', fontSize: 11, fontWeight: 700, padding: '3px 8px', cursor: 'pointer', fontFamily: 'inherit' }}>▼ Hide</button>
           </div>
+        </div>
+        {/* Phase-coloured progress bar */}
+        <div style={{ height: 3, background: 'rgba(255,255,255,.1)', borderRadius: 2, marginBottom: 10, overflow: 'hidden' }}>
+          <div style={{ height: '100%', width: `${Math.round(((demoStep + 1) / steps.length) * 100)}%`, background: ph.c, borderRadius: 2, transition: 'width .35s ease' }} />
         </div>
         {/* Step info */}
         <div style={{ fontSize: m ? 12 : 13, fontWeight: 800, color: '#fff', marginBottom: 4, lineHeight: 1.3, letterSpacing: -.1 }}>{s.title}</div>
         {s.scene && <div style={{ fontSize: m ? 11 : 12, color: 'rgba(255,255,255,.82)', marginBottom: s.note ? 7 : 10, lineHeight: 1.6 }}>{s.scene}</div>}
-        {s.note && <div style={{ fontSize: m ? 10 : 11, color: C.accent, marginBottom: 10, lineHeight: 1.5, borderLeft: `2px solid rgba(27,154,170,.4)`, paddingLeft: 8 }}>{s.note}</div>}
+        {s.note && <div style={{ fontSize: m ? 10 : 11, color: ph.c, marginBottom: 10, lineHeight: 1.5, borderLeft: `2px solid ${ph.c}66`, paddingLeft: 8 }}>{s.note}</div>}
         {!s.scene && <div style={{ fontSize: m ? 11 : 12, color: 'rgba(255,255,255,.5)', marginBottom: 10, lineHeight: 1.4 }}>{s.desc}</div>}
         {/* Controls */}
         <div style={{ display: 'flex', gap: 8 }}>
           <button onClick={() => goToStep(demoStep - 1)} disabled={demoStep === 0} style={{ padding: m ? '7px 12px' : '8px 16px', borderRadius: 8, border: '1px solid rgba(255,255,255,.2)', background: 'transparent', color: '#fff', fontSize: m ? 12 : 13, fontWeight: 600, cursor: demoStep === 0 ? 'not-allowed' : 'pointer', opacity: demoStep === 0 ? .3 : 1, fontFamily: 'inherit' }}>← Prev</button>
           {demoStep < steps.length - 1
-            ? <button onClick={() => goToStep(demoStep + 1)} style={{ padding: m ? '7px 16px' : '8px 20px', borderRadius: 8, border: 'none', background: C.accent, color: '#fff', fontSize: m ? 12 : 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Next →</button>
+            ? <button onClick={() => goToStep(demoStep + 1)} style={{ padding: m ? '7px 16px' : '8px 20px', borderRadius: 8, border: 'none', background: ph.c, color: '#fff', fontSize: m ? 12 : 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Next →</button>
             : <button onClick={onExit} style={{ padding: m ? '7px 16px' : '8px 20px', borderRadius: 8, border: 'none', background: C.green, color: '#fff', fontSize: m ? 12 : 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>✓ Finish</button>}
           <button onClick={onExit} style={{ marginLeft: 'auto', padding: m ? '7px 10px' : '8px 12px', borderRadius: 8, border: 'none', background: 'rgba(255,255,255,.07)', color: 'rgba(255,255,255,.5)', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>Exit</button>
         </div>
@@ -188,6 +219,11 @@ export const IntakeModal = ({ onClose, onDone, m }) => {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {allRisks.map((r, i) => { const sel = d.risks.includes(r); return <span key={i} onClick={() => upd('risks', toggleArr(d.risks, r))} style={{ padding: '6px 12px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: sel ? C.lW : '#F0F2F5', color: sel ? '#7B3E00' : C.txS, cursor: 'pointer' }}>{sel ? '✓ ' : ''}{r}</span>; })}
             </div>
+            <div style={{ marginTop: 16 }}><SL ch="Personal Belongings" ic="🎒" /></div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {ALL_BELONGINGS.map((b, i) => { const sel = d.belongings.includes(b); return <span key={i} onClick={() => upd('belongings', toggleArr(d.belongings, b))} style={{ padding: '6px 12px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: sel ? C.lA : '#F0F2F5', color: sel ? C.accent : C.txS, cursor: 'pointer' }}>{sel ? '✓ ' : ''}{b}</span>; })}
+            </div>
+            <div style={{ fontSize: 11, color: C.txT, marginTop: 6 }}>Admission inventory — tracked through every transfer and confirmed on return.</div>
           </>}
 
           {step === 2 && <>
@@ -259,6 +295,7 @@ export const IntakeModal = ({ onClose, onDone, m }) => {
               <div style={{ fontSize: 12, color: C.txS, marginBottom: 4 }}>Allergies: <span style={{ color: C.red, fontWeight: 600 }}>{d.allergy.join(', ') || 'NKA'}</span></div>
               <div style={{ fontSize: 12, color: C.txS, marginBottom: 4 }}>Conditions: {d.hx.join(', ') || 'None listed'}</div>
               <div style={{ fontSize: 12, color: C.txS, marginBottom: 4 }}>Devices: {d.dev.join(', ') || 'None'}</div>
+              <div style={{ fontSize: 12, color: C.txS, marginBottom: 4 }}>Belongings: {d.belongings.join(', ') || 'None'}</div>
               <div style={{ fontSize: 12, color: C.txS }}>Contact: {d.contact} ({d.contactRel}) {d.contactPh}</div>
             </>} />
           </>}
@@ -268,7 +305,7 @@ export const IntakeModal = ({ onClose, onDone, m }) => {
           {step > 0 && <Bt ch="Back" outline onClick={() => setStep(step - 1)} m={m} style={{ flex: 1 }} />}
           {step < 4
             ? <Bt ch={step === 0 ? 'Next: Clinical ›' : 'Next ›'} onClick={() => setStep(step + 1)} m={m} style={{ flex: step > 0 ? 1 : undefined }} full={step === 0} />
-            : <Bt ch="✓ Save and Generate QR" bg={C.green} onClick={() => { const init = d.name.split(' ').map(x => x[0]).join('').slice(0, 2).toUpperCase() || '??'; onDone({ ...d, init, id: -1 }); }} m={m} full />}
+            : <Bt ch={d.name.trim() ? '✓ Save and Generate QR' : 'Enter a patient name to save'} bg={C.green} disabled={!d.name.trim()} onClick={() => { const init = d.name.split(' ').map(x => x[0]).join('').slice(0, 2).toUpperCase() || '??'; const flag = LANG_FLAGS[(d.lang || '').trim().toLowerCase()] || '🌐'; onDone({ ...d, init, flag, id: -1 }); }} m={m} full />}
         </div>
       </div>
     </div>
@@ -285,13 +322,17 @@ export const S15 = ({ go, m, setPersona, setRole }) => {
   const shifts = ['Day (7a-7p)', 'Night (7p-7a)', 'Swing'];
 
   if (loginStep === 0) return (
-    <div style={{ minHeight: '100vh', background: `linear-gradient(160deg,${C.navy},#2A3F6A)`, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: m ? 16 : 32 }}>
-      <div style={{ maxWidth: 420, width: '100%' }}>
-        <div style={{ textAlign: 'center', marginBottom: 36 }}>
-          <div style={{ fontSize: m ? 28 : 36, fontWeight: 900, color: '#fff' }}>Transfer<span style={{ color: C.accent }}>Link</span></div>
-          <div style={{ fontSize: 14, color: 'rgba(255,255,255,.5)', marginTop: 8 }}>Secure facility access</div>
+    <div style={{ minHeight: '100vh', background: `linear-gradient(160deg,${C.navy},#22375f)`, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: m ? 16 : 32, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', top: '12%', left: '50%', transform: 'translateX(-50%)', width: 460, height: 460, borderRadius: '50%', background: `radial-gradient(circle,${C.accent}24,transparent 68%)`, pointerEvents: 'none' }} />
+      <div style={{ maxWidth: 420, width: '100%', position: 'relative' }}>
+        <div style={{ textAlign: 'center', marginBottom: m ? 26 : 32 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 10 }}>
+            <div style={{ width: m ? 38 : 44, height: m ? 38 : 44, borderRadius: m ? 11 : 13, background: `linear-gradient(135deg,${C.accent},${C.accentD})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: m ? 19 : 22, boxShadow: `0 6px 20px ${C.accent}60` }}>🔗</div>
+            <div style={{ fontFamily: "'Manrope','Inter',sans-serif", fontSize: m ? 28 : 34, fontWeight: 900, color: '#fff', letterSpacing: -.6 }}>Transfer<span style={{ color: C.accent }}>Link</span></div>
+          </div>
+          <div style={{ fontSize: m ? 13 : 14, color: 'rgba(255,255,255,.55)' }}>Secure facility access · no separate EMR password</div>
         </div>
-        <Cd m={m} style={{ padding: m ? '24px 20px' : '32px 28px' }} ch={<>
+        <Cd m={m} style={{ padding: m ? '24px 20px' : '30px 28px', boxShadow: '0 24px 60px rgba(0,0,0,.4)' }} ch={<>
           <SL ch="Facility Login" ic="🏥" />
           <div style={{ marginBottom: 16 }}>
             <span style={{ fontSize: 12, fontWeight: 600, color: C.txS }}>Facility ID</span>
@@ -318,6 +359,9 @@ export const S15 = ({ go, m, setPersona, setRole }) => {
           <Bt full ch="Sign In" onClick={() => { setPersona(PERSONAS[selPersona]); setRole(roles[selRole]); setLoginStep(1); }} m={m} />
           <div style={{ textAlign: 'center', marginTop: 16, fontSize: 12, color: C.txS }}>Secured with facility-level authentication.</div>
         </>} />
+        <div style={{ textAlign: 'center', marginTop: 18 }}>
+          <button onClick={() => go(0)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,.55)', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>← Back to menu</button>
+        </div>
       </div>
     </div>
   );

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { C, Chk, Bg, Av, Cd, Bt, SL, TB, Bk, FR, TxIn, MedSourceBadge, ReturnStates } from './components.jsx';
+import { Chk, Bg, Av, Cd, Bt, SL, TB, Bk, FR, TxIn, MedSourceBadge, ReturnStates } from './components.jsx';
+import { C, getA11yProps } from './tokens.js';
 import { PtSwitcher, TransferTracker } from './clinical.jsx';
 import { INTEGRATIONS, FACILITY_MODES, FACILITY_INFO } from './data.js';
 
-const Toggle = ({ val, onChange, m }) => (
-  <div onClick={() => onChange(!val)} style={{ width: 48, height: 26, borderRadius: 13, background: val ? C.green : '#CCC', cursor: 'pointer', position: 'relative', transition: 'background .2s', flexShrink: 0 }}>
+const Toggle = ({ val, onChange }) => (
+  <div onClick={() => onChange(!val)} {...getA11yProps(() => onChange(!val))} aria-pressed={val} style={{ width: 48, height: 26, borderRadius: 13, background: val ? C.green : '#CCC', cursor: 'pointer', position: 'relative', transition: 'background .2s', flexShrink: 0 }}>
     <div style={{ position: 'absolute', top: 3, left: val ? 25 : 3, width: 20, height: 20, borderRadius: 10, background: '#fff', boxShadow: '0 1px 4px rgba(0,0,0,.2)', transition: 'left .2s' }} />
   </div>
 );
@@ -40,13 +41,15 @@ export const S11 = ({ go, m, p, updateER }) => {
         <Cd m={m} ch={<>
           <SL ch="Provider" ic="👨‍⚕️" />
           <div style={{ position: 'relative', marginBottom: 16 }}>
-            <div onClick={() => setShowDr(!showDr)} style={{ background: '#F8F9FB', borderRadius: 10, padding: '12px 16px', border: `1px solid ${showDr ? C.accent : C.bdr}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
+            <div onClick={() => setShowDr(!showDr)} {...getA11yProps(() => setShowDr(!showDr))} aria-expanded={showDr} style={{ background: '#F8F9FB', borderRadius: 10, padding: '12px 16px', border: `1px solid ${showDr ? C.accent : C.bdr}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
               <span style={{ fontWeight: 600 }}>{dr}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.txS} strokeWidth="2"><path d="M6 9l6 6 6-6" /></svg>
             </div>
-            {showDr && <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', borderRadius: 12, boxShadow: '0 8px 24px rgba(0,0,0,.15)', zIndex: 20, overflow: 'hidden' }}>
+            {showDr && <>
+              <div onClick={() => setShowDr(false)} style={{ position: 'fixed', inset: 0, zIndex: 19 }} />
+              <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', borderRadius: 12, boxShadow: '0 8px 24px rgba(0,0,0,.15)', zIndex: 20, overflow: 'hidden' }}>
               {drs.map((d, i) => <div key={i} onClick={() => { setDr(d); setShowDr(false); }} style={{ padding: '12px 16px', fontSize: 13, cursor: 'pointer', background: d === dr ? C.lG : 'transparent', fontWeight: d === dr ? 600 : 400, borderBottom: `1px solid ${C.bdr}15` }}>{d === dr && '✓ '}{d}</div>)}
-            </div>}
+            </div></>}
           </div>
           <SL ch="Diagnosis" ic="🩺" />
           <TxIn value={dx} onChange={setDx} placeholder="Primary diagnosis..." />
@@ -61,16 +64,16 @@ export const S11 = ({ go, m, p, updateER }) => {
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, padding: '12px 14px', background: '#F8F9FB', borderRadius: 10 }}>
             <span style={{ fontSize: 14, fontWeight: 600, color: C.tx }}>Prescriptions / Med changes?</span>
-            <Toggle val={hasRx} onChange={setHasRx} m={m} />
+            <Toggle val={hasRx} onChange={setHasRx} />
           </div>
           {hasRx && <div style={{ marginBottom: 16 }}><TxIn value={rx} onChange={setRx} placeholder="List medication changes, new prescriptions..." rows={3} /></div>}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, padding: '12px 14px', background: '#F8F9FB', borderRadius: 10 }}>
             <div><span style={{ fontSize: 14, fontWeight: 600, color: C.tx }}>report called to facility?</span>{rptCalled && <span style={{ fontSize: 12, color: C.txS, display: 'block' }}>Called {p.er.rpt || 'Cascade View'}</span>}</div>
-            <Toggle val={rptCalled} onChange={setRptCalled} m={m} />
+            <Toggle val={rptCalled} onChange={setRptCalled} />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, padding: '12px 14px', background: '#F8F9FB', borderRadius: 10 }}>
             <div><span style={{ fontSize: 14, fontWeight: 600, color: C.tx }}>Follow-up appointment required?</span><span style={{ fontSize: 12, color: C.txS, display: 'block' }}>Surfaces this patient on the dashboard follow-up queue</span></div>
-            <Toggle val={followUpRequired} onChange={setFollowUpRequired} m={m} />
+            <Toggle val={followUpRequired} onChange={setFollowUpRequired} />
           </div>
           <SL ch="Discharge Instructions" ic="📋" />
           <textarea value={ins} onChange={e => setIns(e.target.value)} rows={4} placeholder="Follow-up instructions for facility staff and family..." style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, fontFamily: 'inherit', background: C.lG, color: C.tx, resize: 'vertical', boxSizing: 'border-box' }} />
@@ -115,7 +118,7 @@ export const S12 = ({ go, m, p }) => (
         <Bt full ch="Return Home" onClick={() => go(0)} m={m} bg={C.green} />
       </div>
       <div style={{ textAlign: 'center', marginTop: 12 }}>
-        <span onClick={() => go(14)} style={{ fontSize: 13, color: C.accent, fontWeight: 600, cursor: 'pointer' }}>View full transfer timeline →</span>
+        <span onClick={() => go(14)} {...getA11yProps(() => go(14))} style={{ fontSize: 13, color: C.accent, fontWeight: 600, cursor: 'pointer' }}>View full transfer timeline →</span>
       </div>
     </div>
   </div>
@@ -126,12 +129,19 @@ export const S12 = ({ go, m, p }) => (
 export const S13 = ({ go, m, p, patients, ptId, setPt, ackReturn }) => {
   const [copied, setCopied] = useState(false);
   const [dl, setDl] = useState(false);
+  const [returned, setReturned] = useState([]);
+  // Reset the belongings checklist when the user switches patients.
+  const [syncedPt, setSyncedPt] = useState(ptId);
+  if (ptId !== syncedPt) { setSyncedPt(ptId); setReturned([]); }
+  const toggleReturned = b => setReturned(prev => prev.includes(b) ? prev.filter(x => x !== b) : [...prev, b]);
+  const sentItems = p.tx?.belongingsSent || [];
+  const allReturned = sentItems.length > 0 && returned.length === sentItems.length;
   const acked = !!p.er?.ackedAt;
   const ackLabel = acked ? `✓ Acknowledged by ${p.er.ackedBy} at ${p.er.ackedAt}` : 'Acknowledge return — closes the loop';
   const summary = `${p.short} · ${p.fac}\nDx: ${p.er.dx || '—'}\nProvider: ${p.er.dr || '—'}\nVitals: BP ${p.er.bp}, HR ${p.er.hr}, RR ${p.er.rr}, SpO2 ${p.er.sp}\nMed changes: ${p.er.rx || 'None'}\nInstructions: ${p.er.ins || '—'}`;
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
-      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr="Patient Returned" accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
+      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr="Patient Returned" accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} />} />
       <div style={{ padding: m ? 14 : 20, maxWidth: 720, margin: '0 auto' }}>
         {/* Push-notification banner that persists until acked */}
         <div style={{ background: acked ? `linear-gradient(90deg,${C.lG},#F0FFF4)` : `linear-gradient(90deg,#FFF5E1,#FFE8C4)`, border: `1.5px solid ${acked ? C.green : C.amber}`, borderLeft: `4px solid ${acked ? C.green : C.amberD}`, borderRadius: 12, padding: m ? '12px 14px' : '14px 20px', marginBottom: m ? 10 : 14, display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -167,6 +177,27 @@ export const S13 = ({ go, m, p, patients, ptId, setPt, ackReturn }) => {
           <FR l="Provider" v={p.er.dr} />
           {p.er.rx && <FR l="Medication changes" v={<span>{p.er.rx} <MedSourceBadge src={{ method: 'manual', label: 'From ED return', count: (p.er.rx.match(/\d+\s?(mg|mcg|g|ml|units?|iu)\b/gi) || []).length, verified: true }} compact /></span>} />}
         </>} />
+
+        {sentItems.length > 0 && (
+          <Cd m={m} style={{ borderLeft: `4px solid ${allReturned ? C.green : C.amber}` }} ch={<>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <SL ch="Belongings — Confirm Returned" ic="🎒" />
+              <span style={{ fontSize: 11, fontWeight: 700, color: allReturned ? C.greenD : C.amberD }}>{returned.length} of {sentItems.length} confirmed</span>
+            </div>
+            {sentItems.map((b, i) => {
+              const ok = returned.includes(b);
+              return (
+                <div key={i} onClick={() => toggleReturned(b)} role="button" tabIndex={0} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleReturned(b); } }} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 4px', borderBottom: i < sentItems.length - 1 ? `1px dashed ${C.bdr}` : 'none', cursor: 'pointer' }}>
+                  <div style={{ width: 22, height: 22, borderRadius: 6, border: `2px solid ${ok ? C.green : C.bdr}`, background: ok ? C.green : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{ok && <Chk s={13} />}</div>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: ok ? C.tx : C.txS }}>{b}</span>
+                </div>
+              );
+            })}
+            <div style={{ fontSize: 11, color: allReturned ? C.greenD : C.txT, marginTop: 8, fontWeight: allReturned ? 700 : 400 }}>
+              {allReturned ? '✓ All belongings accounted for and returned to the resident.' : 'Check each item as it is returned to the resident. Hearing aids, dentures, and glasses are the most commonly lost in a transfer.'}
+            </div>
+          </>} />
+        )}
 
         <div style={{ display: 'flex', gap: m ? 8 : 10, marginTop: 10, flexWrap: 'wrap' }}>
           <Bt ch={copied ? '✓ Instructions copied' : '📋 Copy instructions'} outline bg={copied ? C.green : C.accent} onClick={() => { try { navigator.clipboard && navigator.clipboard.writeText(summary); } catch { /* clipboard not available */ } setCopied(true); setTimeout(() => setCopied(false), 1800); }} m={m} style={{ flex: 1, minWidth: 180 }} />
@@ -254,7 +285,7 @@ export const S17 = ({ go, m, patients, persona, alerts, dismissAlert, setPt }) =
 
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
-      <TB m={m} left={<Bk go={go} to={15} label="Back" />} ctr="Facility Dashboard" />
+      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr="Facility Dashboard" />
       <div style={{ padding: m ? 14 : 20, maxWidth: 720, margin: '0 auto' }}>
         <div style={{ background: `linear-gradient(135deg,${C.navy},${C.navyL})`, borderRadius: 16, padding: m ? '14px 14px' : '18px 22px', marginBottom: m ? 12 : 16, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
@@ -373,15 +404,15 @@ export const S18 = ({ go, m, patients, setPt }) => {
       <TB m={m} left={<Bk go={go} to={17} label="Dashboard" />} ctr="Transfer History" />
       <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
         <div style={{ display: 'flex', gap: 8, marginBottom: m ? 14 : 20, overflowX: 'auto', paddingBottom: 4 }}>
-          {tabs.map((t, i) => <span key={i} onClick={() => setTab(i)} style={{ padding: '8px 18px', borderRadius: 20, fontSize: 13, fontWeight: 600, background: tab === i ? C.accent : '#fff', color: tab === i ? '#fff' : C.txS, cursor: 'pointer', whiteSpace: 'nowrap', border: `1px solid ${tab === i ? C.accent : C.bdr}` }}>{t}</span>)}
+          {tabs.map((t, i) => <span key={i} onClick={() => setTab(i)} {...getA11yProps(() => setTab(i))} style={{ padding: '8px 18px', borderRadius: 20, fontSize: 13, fontWeight: 600, background: tab === i ? C.accent : '#fff', color: tab === i ? '#fff' : C.txS, cursor: 'pointer', whiteSpace: 'nowrap', border: `1px solid ${tab === i ? C.accent : C.bdr}` }}>{t}</span>)}
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr 1fr', gap: m ? 8 : 12, marginBottom: 16 }}>
           {[['Total Transfers', txPts.length, C.accent], ['Active', txPts.filter(p => !(p.er && p.er.dx)).length, C.amber], ['Completed', txPts.filter(p => p.er && p.er.dx).length, C.green]].map(([l, n, c], i) => (
             <Cd key={i} m={m} style={{ textAlign: 'center', borderTop: `3px solid ${c}` }} ch={<><div style={{ fontSize: m ? 24 : 28, fontWeight: 900, color: c }}>{n}</div><div style={{ fontSize: 12, color: C.txS }}>{l}</div></>} />
           ))}
         </div>
-        {filtered.length === 0 ? <Cd m={m} ch={<div style={{ textAlign: 'center', padding: 32, color: C.dis }}>No transfers in this category.</div>} /> : filtered.map((pt, i) => (
-          <Cd key={i} m={m} onClick={() => { setPt(pt.id); go(2); }} style={{ cursor: 'pointer', borderLeft: `4px solid ${pt.er && pt.er.dx ? C.green : C.amber}` }} ch={
+        {filtered.length === 0 ? <Cd m={m} ch={<div style={{ textAlign: 'center', padding: 32, color: C.dis }}>No transfers in this category.</div>} /> : filtered.map((pt) => (
+          <Cd key={pt.id} m={m} onClick={() => { setPt(pt.id); go(2); }} style={{ cursor: 'pointer', borderLeft: `4px solid ${pt.er && pt.er.dx ? C.green : C.amber}` }} ch={
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
               <Av sz={36} init={pt.init} />
               <div style={{ flex: 1 }}>
@@ -430,7 +461,7 @@ export const S19 = ({ go, m, patients, persona }) => {
       s: `EMS en route / on scene with ${pt.name}, age ${pt.age}, from ${pt.fac}. Reason: ${pt.tx?.reason || '—'}. Destination: ${pt.tx?.dest || '—'}.`,
       b: `Code: ${pt.code}. ${pt.polst ? 'POLST on file. ' : ''}Allergies: ${pt.allergy.join(', ') || 'NKA'}. Hx: ${pt.hx.join(', ')}. Meds: ${medText}. ${medSourceText}`,
       a: `Symptoms on exit: ${(pt.tx?.symp || []).join(', ') || '—'}. Last vitals: ${pt.tx?.lastVitals || '—'}. Interventions: ${pt.tx?.intv || '—'}. Recent 72h: ${pt.tx?.chg || '—'}.`,
-      r: `Transport to ${pt.tx?.dest || 'receiving ED'}. Family contact: ${pt.contact} (${pt.contactRel}) ${pt.contactPh}. Safety: ${pcFlags || '—'}.`,
+      r: `Transport to ${pt.tx?.dest || 'receiving ED'}. Family contact: ${pt.contact} (${pt.contactRel}) ${pt.contactPh}. Belongings traveling with patient: ${(pt.tx?.belongingsSent || []).join(', ') || 'none recorded'}. Safety: ${pcFlags || '—'}.`,
     },
     ed: {
       label: 'ED triage',

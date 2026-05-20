@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { C, Chk, DnA, WarnIco, QR, Bg, Av, Cd, Bt, SL, TB, Bk, FR, Chips, MedSourceBadge, getA11yProps } from './components.jsx';
+import { Chk, DnA, WarnIco, QR, Bg, Av, Cd, Bt, SL, TB, Bk, FR, Chips, MedSourceBadge } from './components.jsx';
+import { C, getA11yProps } from './tokens.js';
+import { useWindowWidth } from './shared/hooks.js';
 
 // ===== ALLERGY BANNER =====
 export const AllergyB = ({ p, m }) =>
@@ -258,17 +260,19 @@ export const TransferTracker = ({ visited, m }) => {
 };
 
 // ===== PATIENT SWITCHER =====
-export const PtSwitcher = ({ patients, ptId, setPt, m }) => {
+export const PtSwitcher = ({ patients, ptId, setPt }) => {
   const [open, setOpen] = useState(false);
+  const m = useWindowWidth() < 520;
   const p = patients.find(x => x.id === ptId) || patients[0];
   return (
     <div style={{ position: 'relative' }}>
-      <div onClick={() => setOpen(!open)} style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', padding: '4px 10px', borderRadius: 20, background: 'rgba(255,255,255,.12)', minHeight: 36 }}>
-        <div style={{ width: 24, height: 24, borderRadius: 12, background: 'rgba(255,255,255,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: '#fff' }}>{p.init}</div>
-        <span style={{ fontSize: 12, fontWeight: 600, color: '#fff' }}>{p.short}</span>
+      <div onClick={() => setOpen(!open)} {...getA11yProps(() => setOpen(!open))} aria-expanded={open} aria-label={`Switch patient — current: ${p.short}`} style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', padding: m ? '5px 8px' : '4px 10px', borderRadius: 20, background: 'rgba(255,255,255,.12)', minHeight: 36 }}>
+        <div style={{ width: 24, height: 24, borderRadius: 12, background: 'rgba(255,255,255,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: '#fff', flexShrink: 0 }}>{p.init}</div>
+        {!m && <span style={{ fontSize: 12, fontWeight: 600, color: '#fff', whiteSpace: 'nowrap' }}>{p.short}</span>}
         <DnA />
       </div>
-      {open && (
+      {open && (<>
+        <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 49 }} />
         <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 6, background: '#fff', borderRadius: 14, boxShadow: '0 8px 32px rgba(0,0,0,.2)', border: `1px solid ${C.bdr}`, overflow: 'hidden', zIndex: 50, minWidth: 240 }}>
           <div style={{ padding: '10px 14px', borderBottom: `1px solid ${C.bdr}`, fontSize: 11, fontWeight: 700, color: C.txS, textTransform: 'uppercase' }}>Switch Patient</div>
           {patients.map((pt, i) => (
@@ -279,7 +283,7 @@ export const PtSwitcher = ({ patients, ptId, setPt, m }) => {
             </div>
           ))}
         </div>
-      )}
+      </>)}
     </div>
   );
 };
@@ -331,10 +335,42 @@ export const Scanner = ({ label, onDone, m }) => {
   );
 };
 
+// ===== VITALS TREND (last 24h) =====
+export const VitalsTrend = ({ p, m }) => {
+  const vh = p.vitalsHistory || [];
+  if (vh.length === 0) return null;
+  const first = vh[0].sp, last = vh[vh.length - 1].sp;
+  const spDrop = (typeof first === 'number' && typeof last === 'number') ? last - first : 0;
+  const flagged = spDrop <= -4;
+  return (
+    <Cd m={m} style={{ borderLeft: `4px solid ${flagged ? C.red : C.accent}` }} ch={<>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+        <SL ch="Recent Vitals — Last 24h" ic="📈" />
+        {flagged && <Bg ch={`SpO₂ ↓ ${Math.abs(spDrop)}%`} bg={C.red} style={{ fontSize: 10, padding: '3px 9px' }} />}
+      </div>
+      <div style={{ display: 'flex', gap: m ? 6 : 10, overflowX: 'auto', paddingBottom: 2 }}>
+        {vh.map((v, i) => {
+          const prev = i > 0 ? vh[i - 1] : null;
+          const spFell = prev && typeof v.sp === 'number' && typeof prev.sp === 'number' && v.sp < prev.sp;
+          return (
+            <div key={i} style={{ flex: '1 0 auto', minWidth: m ? 70 : 84, background: '#F8F9FB', borderRadius: 10, padding: m ? '8px 8px' : '8px 12px', textAlign: 'center', border: `1px solid ${C.bdr}` }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.txT, letterSpacing: .4 }}>{v.time}</div>
+              <div style={{ fontSize: m ? 13 : 14, fontWeight: 800, color: C.navy, marginTop: 5 }}>{v.bp}</div>
+              <div style={{ fontSize: 11, color: C.txS, marginTop: 2 }}>HR {v.hr}</div>
+              <div style={{ fontSize: 12, fontWeight: 800, marginTop: 3, color: spFell ? C.red : C.green }}>SpO₂ {v.sp}{typeof v.sp === 'number' ? '%' : ''}</div>
+            </div>
+          );
+        })}
+      </div>
+      <div style={{ fontSize: 11, color: C.txT, marginTop: 8 }}>Captured at the facility before transfer · most recent reading is rightmost.</div>
+    </>} />
+  );
+};
+
 // ===== RECORD SECTIONS =====
 export const Sections = ({ p, tx, er, m, comfortOpen, onImportMeds }) => (
   <>
-    {tx && <Cd m={m} hl={C.lW} style={{ border: `1.5px solid ${C.amber}`, borderLeft: `4px solid ${C.amber}` }} ch={<><SL ch="Active Transfer Details" ic="🚨" /><FR l="Reason for Transfer" v={p.tx.reason} hl /><FR l="Symptoms" v={<Chips items={p.tx.symp} bg={C.amber} color="#fff" />} /><FR l="Interventions" v={p.tx.intv} /><FR l="Recent Changes (72h)" v={p.tx.chg} /><FR l="Destination" v={p.tx.dest} /><div style={{ fontSize: 12, color: C.txS, marginTop: 6, paddingTop: 6, borderTop: `1px solid ${C.amber}30` }}>Initiated: {p.tx.time} by {p.tx.nurse}{p.tx.eventId ? ` · Event ${p.tx.eventId}` : ''}</div></>} />}
+    {tx && <Cd m={m} hl={C.lW} style={{ border: `1.5px solid ${C.amber}`, borderLeft: `4px solid ${C.amber}` }} ch={<><SL ch="Active Transfer Details" ic="🚨" /><FR l="Reason for Transfer" v={p.tx.reason} hl /><FR l="Symptoms" v={<Chips items={p.tx.symp} bg={C.amber} color="#fff" />} /><FR l="Interventions" v={p.tx.intv} /><FR l="Recent Changes (72h)" v={p.tx.chg} /><FR l="Destination" v={p.tx.dest} /><FR l="Belongings Traveling with Patient" v={p.tx.belongingsSent && p.tx.belongingsSent.length ? <Chips items={p.tx.belongingsSent} bg={C.amber} color="#fff" /> : <span style={{ fontSize: 13, color: C.txT }}>None recorded as sent</span>} /><div style={{ fontSize: 12, color: C.txS, marginTop: 6, paddingTop: 6, borderTop: `1px solid ${C.amber}30` }}>Initiated: {p.tx.time} by {p.tx.nurse}{p.tx.eventId ? ` · Event ${p.tx.eventId}` : ''}</div></>} />}
     <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr', gap: m ? 10 : 14 }}>
       <Coll title="Contacts & Facility" ic="👥" m={m} ch={<><FR l="Contact" v={<span><strong>{p.contact}</strong> ({p.contactRel})</span>} /><FR l="Phone" v={<span style={{ color: C.accent, fontWeight: 600 }}>{p.contactPh}</span>} /><div style={{ height: 1, background: C.bdr, margin: '8px 0' }} /><FR l="Facility" v={<strong>{p.fac}</strong>} /><FR l="Address" v={p.facAddr} /><FR l="Phone" v={p.facPh} /></>} />
       <Coll title="Medications" ic="💊" m={m} ch={<>
@@ -360,7 +396,7 @@ export const Sections = ({ p, tx, er, m, comfortOpen, onImportMeds }) => (
     </div>
     <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr', gap: m ? 10 : 14 }}>
       <Coll title="History & Baselines" ic="📋" m={m} ch={<><FR l="Conditions" v={<Chips items={p.hx} />} /><div style={{ marginTop: 12 }}><span style={{ fontSize: 11, fontWeight: 700, color: C.txS, textTransform: 'uppercase' }}>Baseline Mentation</span><MScale lvl={p.mLvl} m={m} /></div><div style={{ marginTop: 12 }}><span style={{ fontSize: 11, fontWeight: 700, color: C.txS, textTransform: 'uppercase' }}>Functional Status</span><FScale lvl={p.fLvl} m={m} /></div></>} />
-      <Coll title="Devices & Risks" ic="⚠️" m={m} ch={<><FR l="Devices" v={<Chips items={p.dev} />} /><FR l="Risk Alerts" v={<Chips items={p.risks} bg={C.lW} color="#7B3E00" />} /><FR l="Isolation" v={<Bg ch={'✓ ' + p.iso} bg="#F0F2F5" color={C.green} style={{ fontSize: 12 }} />} /></>} />
+      <Coll title="Devices & Risks" ic="⚠️" m={m} ch={<><FR l="Devices" v={<Chips items={p.dev} />} /><FR l="Risk Alerts" v={<Chips items={p.risks} bg={C.lW} color="#7B3E00" />} /><FR l="Isolation" v={<Bg ch={'✓ ' + p.iso} bg="#F0F2F5" color={C.green} style={{ fontSize: 12 }} />} /><FR l="Belongings on File" v={p.belongings && p.belongings.length ? <Chips items={p.belongings} bg="#F0F2F5" color={C.txS} /> : <span style={{ fontSize: 13, color: C.txT }}>None recorded</span>} /></>} />
     </div>
     <ComfortSection p={p} m={m} defaultOpen={comfortOpen || false} />
     {er ? (

@@ -3,7 +3,7 @@
 // live below.
 
 import React from 'react';
-import { C } from '../components.jsx';
+import { C } from '../tokens.js';
 import { useWindowWidth } from '../shared/hooks.js';
 import { navigate } from '../shared/routing.js';
 

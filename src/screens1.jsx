@@ -1,131 +1,7 @@
 import React, { useState } from 'react';
-import { C, Chk, DnA, QR, Bg, Av, Cd, Bt, SL, TB, Bk, FR, ProgressMeter } from './components.jsx';
-import { AllergyB, CodeBanner, PtHd, Steps, TransferTracker, PtSwitcher, POLST, Scanner, Sections, ComfortSection, MedImportModal } from './clinical.jsx';
-
-// ===== S0 — HOME =====
-export const S0 = ({ go, m, onStartDemo }) => {
-  const rs = [
-    { s: 1,  i: '📋', t: 'LTC Nurse',       d: 'Initiate a transfer',   c: C.accent },
-    { s: 7,  i: '🚑', t: 'EMS Crew',         d: 'Scan on transport',     c: C.amber  },
-    { s: 9,  i: '🏥', t: 'ED Staff',          d: 'Receive a patient',     c: C.green  },
-    { s: 13, i: '🏠', t: 'Facility Return',   d: 'Patient is back',       c: C.purple },
-  ];
-  const nav2 = [
-    { s: 15, i: '🔐', t: 'Login',       c: '#546E7A' },
-    { s: 17, i: '📊', t: 'Dashboard',   c: '#0097A7' },
-    { s: 19, i: '📋', t: 'SBAR',        c: '#7B1FA2' },
-    { s: 20, i: '🔌', t: 'Integrations', c: '#2A9D8F' },
-  ];
-
-  const stats = [
-    { n: '88%',  label: 'Want 3–5 minute completion', sub: 'Time was the top barrier' },
-    { n: '9–50+', label: 'Active meds per resident', sub: 'Why transcription fails' },
-    { n: '100%', label: 'Return loops tracked',       sub: 'Submitted → Ack → Closed' },
-  ];
-
-  const stories = [
-    {
-      tag: 'Committee Priority · Medication Accuracy',
-      color: C.accent,
-      body: 'Brenda on the workgroup flagged medication transcription as the largest error source — facilities may have 9 to 50+ active meds per resident. This build imports the medication list from PDF, photo, or PointClickCare. Every record shows a verified source and timestamp.',
-      resolution: 'No retyping under pressure. Source travels with the patient.',
-    },
-    {
-      tag: 'Committee Priority · Closed-Loop Return',
-      color: C.green,
-      body: 'Donald pushed back on the return being a "nice-to-have screen." The ED return now moves through four tracked states — submitted, notified, acknowledged, closed — with an acknowledgement action at the facility and a push-notification banner until the nurse taps ack.',
-      resolution: 'Return documentation is automatic, not passive.',
-    },
-  ];
-
-  return (
-    <div style={{ minHeight: '100vh', background: `linear-gradient(160deg,${C.navy},#1A2B45 45%,#22395E)`, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: m ? '28px 16px 36px' : '40px 32px 48px', position: 'relative' }}>
-      {/* Subtle dot grid */}
-      <div style={{ position: 'fixed', inset: 0, backgroundImage: 'radial-gradient(circle at 1px 1px,rgba(255,255,255,.025) 1px,transparent 0)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
-
-      {/* ── HEADER ── */}
-      <div style={{ textAlign: 'center', marginBottom: m ? 20 : 28, position: 'relative', maxWidth: 540, width: '100%' }}>
-        <div style={{ fontSize: m ? 10 : 11, fontWeight: 700, letterSpacing: 3.5, color: C.accent, textTransform: 'uppercase', marginBottom: 14 }}>
-          DNP Research · WA State · 2026
-        </div>
-        <div style={{ fontFamily: "'Manrope','Inter',sans-serif", fontSize: m ? 34 : 48, fontWeight: 900, color: '#fff', letterSpacing: -1.5, lineHeight: 1 }}>
-          Transfer<span style={{ color: C.accent }}>Link</span>
-        </div>
-        <div style={{ fontSize: m ? 13 : 15, color: 'rgba(255,255,255,.5)', marginTop: 12, letterSpacing: .1 }}>
-          One patient. One record. Every handoff.
-        </div>
-      </div>
-
-      {/* ── STATS ROW ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: m ? 8 : 12, maxWidth: 540, width: '100%', marginBottom: m ? 16 : 20, position: 'relative' }}>
-        {stats.map((st, i) => (
-          <div key={i} style={{ background: 'rgba(255,255,255,.06)', borderRadius: m ? 12 : 14, padding: m ? '12px 8px' : '16px 12px', textAlign: 'center', border: '1px solid rgba(255,255,255,.07)' }}>
-            <div style={{ fontFamily: "'Manrope','Inter',sans-serif", fontSize: m ? 20 : 26, fontWeight: 900, color: C.accent, lineHeight: 1 }}>{st.n}</div>
-            <div style={{ fontSize: m ? 9 : 10, fontWeight: 700, color: 'rgba(255,255,255,.7)', marginTop: 5, lineHeight: 1.35 }}>{st.label}</div>
-            <div style={{ fontSize: m ? 8 : 9, color: 'rgba(255,255,255,.3)', marginTop: 3 }}>{st.sub}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* ── CLINICAL STORIES ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr', gap: m ? 8 : 12, maxWidth: 540, width: '100%', marginBottom: m ? 16 : 22, position: 'relative' }}>
-        {stories.map((st, i) => (
-          <div key={i} style={{ background: 'rgba(255,255,255,.05)', borderRadius: m ? 12 : 14, padding: m ? '14px 13px' : '18px 16px', borderLeft: `3px solid ${st.color}55` }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: st.color, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 8 }}>{st.tag}</div>
-            <div style={{ fontSize: m ? 11 : 12, color: 'rgba(255,255,255,.62)', lineHeight: 1.65, marginBottom: 10 }}>{st.body}</div>
-            <div style={{ fontSize: m ? 10 : 11, color: 'rgba(255,255,255,.88)', fontWeight: 600, lineHeight: 1.45 }}>→ {st.resolution}</div>
-          </div>
-        ))}
-        <div style={{ gridColumn: '1 / -1', fontSize: m ? 9 : 10, color: 'rgba(255,255,255,.25)', textAlign: 'center', marginTop: 4, lineHeight: 1.5 }}>
-          Composite accounts based on clinician survey responses. No individual patient is identified.
-        </div>
-      </div>
-
-      {/* ── ROLE CARDS ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: m ? 10 : 14, maxWidth: 540, width: '100%', position: 'relative' }}>
-        {rs.map(r => (
-          <div key={r.s} onClick={() => go(r.s)} className="hover-scale" style={{ background: 'rgba(255,255,255,.07)', backdropFilter: 'blur(16px)', border: `1px solid ${r.c}28`, borderRadius: m ? 18 : 20, padding: m ? '20px 14px 18px' : '26px 20px 22px', cursor: 'pointer', textAlign: 'center', transition: 'all .25s', position: 'relative', overflow: 'hidden', boxShadow: `0 4px 24px ${r.c}0d` }}>
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg,transparent,${r.c},transparent)` }} />
-            <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(ellipse at 50% 0%,${r.c}14,transparent 65%)`, pointerEvents: 'none' }} />
-            <div style={{ width: m ? 46 : 52, height: m ? 46 : 52, borderRadius: '50%', background: `${r.c}1e`, border: `1.5px solid ${r.c}38`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', marginBottom: m ? 10 : 13 }}>
-              <span style={{ fontSize: m ? 22 : 24 }}>{r.i}</span>
-            </div>
-            <div style={{ fontSize: m ? 13 : 15, fontWeight: 800, color: '#fff', marginBottom: 4 }}>{r.t}</div>
-            <div style={{ fontSize: m ? 10 : 11, color: 'rgba(255,255,255,.42)', fontWeight: 500 }}>{r.d}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* ── SECONDARY NAV ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: m ? 7 : 10, maxWidth: 540, width: '100%', marginTop: m ? 10 : 13, position: 'relative' }}>
-        {nav2.map(n => (
-          <div key={n.s} onClick={() => go(n.s)} style={{ background: 'rgba(255,255,255,.05)', border: '1px solid rgba(255,255,255,.08)', borderBottom: `2px solid ${n.c}55`, borderRadius: 12, padding: m ? '11px 6px' : '12px 10px', cursor: 'pointer', textAlign: 'center', transition: 'all .2s' }}>
-            <div style={{ fontSize: m ? 15 : 17, marginBottom: 3 }}>{n.i}</div>
-            <div style={{ fontSize: m ? 9 : 10, fontWeight: 700, color: 'rgba(255,255,255,.65)', letterSpacing: .3 }}>{n.t}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* ── DEMO CTA ── */}
-      <div style={{ marginTop: m ? 18 : 26, position: 'relative' }}>
-        <button onClick={onStartDemo} style={{ padding: m ? '13px 28px' : '14px 36px', borderRadius: 14, background: `linear-gradient(135deg,${C.accent},${C.accentD})`, color: '#fff', border: 'none', fontSize: m ? 14 : 15, fontWeight: 700, cursor: 'pointer', boxShadow: `0 4px 20px rgba(27,154,170,.35)`, fontFamily: 'inherit', letterSpacing: .2 }}>
-          ▶ Start Guided Tour — Follow a Transfer
-        </button>
-      </div>
-
-      {/* ── FOOTER ATTRIBUTION ── */}
-      <div style={{ marginTop: m ? 20 : 28, textAlign: 'center', position: 'relative', maxWidth: 480 }}>
-        <div style={{ fontSize: m ? 10 : 11, color: 'rgba(255,255,255,.28)', lineHeight: 1.9 }}>
-          Research: Lily Schroeder, DNP Candidate · ER Nurse, 12+ years<br />
-          WA State LTC Transformation Workgroup · 360 Social Impact Studios
-        </div>
-        <div style={{ fontSize: 10, color: 'rgba(255,255,255,.15)', marginTop: 6 }}>
-          Prototype demonstration · No real patient data
-        </div>
-      </div>
-    </div>
-  );
-};
+import { Chk, DnA, QR, Bg, Av, Cd, Bt, SL, TB, Bk, FR, ProgressMeter } from './components.jsx';
+import { C, getA11yProps } from './tokens.js';
+import { AllergyB, PtHd, Steps, TransferTracker, PtSwitcher, POLST, Scanner, Sections, MedImportModal, VitalsTrend } from './clinical.jsx';
 
 // ===== S1 — PATIENT ROSTER =====
 export const S1 = ({ go, m, setPt, patients, onAddPt }) => {
@@ -139,7 +15,7 @@ export const S1 = ({ go, m, setPt, patients, onAddPt }) => {
         {/* Search + Add */}
         <div style={{ display: 'flex', gap: 10, marginBottom: m ? 12 : 16 }}>
           <div style={{ position: 'relative', flex: 1 }}>
-            <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search patients..." style={{ width: '100%', padding: '11px 16px 11px 40px', borderRadius: 12, border: `1.5px solid ${C.bdr}`, fontSize: 14, background: '#fff', boxSizing: 'border-box', fontFamily: 'inherit', outline: 'none' }} />
+            <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search patients..." style={{ width: '100%', padding: '11px 16px 11px 40px', borderRadius: 12, border: `1.5px solid ${C.bdr}`, fontSize: 14, background: '#fff', boxSizing: 'border-box', fontFamily: 'inherit' }} />
             <svg style={{ position: 'absolute', left: 13, top: 12 }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.dis} strokeWidth="2"><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /></svg>
           </div>
           <button onClick={onAddPt} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', borderRadius: 12, background: `linear-gradient(135deg,${C.accent},${C.accentD})`, color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: 13, whiteSpace: 'nowrap', fontFamily: 'inherit', boxShadow: `0 3px 12px ${C.accentG}` }}>
@@ -150,12 +26,12 @@ export const S1 = ({ go, m, setPt, patients, onAddPt }) => {
         {/* Patient count */}
         <div style={{ fontSize: 11, fontWeight: 600, color: C.txT, textTransform: 'uppercase', letterSpacing: .8, marginBottom: 10 }}>{filtered.length} Resident{filtered.length !== 1 ? 's' : ''}</div>
         {/* Patient cards */}
-        {filtered.map((p, i) => {
+        {filtered.map((p) => {
           const cc = codeColor(p);
           const hasTransfer = !!(p.tx && p.tx.reason);
           const returned = !!(p.er && p.er.dx);
           return (
-            <div key={i} onClick={() => { setPt(p.id); go(2); }} className="card-hover" style={{ background: '#fff', borderRadius: 14, marginBottom: m ? 9 : 11, display: 'flex', alignItems: 'stretch', border: `1px solid ${C.bdr}30`, cursor: 'pointer', boxShadow: '0 1px 6px rgba(0,0,0,.05)', transition: 'all .2s', overflow: 'hidden' }}>
+            <div key={p.id} onClick={() => { setPt(p.id); go(2); }} {...getA11yProps(() => { setPt(p.id); go(2); })} className="card-hover" style={{ background: '#fff', borderRadius: 14, marginBottom: m ? 9 : 11, display: 'flex', alignItems: 'stretch', border: `1px solid ${C.bdr}30`, cursor: 'pointer', boxShadow: '0 1px 6px rgba(0,0,0,.05)', transition: 'all .2s', overflow: 'hidden' }}>
               {/* Color bar */}
               <div style={{ width: 5, background: cc, flexShrink: 0 }} />
               {/* Content */}
@@ -194,14 +70,15 @@ export const S2 = ({ go, m, p, patients, ptId, setPt, visited, importMedSource }
   const [medOpen, setMedOpen] = useState(false);
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
-      <TB m={m} left={<Bk go={go} to={1} label="Patients" />} ctr="Patient Record" right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
+      <TB m={m} left={<Bk go={go} to={1} label="Patients" />} ctr="Patient Record" right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} />} />
       <Steps cur={0} m={m} />
       {medOpen && <MedImportModal onClose={() => setMedOpen(false)} onImport={(src) => importMedSource && importMedSource(src)} currentSource={p.medSource} m={m} />}
       <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
         <TransferTracker visited={visited} m={m} />
         <PtHd p={p} onQR={() => go(5)} m={m} />
         <AllergyB p={p} m={m} />
-        <Sections p={p} m={m} onImportMeds={() => setMedOpen(true)} />
+        <VitalsTrend p={p} m={m} />
+        <Sections p={p} m={m} er={!!p.er?.ackedAt} onImportMeds={() => setMedOpen(true)} />
         <div style={{ marginTop: 8 }}>
           <Bt full ch="Initiate Transfer to ED" onClick={() => go(3)} m={m} />
         </div>
@@ -222,14 +99,16 @@ export const S3 = ({ go, m, p, update, importMedSource }) => {
   const [safetyOk, setSafetyOk] = useState(false);
   const [showSecondary, setShowSecondary] = useState(false);
   const [medOpen, setMedOpen] = useState(false);
+  const [belongings, setBelongings] = useState(p.tx.belongingsSent?.length ? [...p.tx.belongingsSent] : [...(p.belongings || [])]);
   const dests = ['Providence Regional Medical Center, Everett', 'Swedish Edmonds', 'EvergreenHealth Monroe', 'Harborview Medical Center, Seattle'];
   const toggleSymp = s => setSymp(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
+  const toggleBel = b => setBelongings(prev => prev.includes(b) ? prev.filter(x => x !== b) : [...prev, b]);
   const isValid = reason.trim() && symp.length > 0 && chg.trim() && safetyOk;
   // progress meter: five essential fields
   const filled = [reason.trim(), symp.length > 0, chg.trim(), dest.trim(), safetyOk].filter(Boolean).length;
   const pct = (filled / 5) * 100;
   const est = filled === 5 ? 'Ready in under 5 min' : filled >= 3 ? '< 2 min remaining' : filled >= 1 ? '< 4 min remaining' : 'Starts now';
-  const handleContinue = () => { if (isValid) { update({ reason, symp, intv, chg, dest }); go(4); } };
+  const handleContinue = () => { if (isValid) { update({ reason, symp, intv, chg, dest, belongingsSent: belongings }); go(4); } };
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
       <TB m={m} left={<Bk go={go} to={2} label="Cancel" />} ctr="Initiate Transfer" />
@@ -259,11 +138,12 @@ export const S3 = ({ go, m, p, update, importMedSource }) => {
             <div onClick={() => setShowDest(!showDest)} role="button" tabIndex={0} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setShowDest(!showDest); } }} style={{ background: '#F8F9FB', borderRadius: 10, padding: '12px 16px', fontSize: 14, border: `1px solid ${showDest ? C.accent : C.bdr}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
               <span style={{ fontWeight: 600 }}>{dest}</span><DnA />
             </div>
-            {showDest && (
+            {showDest && (<>
+              <div onClick={() => setShowDest(false)} style={{ position: 'fixed', inset: 0, zIndex: 19 }} />
               <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', borderRadius: 12, boxShadow: '0 8px 24px rgba(0,0,0,.15)', border: `1px solid ${C.bdr}`, zIndex: 20, overflow: 'hidden' }}>
                 {dests.map((d, i) => <div key={i} onClick={() => { setDest(d); setShowDest(false); }} style={{ padding: '12px 16px', fontSize: 13, cursor: 'pointer', background: d === dest ? C.lA : 'transparent', borderBottom: `1px solid ${C.bdr}15`, fontWeight: d === dest ? 600 : 400 }}>{d === dest && '✓ '}{d}</div>)}
               </div>
-            )}
+            </>)}
           </div>
 
           {/* Medication source verification */}
@@ -300,8 +180,22 @@ export const S3 = ({ go, m, p, update, importMedSource }) => {
           {showSecondary && (
             <div style={{ marginTop: 12 }}>
               <SL ch="Interventions Already Taken" ic="💉" />
-              <textarea value={intv} onChange={e => setIntv(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: '#F8F9FB', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 4 }} />
-              <div style={{ fontSize: 11, color: C.txT, marginTop: 6 }}>Baseline mentation, functional status, devices, risks, and person-centered preferences all travel automatically from the record.</div>
+              <textarea value={intv} onChange={e => setIntv(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${C.bdr}`, fontSize: 14, color: C.tx, background: '#F8F9FB', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 16 }} />
+              <SL ch="Belongings Traveling with Patient" ic="🎒" />
+              {p.belongings && p.belongings.length ? (
+                <>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    {p.belongings.map((b, i) => {
+                      const sel = belongings.includes(b);
+                      return <span key={i} onClick={() => toggleBel(b)} role="button" tabIndex={0} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleBel(b); } }} style={{ padding: m ? '10px 14px' : '8px 14px', borderRadius: 20, fontSize: 13, fontWeight: 600, background: sel ? C.accent : '#F0F0F0', color: sel ? '#fff' : C.txS, border: sel ? `2px solid ${C.accentD}` : `1px solid ${C.bdr}`, cursor: 'pointer', transition: 'all .15s' }}>{sel ? '✓ ' : ''}{b}</span>;
+                    })}
+                  </div>
+                  <div style={{ fontSize: 11, color: C.txT, marginTop: 6 }}>Tap each item physically leaving with the patient. EMS, the ED, and the facility all see this list — and confirm it on return.</div>
+                </>
+              ) : (
+                <div style={{ fontSize: 12, color: C.txT, fontStyle: 'italic' }}>No belongings recorded on this patient&apos;s file. Add them at admission intake.</div>
+              )}
+              <div style={{ fontSize: 11, color: C.txT, marginTop: 12 }}>Baseline mentation, functional status, devices, risks, and person-centered preferences all travel automatically from the record.</div>
             </div>
           )}
         </>} />
@@ -315,7 +209,7 @@ export const S3 = ({ go, m, p, update, importMedSource }) => {
 // ===== S4 — CONFIRM TRANSFER =====
 export const S4 = ({ go, m, p, patients, ptId, setPt }) => (
   <div style={{ minHeight: '100vh', background: C.bg }}>
-    <TB m={m} left={<Bk go={go} to={3} label="Edit" />} ctr="Confirm Transfer" right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
+    <TB m={m} left={<Bk go={go} to={3} label="Edit" />} ctr="Confirm Transfer" right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} />} />
     <Steps cur={2} m={m} />
     <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
       <PtHd p={p} m={m} />
@@ -467,7 +361,7 @@ export const S6 = ({ go, m, p }) => {
           <div><b>Allergies:</b> <span style={{ color: 'red' }}>{p.allergy.join(', ')}</span></div>
           <div style={{ wordBreak: 'break-word' }}><b>Meds:</b> {p.meds.map(x => x.n + ' ' + x.f).join('; ')}</div>
           <div><b>Hx:</b> {p.hx.join(', ')}</div>
-          <div style={{ borderTop: '1px solid #666', paddingTop: 6, marginTop: 6 }}><b>Reason:</b> {p.tx.reason}<br /><b>Dest:</b> {p.tx.dest}</div>
+          <div style={{ borderTop: '1px solid #666', paddingTop: 6, marginTop: 6 }}><b>Reason:</b> {p.tx.reason}<br /><b>Dest:</b> {p.tx.dest}<br /><b>Belongings sent:</b> {p.tx.belongingsSent && p.tx.belongingsSent.length ? p.tx.belongingsSent.join(', ') : 'None recorded'}</div>
           <div style={{ marginTop: 8, padding: 8, background: '#FFF8E1', borderRadius: 4, border: '1px solid #FFF59D', fontSize: 11 }}><b>Person-Centered Care Notes:</b> {p.comfort.comm} {p.comfort.dist}</div>
           <div style={{ borderTop: '2px solid #000', paddingTop: 6, marginTop: 10 }}>
             <div style={{ fontWeight: 900 }}>ED RETURN (To be completed by ED)</div>
@@ -534,7 +428,7 @@ export const S8 = ({ go, m, p, patients, ptId, setPt }) => {
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
       {pol && p.polst && <POLST p={p} onClose={() => setPol(false)} m={m} />}
-      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr={m ? 'EMS View' : 'TransferLink | EMS'} accent={C.amber} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
+      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr={m ? 'EMS View' : 'TransferLink | EMS'} accent={C.amber} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} />} />
       <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
         <TriagePanel p={p} m={m} tone="amber" />
         {/* Person-centered operational surface: triggers + calming */}
@@ -547,6 +441,9 @@ export const S8 = ({ go, m, p, patients, ptId, setPt }) => {
         )}
         {p.polst && <Bt full bg={C.red} ch="View POLST" onClick={() => setPol(true)} m={m} />}
         <Sections p={p} tx m={m} comfortOpen={false} />
+        <div style={{ marginTop: 8 }}>
+          <Bt full ch="Arrive at ED — Hand Off Record →" onClick={() => go(9)} m={m} bg={C.green} />
+        </div>
         <div style={{ textAlign: 'center', fontSize: 12, color: C.dis, marginTop: 16 }}>📡 QR scan access · Read-only · Event {p.tx?.eventId}</div>
       </div>
     </div>
@@ -560,7 +457,7 @@ export const S10 = ({ go, m, p, patients, ptId, setPt }) => {
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
       {pol && p.polst && <POLST p={p} onClose={() => setPol(false)} m={m} />}
-      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr={m ? 'ED Triage' : 'TransferLink | ED Triage'} accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
+      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr={m ? 'ED Triage' : 'TransferLink | ED Triage'} accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} />} />
       <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
         <TriagePanel p={p} m={m} tone="green" />
 
@@ -578,7 +475,7 @@ export const S10 = ({ go, m, p, patients, ptId, setPt }) => {
           <span style={{ color: C.txS, fontSize: 14, fontWeight: 700 }}>{deep ? '−' : '+'}</span>
         </div>
 
-        {deep && <Sections p={p} tx m={m} comfortOpen={false} />}
+        {deep && <><VitalsTrend p={p} m={m} /><Sections p={p} tx m={m} comfortOpen={false} /></>}
 
         <div style={{ textAlign: 'center', fontSize: 12, color: C.dis, marginTop: 12 }}>📡 QR scan access · Read-only until ED return is filed · Event {p.tx?.eventId}</div>
       </div>
