@@ -9,7 +9,8 @@
 // (scanner / full-bleed screens suppress it, matching current behavior).
 
 import React, { useState } from 'react';
-import { C, BellIco } from '../components.jsx';
+import { BellIco } from '../components.jsx';
+import { C } from '../tokens.js';
 import { ToastContainer, NotificationCenter } from '../modals.jsx';
 
 const globalStyles = `

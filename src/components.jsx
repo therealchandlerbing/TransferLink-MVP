@@ -1,14 +1,5 @@
-import React, { useState, useEffect } from 'react';
-
-// ===== DESIGN TOKENS =====
-export const C = {
-  navy:"#0F1D2F", navyL:"#1a2d42", accent:"#1B9AAA", accentD:"#168a99",
-  accentG:"rgba(27,154,170,0.20)", amber:"#F4A261", amberD:"#E08A3A",
-  red:"#E63946", green:"#2A9D8F", greenD:"#228B7E", purple:"#7C4DFF",
-  bg:"#F0F2F5", card:"#FFF", dis:"#9E9E9E",
-  lA:"#E8F6F8", lR:"#FDEAEA", lW:"#FFF3E0", lG:"#E6F5F0", lP:"#EDE7F6",
-  bdr:"#E0E4EA", tx:"#1a1a2e", txS:"#5A6678", txT:"#8E99A8",
-};
+import React, { useState } from 'react';
+import { C, getA11yProps } from './tokens.js';
 
 // ===== SVG ICONS =====
 export const Chev=()=><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>;
@@ -17,13 +8,6 @@ export const DnA=()=><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
 export const WarnIco=()=><svg width="18" height="18" viewBox="0 0 24 24" fill={C.red}><path d="M12 2L1 21h22L12 2zm0 4l7.53 13H4.47L12 6zm-1 5v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg>;
 export const PlusIco=()=><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>;
 export const BellIco=({n})=><div style={{position:"relative",cursor:"pointer"}}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>{n>0&&<span style={{position:"absolute",top:-4,right:-6,background:C.red,color:"#fff",fontSize:9,fontWeight:800,borderRadius:10,padding:"1px 5px",minWidth:16,textAlign:"center"}}>{n}</span>}</div>;
-
-// ===== HELPER TO ADD A11Y TO CLICKABLE DIVS =====
-export const getA11yProps = (onClick) => onClick ? {
-  role: "button",
-  tabIndex: 0,
-  onKeyDown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(e); } }
-} : {};
 
 // ===== QR CODE (Optimization 1: Memoize) =====
 export const QR = React.memo(({sz=200})=>{const g=25,cs=sz/g,cells=[];const sd=[1,0,1,1,0,0,1,0,1,1,1,0,0,1,0,1,1,0,1,0,0,1,1,0,1];for(let r=0;r<g;r++)for(let c=0;c<g;c++){const inF=(r<7&&c<7)||(r<7&&c>=g-7)||(r>=g-7&&c<7);if(inF){const cr=r<7?r:r-(g-7),cc=c<7?c:c-(g-7);if([0,2,3].includes(Math.max(Math.abs(cr-3),Math.abs(cc-3))))cells.push(<rect key={r+"-"+c} x={c*cs} y={r*cs} width={cs} height={cs} fill={C.navy} rx={1}/>);}else if(((r*31+c*17+sd[(r+c)%sd.length])*2654435761>>>0)%3!==0)cells.push(<rect key={r+"-"+c} x={c*cs} y={r*cs} width={cs} height={cs} fill={C.navy} rx={.5}/>);}return <svg width={sz} height={sz} viewBox={`0 0 ${sz} ${sz}`} style={{borderRadius:8}}><rect width={sz} height={sz} fill="#fff" rx={8}/>{cells}</svg>;});
@@ -42,7 +26,10 @@ export const Chips=({items,bg=C.lA,color=C.tx})=><div style={{display:"flex",fle
 // ===== TXIN (Optimization 2: Debounce/Local State) =====
 export const TxIn = ({ value, onChange, placeholder, rows }) => {
   const [local, setLocal] = useState(value || '');
-  useEffect(() => { setLocal(value || ''); }, [value]);
+  // Re-sync local buffer when the controlling value changes (render-phase
+  // sync — see react.dev "You Might Not Need an Effect").
+  const [syncedValue, setSyncedValue] = useState(value);
+  if (value !== syncedValue) { setSyncedValue(value); setLocal(value || ''); }
   const handleBlur = () => { if (local !== value) onChange(local); };
   const hKeyDown = (e) => { if (e.key === 'Enter' && !rows) handleBlur(); };
 

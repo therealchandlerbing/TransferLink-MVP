@@ -7,7 +7,7 @@
 //                  guided-demo overlay is pinned to the bottom of the viewport
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { C } from '../components.jsx';
+import { C } from '../tokens.js';
 import { DEMO_SCREEN_MAP } from '../data.js';
 import { GuidedDemo, IntakeModal, S15 } from '../modals.jsx';
 import { S1, S2, S3, S4, S5, S6, S7, S9, S8, S10 } from '../screens1.jsx';

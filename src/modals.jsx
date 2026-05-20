@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { C, Chk, WarnIco, Bg, Av, Cd, Bt, SL, TB, Bk, TxIn } from './components.jsx';
-import { DEMO_SCREEN_MAP, NEW_PT_TEMPLATE, PERSONAS, FACILITY_MODES, FACILITY_INFO } from './data.js';
+import { Chk, WarnIco, Bg, Av, Cd, Bt, SL, TB, Bk, TxIn } from './components.jsx';
+import { C } from './tokens.js';
+import { DEMO_SCREEN_MAP, NEW_PT_TEMPLATE, PERSONAS, FACILITY_MODES, FACILITY_INFO, ALL_BELONGINGS } from './data.js';
 import { MScaleSelect, FScaleSelect, MedImportModal } from './clinical.jsx';
 
 // ===== TOAST SYSTEM =====
@@ -188,6 +189,11 @@ export const IntakeModal = ({ onClose, onDone, m }) => {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {allRisks.map((r, i) => { const sel = d.risks.includes(r); return <span key={i} onClick={() => upd('risks', toggleArr(d.risks, r))} style={{ padding: '6px 12px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: sel ? C.lW : '#F0F2F5', color: sel ? '#7B3E00' : C.txS, cursor: 'pointer' }}>{sel ? '✓ ' : ''}{r}</span>; })}
             </div>
+            <div style={{ marginTop: 16 }}><SL ch="Personal Belongings" ic="🎒" /></div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {ALL_BELONGINGS.map((b, i) => { const sel = d.belongings.includes(b); return <span key={i} onClick={() => upd('belongings', toggleArr(d.belongings, b))} style={{ padding: '6px 12px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: sel ? C.lA : '#F0F2F5', color: sel ? C.accent : C.txS, cursor: 'pointer' }}>{sel ? '✓ ' : ''}{b}</span>; })}
+            </div>
+            <div style={{ fontSize: 11, color: C.txT, marginTop: 6 }}>Admission inventory — tracked through every transfer and confirmed on return.</div>
           </>}
 
           {step === 2 && <>
@@ -259,6 +265,7 @@ export const IntakeModal = ({ onClose, onDone, m }) => {
               <div style={{ fontSize: 12, color: C.txS, marginBottom: 4 }}>Allergies: <span style={{ color: C.red, fontWeight: 600 }}>{d.allergy.join(', ') || 'NKA'}</span></div>
               <div style={{ fontSize: 12, color: C.txS, marginBottom: 4 }}>Conditions: {d.hx.join(', ') || 'None listed'}</div>
               <div style={{ fontSize: 12, color: C.txS, marginBottom: 4 }}>Devices: {d.dev.join(', ') || 'None'}</div>
+              <div style={{ fontSize: 12, color: C.txS, marginBottom: 4 }}>Belongings: {d.belongings.join(', ') || 'None'}</div>
               <div style={{ fontSize: 12, color: C.txS }}>Contact: {d.contact} ({d.contactRel}) {d.contactPh}</div>
             </>} />
           </>}
