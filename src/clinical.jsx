@@ -269,7 +269,8 @@ export const PtSwitcher = ({ patients, ptId, setPt }) => {
         <span style={{ fontSize: 12, fontWeight: 600, color: '#fff' }}>{p.short}</span>
         <DnA />
       </div>
-      {open && (
+      {open && (<>
+        <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 49 }} />
         <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 6, background: '#fff', borderRadius: 14, boxShadow: '0 8px 32px rgba(0,0,0,.2)', border: `1px solid ${C.bdr}`, overflow: 'hidden', zIndex: 50, minWidth: 240 }}>
           <div style={{ padding: '10px 14px', borderBottom: `1px solid ${C.bdr}`, fontSize: 11, fontWeight: 700, color: C.txS, textTransform: 'uppercase' }}>Switch Patient</div>
           {patients.map((pt, i) => (
@@ -280,7 +281,7 @@ export const PtSwitcher = ({ patients, ptId, setPt }) => {
             </div>
           ))}
         </div>
-      )}
+      </>)}
     </div>
   );
 };

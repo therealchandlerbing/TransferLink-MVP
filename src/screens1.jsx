@@ -138,11 +138,12 @@ export const S3 = ({ go, m, p, update, importMedSource }) => {
             <div onClick={() => setShowDest(!showDest)} role="button" tabIndex={0} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setShowDest(!showDest); } }} style={{ background: '#F8F9FB', borderRadius: 10, padding: '12px 16px', fontSize: 14, border: `1px solid ${showDest ? C.accent : C.bdr}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
               <span style={{ fontWeight: 600 }}>{dest}</span><DnA />
             </div>
-            {showDest && (
+            {showDest && (<>
+              <div onClick={() => setShowDest(false)} style={{ position: 'fixed', inset: 0, zIndex: 19 }} />
               <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', borderRadius: 12, boxShadow: '0 8px 24px rgba(0,0,0,.15)', border: `1px solid ${C.bdr}`, zIndex: 20, overflow: 'hidden' }}>
                 {dests.map((d, i) => <div key={i} onClick={() => { setDest(d); setShowDest(false); }} style={{ padding: '12px 16px', fontSize: 13, cursor: 'pointer', background: d === dest ? C.lA : 'transparent', borderBottom: `1px solid ${C.bdr}15`, fontWeight: d === dest ? 600 : 400 }}>{d === dest && '✓ '}{d}</div>)}
               </div>
-            )}
+            </>)}
           </div>
 
           {/* Medication source verification */}

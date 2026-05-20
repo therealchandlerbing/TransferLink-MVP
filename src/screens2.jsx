@@ -45,9 +45,11 @@ export const S11 = ({ go, m, p, updateER }) => {
               <span style={{ fontWeight: 600 }}>{dr}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.txS} strokeWidth="2"><path d="M6 9l6 6 6-6" /></svg>
             </div>
-            {showDr && <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', borderRadius: 12, boxShadow: '0 8px 24px rgba(0,0,0,.15)', zIndex: 20, overflow: 'hidden' }}>
+            {showDr && <>
+              <div onClick={() => setShowDr(false)} style={{ position: 'fixed', inset: 0, zIndex: 19 }} />
+              <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', borderRadius: 12, boxShadow: '0 8px 24px rgba(0,0,0,.15)', zIndex: 20, overflow: 'hidden' }}>
               {drs.map((d, i) => <div key={i} onClick={() => { setDr(d); setShowDr(false); }} style={{ padding: '12px 16px', fontSize: 13, cursor: 'pointer', background: d === dr ? C.lG : 'transparent', fontWeight: d === dr ? 600 : 400, borderBottom: `1px solid ${C.bdr}15` }}>{d === dr && '✓ '}{d}</div>)}
-            </div>}
+            </div></>}
           </div>
           <SL ch="Diagnosis" ic="🩺" />
           <TxIn value={dx} onChange={setDx} placeholder="Primary diagnosis..." />
@@ -280,7 +282,7 @@ export const S17 = ({ go, m, patients, persona, alerts, dismissAlert, setPt }) =
 
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
-      <TB m={m} left={<Bk go={go} to={15} label="Back" />} ctr="Facility Dashboard" />
+      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr="Facility Dashboard" />
       <div style={{ padding: m ? 14 : 20, maxWidth: 720, margin: '0 auto' }}>
         <div style={{ background: `linear-gradient(135deg,${C.navy},${C.navyL})`, borderRadius: 16, padding: m ? '14px 14px' : '18px 22px', marginBottom: m ? 12 : 16, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
