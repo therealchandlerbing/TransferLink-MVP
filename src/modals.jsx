@@ -295,13 +295,17 @@ export const S15 = ({ go, m, setPersona, setRole }) => {
   const shifts = ['Day (7a-7p)', 'Night (7p-7a)', 'Swing'];
 
   if (loginStep === 0) return (
-    <div style={{ minHeight: '100vh', background: `linear-gradient(160deg,${C.navy},#2A3F6A)`, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: m ? 16 : 32 }}>
-      <div style={{ maxWidth: 420, width: '100%' }}>
-        <div style={{ textAlign: 'center', marginBottom: 36 }}>
-          <div style={{ fontSize: m ? 28 : 36, fontWeight: 900, color: '#fff' }}>Transfer<span style={{ color: C.accent }}>Link</span></div>
-          <div style={{ fontSize: 14, color: 'rgba(255,255,255,.5)', marginTop: 8 }}>Secure facility access</div>
+    <div style={{ minHeight: '100vh', background: `linear-gradient(160deg,${C.navy},#22375f)`, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: m ? 16 : 32, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', top: '12%', left: '50%', transform: 'translateX(-50%)', width: 460, height: 460, borderRadius: '50%', background: `radial-gradient(circle,${C.accent}24,transparent 68%)`, pointerEvents: 'none' }} />
+      <div style={{ maxWidth: 420, width: '100%', position: 'relative' }}>
+        <div style={{ textAlign: 'center', marginBottom: m ? 26 : 32 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 10 }}>
+            <div style={{ width: m ? 38 : 44, height: m ? 38 : 44, borderRadius: m ? 11 : 13, background: `linear-gradient(135deg,${C.accent},${C.accentD})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: m ? 19 : 22, boxShadow: `0 6px 20px ${C.accent}60` }}>🔗</div>
+            <div style={{ fontFamily: "'Manrope','Inter',sans-serif", fontSize: m ? 28 : 34, fontWeight: 900, color: '#fff', letterSpacing: -.6 }}>Transfer<span style={{ color: C.accent }}>Link</span></div>
+          </div>
+          <div style={{ fontSize: m ? 13 : 14, color: 'rgba(255,255,255,.55)' }}>Secure facility access · no separate EMR password</div>
         </div>
-        <Cd m={m} style={{ padding: m ? '24px 20px' : '32px 28px' }} ch={<>
+        <Cd m={m} style={{ padding: m ? '24px 20px' : '30px 28px', boxShadow: '0 24px 60px rgba(0,0,0,.4)' }} ch={<>
           <SL ch="Facility Login" ic="🏥" />
           <div style={{ marginBottom: 16 }}>
             <span style={{ fontSize: 12, fontWeight: 600, color: C.txS }}>Facility ID</span>
