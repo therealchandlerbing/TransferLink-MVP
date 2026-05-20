@@ -23,7 +23,7 @@ const Toast = ({ t, remove }) => {
 export const ToastContainer = ({ toasts, setToasts }) => {
   const remove = useCallback((id) => setToasts(ts => ts.filter(x => x.id !== id)), [setToasts]);
   return (
-    <div style={{ position: 'fixed', top: 64, left: 16, right: 16, zIndex: 1000, display: 'flex', flexDirection: 'column', gap: 10, pointerEvents: 'none' }}>
+    <div style={{ position: 'fixed', top: 64, left: '50%', transform: 'translateX(-50%)', width: 'calc(100% - 32px)', maxWidth: 648, zIndex: 1000, display: 'flex', flexDirection: 'column', gap: 10, pointerEvents: 'none' }}>
       {toasts.map(t => <Toast key={t.id} t={t} remove={remove} />)}
     </div>
   );

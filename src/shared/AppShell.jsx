@@ -19,7 +19,7 @@ import { ToastContainer, NotificationCenter } from '../modals.jsx';
 
 const globalStyles = `
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #1a1a2e; -webkit-text-size-adjust: 100%; }
+  body { background: #080d17; -webkit-text-size-adjust: 100%; }
   button, [role="button"] { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .card-hover:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(15,29,47,.12) !important; }
   .hover-scale:hover { transform: scale(1.03); }
@@ -107,18 +107,23 @@ export default function AppShell({
 
   return (
     <TopBarContext.Provider value={chrome}>
-      <div style={{ maxWidth: 680, margin: '0 auto', minHeight: '100vh', position: 'relative', fontFamily: "'Inter',system-ui,sans-serif", color: C.tx }}>
-        <style>{globalStyles}</style>
-        <ToastContainer toasts={toasts} setToasts={setToasts} />
-        {showNotif && (
-          <NotificationCenter
-            notifications={notifs}
-            onClose={() => setShowNotif(false)}
-            onSelect={handleNotifSelect}
-            m={m}
-          />
-        )}
-        {children}
+      {/* Ambient backdrop so the app column reads as an intentional, elevated
+          surface on wide screens instead of a strip floating in dead space. */}
+      <div style={{ minHeight: '100vh', background: 'radial-gradient(ellipse 100% 58% at 50% 0%, #1c2e4c 0%, #0d1626 58%, #080d17 100%)' }}>
+        <div style={{ position: 'fixed', inset: 0, backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,.022) 1px, transparent 0)', backgroundSize: '34px 34px', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 680, margin: '0 auto', minHeight: '100vh', position: 'relative', fontFamily: "'Inter',system-ui,sans-serif", color: C.tx, boxShadow: '0 0 0 1px rgba(255,255,255,.05), 0 0 90px rgba(0,0,0,.6)' }}>
+          <style>{globalStyles}</style>
+          <ToastContainer toasts={toasts} setToasts={setToasts} />
+          {showNotif && (
+            <NotificationCenter
+              notifications={notifs}
+              onClose={() => setShowNotif(false)}
+              onSelect={handleNotifSelect}
+              m={m}
+            />
+          )}
+          {children}
+        </div>
       </div>
     </TopBarContext.Provider>
   );
