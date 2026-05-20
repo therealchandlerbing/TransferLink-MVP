@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Chk, WarnIco, Bg, Av, Cd, Bt, SL, TB, Bk, TxIn } from './components.jsx';
 import { C } from './tokens.js';
 import { DEMO_SCREEN_MAP, NEW_PT_TEMPLATE, PERSONAS, FACILITY_MODES, FACILITY_INFO, ALL_BELONGINGS } from './data.js';
@@ -50,8 +50,21 @@ export const NotificationCenter = ({ notifications, onClose, onSelect, m }) => (
 );
 
 // ===== GUIDED DEMO =====
-export const GuidedDemo = ({ onExit, demoStep, setDemoStep, navigate, selectPatient, m }) => {
+export const GuidedDemo = ({ onExit, demoStep, setDemoStep, navigate, selectPatient, m, onHeight }) => {
   const [collapsed, setCollapsed] = useState(false);
+  // Report the tray's actual height so the screen reserves exactly that much
+  // space below its content — action buttons then always scroll clear of the
+  // tray, with no need to collapse it to reach them.
+  const trayRef = useRef(null);
+  useEffect(() => {
+    const node = trayRef.current;
+    if (!node || !onHeight) return undefined;
+    const report = () => onHeight(node.offsetHeight);
+    report();
+    const ro = new ResizeObserver(report);
+    ro.observe(node);
+    return () => ro.disconnect();
+  }, [collapsed, demoStep, onHeight, m]);
   const steps = DEMO_SCREEN_MAP;
   const s = steps[demoStep];
   if (!s) return null;
@@ -65,7 +78,7 @@ export const GuidedDemo = ({ onExit, demoStep, setDemoStep, navigate, selectPati
 
   // ── Slim bar when collapsed ──────────────────────────────────────────
   if (collapsed) return (
-    <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200, background: 'rgba(15,29,47,0.97)', backdropFilter: 'blur(12px)', borderTop: '2px solid rgba(27,154,170,0.4)', height: 44, display: 'flex', alignItems: 'center', padding: '0 14px', gap: 10 }}>
+    <div ref={trayRef} style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200, background: 'rgba(15,29,47,0.97)', backdropFilter: 'blur(12px)', borderTop: '2px solid rgba(27,154,170,0.4)', height: 44, display: 'flex', alignItems: 'center', padding: '0 14px', gap: 10 }}>
       <div style={{ display: 'flex', gap: 3, flexShrink: 0 }}>
         {steps.map((_, i) => <div key={i} style={{ width: i === demoStep ? 12 : 5, height: 5, borderRadius: 3, background: i < demoStep ? C.green : i === demoStep ? C.accent : 'rgba(255,255,255,.2)', transition: 'all .3s' }} />)}
       </div>
@@ -81,7 +94,7 @@ export const GuidedDemo = ({ onExit, demoStep, setDemoStep, navigate, selectPati
 
   // ── Full tray ────────────────────────────────────────────────────────
   return (
-    <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200, background: 'linear-gradient(180deg,rgba(15,29,47,0.96),rgba(15,29,47,0.99))', backdropFilter: 'blur(12px)', borderTop: '2px solid rgba(27,154,170,0.4)', padding: m ? '10px 14px 12px' : '14px 24px 16px', animation: 'slideUp .3s ease', maxHeight: m ? '55vh' : '44vh', overflowY: 'auto' }}>
+    <div ref={trayRef} style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200, background: 'linear-gradient(180deg,rgba(15,29,47,0.96),rgba(15,29,47,0.99))', backdropFilter: 'blur(12px)', borderTop: '2px solid rgba(27,154,170,0.4)', padding: m ? '10px 14px 12px' : '14px 24px 16px', animation: 'slideUp .3s ease', maxHeight: m ? '55vh' : '44vh', overflowY: 'auto' }}>
       <div style={{ maxWidth: 700, margin: '0 auto' }}>
         {/* Header row: dots + step counter + collapse */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>

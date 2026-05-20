@@ -134,6 +134,7 @@ export default function Prototype({
   // step-advance (which calls go() internally).
   const [visited, setVisited] = useState(() => new Set([screen]));
   const [showIntake, setShowIntake] = useState(false);
+  const [trayH, setTrayH] = useState(0);
 
   const go = useCallback((s) => {
     if (s === 'add') { setShowIntake(true); return; }
@@ -199,6 +200,7 @@ export default function Prototype({
           navigate={go}
           selectPatient={setPtId}
           m={m}
+          onHeight={setTrayH}
         />
       )}
 
@@ -206,7 +208,7 @@ export default function Prototype({
         <Hub go={go} m={m} onExitToLanding={exitToLanding} showExit={mode !== 'tour'} />
       )}
 
-      <div style={{ paddingBottom: mode === 'tour' ? (m ? 180 : 110) : 0 }}>
+      <div style={{ paddingBottom: mode === 'tour' ? trayH : 0 }}>
         {screen === 15 && <S15 go={go} m={m} setPersona={setPersona} setRole={setRole} />}
         {screen === 17 && <S17 go={go} m={m} patients={patients} persona={persona} setPt={setPtId} alerts={dashAlerts} dismissAlert={dismissAlert} ackReturn={ackReturn} />}
         {screen === 18 && <S18 go={go} m={m} patients={patients} setPt={setPtId} />}
