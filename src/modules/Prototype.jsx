@@ -7,7 +7,7 @@
 //                  guided-demo overlay is pinned to the bottom of the viewport
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { C } from '../tokens.js';
+import { C, getA11yProps } from '../tokens.js';
 import { DEMO_SCREEN_MAP } from '../data.js';
 import { GuidedDemo, IntakeModal, S15 } from '../modals.jsx';
 import { S1, S2, S3, S4, S5, S6, S7, S9, S8, S10 } from '../screens1.jsx';
@@ -77,7 +77,7 @@ function Hub({ go, m, onExitToLanding, showExit = true }) {
       <div style={{ marginTop: m ? 24 : 32, textAlign: 'center', position: 'relative', maxWidth: 460 }}>
         <div style={{ fontSize: 11, color: 'rgba(255,255,255,.28)', lineHeight: 1.7 }}>
           No real patient data · prototype only<br />
-          Prefer a narrated walkthrough? <span onClick={() => navigate('tour', [])} style={{ color: C.accent, cursor: 'pointer', fontWeight: 600 }}>Start the 3-minute tour →</span>
+          Prefer a narrated walkthrough? <span onClick={() => navigate('tour', [])} {...getA11yProps(() => navigate('tour', []))} style={{ color: C.accent, cursor: 'pointer', fontWeight: 600 }}>Start the 3-minute tour →</span>
         </div>
       </div>
     </div>

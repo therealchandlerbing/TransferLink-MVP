@@ -278,7 +278,7 @@ export const IntakeModal = ({ onClose, onDone, m }) => {
           {step > 0 && <Bt ch="Back" outline onClick={() => setStep(step - 1)} m={m} style={{ flex: 1 }} />}
           {step < 4
             ? <Bt ch={step === 0 ? 'Next: Clinical ›' : 'Next ›'} onClick={() => setStep(step + 1)} m={m} style={{ flex: step > 0 ? 1 : undefined }} full={step === 0} />
-            : <Bt ch="✓ Save and Generate QR" bg={C.green} onClick={() => { const init = d.name.split(' ').map(x => x[0]).join('').slice(0, 2).toUpperCase() || '??'; const flag = LANG_FLAGS[(d.lang || '').trim().toLowerCase()] || '🌐'; onDone({ ...d, init, flag, id: -1 }); }} m={m} full />}
+            : <Bt ch={d.name.trim() ? '✓ Save and Generate QR' : 'Enter a patient name to save'} bg={C.green} disabled={!d.name.trim()} onClick={() => { const init = d.name.split(' ').map(x => x[0]).join('').slice(0, 2).toUpperCase() || '??'; const flag = LANG_FLAGS[(d.lang || '').trim().toLowerCase()] || '🌐'; onDone({ ...d, init, flag, id: -1 }); }} m={m} full />}
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Chk, DnA, QR, Bg, Av, Cd, Bt, SL, TB, Bk, FR, ProgressMeter } from './components.jsx';
-import { C } from './tokens.js';
+import { C, getA11yProps } from './tokens.js';
 import { AllergyB, PtHd, Steps, TransferTracker, PtSwitcher, POLST, Scanner, Sections, MedImportModal, VitalsTrend } from './clinical.jsx';
 
 // ===== S1 — PATIENT ROSTER =====
@@ -15,7 +15,7 @@ export const S1 = ({ go, m, setPt, patients, onAddPt }) => {
         {/* Search + Add */}
         <div style={{ display: 'flex', gap: 10, marginBottom: m ? 12 : 16 }}>
           <div style={{ position: 'relative', flex: 1 }}>
-            <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search patients..." style={{ width: '100%', padding: '11px 16px 11px 40px', borderRadius: 12, border: `1.5px solid ${C.bdr}`, fontSize: 14, background: '#fff', boxSizing: 'border-box', fontFamily: 'inherit', outline: 'none' }} />
+            <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search patients..." style={{ width: '100%', padding: '11px 16px 11px 40px', borderRadius: 12, border: `1.5px solid ${C.bdr}`, fontSize: 14, background: '#fff', boxSizing: 'border-box', fontFamily: 'inherit' }} />
             <svg style={{ position: 'absolute', left: 13, top: 12 }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.dis} strokeWidth="2"><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /></svg>
           </div>
           <button onClick={onAddPt} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', borderRadius: 12, background: `linear-gradient(135deg,${C.accent},${C.accentD})`, color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: 13, whiteSpace: 'nowrap', fontFamily: 'inherit', boxShadow: `0 3px 12px ${C.accentG}` }}>
@@ -26,12 +26,12 @@ export const S1 = ({ go, m, setPt, patients, onAddPt }) => {
         {/* Patient count */}
         <div style={{ fontSize: 11, fontWeight: 600, color: C.txT, textTransform: 'uppercase', letterSpacing: .8, marginBottom: 10 }}>{filtered.length} Resident{filtered.length !== 1 ? 's' : ''}</div>
         {/* Patient cards */}
-        {filtered.map((p, i) => {
+        {filtered.map((p) => {
           const cc = codeColor(p);
           const hasTransfer = !!(p.tx && p.tx.reason);
           const returned = !!(p.er && p.er.dx);
           return (
-            <div key={i} onClick={() => { setPt(p.id); go(2); }} className="card-hover" style={{ background: '#fff', borderRadius: 14, marginBottom: m ? 9 : 11, display: 'flex', alignItems: 'stretch', border: `1px solid ${C.bdr}30`, cursor: 'pointer', boxShadow: '0 1px 6px rgba(0,0,0,.05)', transition: 'all .2s', overflow: 'hidden' }}>
+            <div key={p.id} onClick={() => { setPt(p.id); go(2); }} {...getA11yProps(() => { setPt(p.id); go(2); })} className="card-hover" style={{ background: '#fff', borderRadius: 14, marginBottom: m ? 9 : 11, display: 'flex', alignItems: 'stretch', border: `1px solid ${C.bdr}30`, cursor: 'pointer', boxShadow: '0 1px 6px rgba(0,0,0,.05)', transition: 'all .2s', overflow: 'hidden' }}>
               {/* Color bar */}
               <div style={{ width: 5, background: cc, flexShrink: 0 }} />
               {/* Content */}
@@ -70,7 +70,7 @@ export const S2 = ({ go, m, p, patients, ptId, setPt, visited, importMedSource }
   const [medOpen, setMedOpen] = useState(false);
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
-      <TB m={m} left={<Bk go={go} to={1} label="Patients" />} ctr="Patient Record" right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
+      <TB m={m} left={<Bk go={go} to={1} label="Patients" />} ctr="Patient Record" right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} />} />
       <Steps cur={0} m={m} />
       {medOpen && <MedImportModal onClose={() => setMedOpen(false)} onImport={(src) => importMedSource && importMedSource(src)} currentSource={p.medSource} m={m} />}
       <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
@@ -78,7 +78,7 @@ export const S2 = ({ go, m, p, patients, ptId, setPt, visited, importMedSource }
         <PtHd p={p} onQR={() => go(5)} m={m} />
         <AllergyB p={p} m={m} />
         <VitalsTrend p={p} m={m} />
-        <Sections p={p} m={m} onImportMeds={() => setMedOpen(true)} />
+        <Sections p={p} m={m} er={!!p.er?.ackedAt} onImportMeds={() => setMedOpen(true)} />
         <div style={{ marginTop: 8 }}>
           <Bt full ch="Initiate Transfer to ED" onClick={() => go(3)} m={m} />
         </div>
@@ -209,7 +209,7 @@ export const S3 = ({ go, m, p, update, importMedSource }) => {
 // ===== S4 — CONFIRM TRANSFER =====
 export const S4 = ({ go, m, p, patients, ptId, setPt }) => (
   <div style={{ minHeight: '100vh', background: C.bg }}>
-    <TB m={m} left={<Bk go={go} to={3} label="Edit" />} ctr="Confirm Transfer" right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
+    <TB m={m} left={<Bk go={go} to={3} label="Edit" />} ctr="Confirm Transfer" right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} />} />
     <Steps cur={2} m={m} />
     <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
       <PtHd p={p} m={m} />
@@ -428,7 +428,7 @@ export const S8 = ({ go, m, p, patients, ptId, setPt }) => {
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
       {pol && p.polst && <POLST p={p} onClose={() => setPol(false)} m={m} />}
-      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr={m ? 'EMS View' : 'TransferLink | EMS'} accent={C.amber} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
+      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr={m ? 'EMS View' : 'TransferLink | EMS'} accent={C.amber} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} />} />
       <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
         <TriagePanel p={p} m={m} tone="amber" />
         {/* Person-centered operational surface: triggers + calming */}
@@ -457,7 +457,7 @@ export const S10 = ({ go, m, p, patients, ptId, setPt }) => {
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
       {pol && p.polst && <POLST p={p} onClose={() => setPol(false)} m={m} />}
-      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr={m ? 'ED Triage' : 'TransferLink | ED Triage'} accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
+      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr={m ? 'ED Triage' : 'TransferLink | ED Triage'} accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} />} />
       <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
         <TriagePanel p={p} m={m} tone="green" />
 

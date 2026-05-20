@@ -118,7 +118,7 @@ export const S12 = ({ go, m, p }) => (
         <Bt full ch="Return Home" onClick={() => go(0)} m={m} bg={C.green} />
       </div>
       <div style={{ textAlign: 'center', marginTop: 12 }}>
-        <span onClick={() => go(14)} style={{ fontSize: 13, color: C.accent, fontWeight: 600, cursor: 'pointer' }}>View full transfer timeline →</span>
+        <span onClick={() => go(14)} {...getA11yProps(() => go(14))} style={{ fontSize: 13, color: C.accent, fontWeight: 600, cursor: 'pointer' }}>View full transfer timeline →</span>
       </div>
     </div>
   </div>
@@ -141,7 +141,7 @@ export const S13 = ({ go, m, p, patients, ptId, setPt, ackReturn }) => {
   const summary = `${p.short} · ${p.fac}\nDx: ${p.er.dx || '—'}\nProvider: ${p.er.dr || '—'}\nVitals: BP ${p.er.bp}, HR ${p.er.hr}, RR ${p.er.rr}, SpO2 ${p.er.sp}\nMed changes: ${p.er.rx || 'None'}\nInstructions: ${p.er.ins || '—'}`;
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
-      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr="Patient Returned" accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} m={m} />} />
+      <TB m={m} left={<Bk go={go} to={0} label="Home" />} ctr="Patient Returned" accent={C.green} right={<PtSwitcher patients={patients} ptId={ptId} setPt={setPt} />} />
       <div style={{ padding: m ? 14 : 20, maxWidth: 720, margin: '0 auto' }}>
         {/* Push-notification banner that persists until acked */}
         <div style={{ background: acked ? `linear-gradient(90deg,${C.lG},#F0FFF4)` : `linear-gradient(90deg,#FFF5E1,#FFE8C4)`, border: `1.5px solid ${acked ? C.green : C.amber}`, borderLeft: `4px solid ${acked ? C.green : C.amberD}`, borderRadius: 12, padding: m ? '12px 14px' : '14px 20px', marginBottom: m ? 10 : 14, display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -404,15 +404,15 @@ export const S18 = ({ go, m, patients, setPt }) => {
       <TB m={m} left={<Bk go={go} to={17} label="Dashboard" />} ctr="Transfer History" />
       <div style={{ padding: m ? 14 : 20, maxWidth: 700, margin: '0 auto' }}>
         <div style={{ display: 'flex', gap: 8, marginBottom: m ? 14 : 20, overflowX: 'auto', paddingBottom: 4 }}>
-          {tabs.map((t, i) => <span key={i} onClick={() => setTab(i)} style={{ padding: '8px 18px', borderRadius: 20, fontSize: 13, fontWeight: 600, background: tab === i ? C.accent : '#fff', color: tab === i ? '#fff' : C.txS, cursor: 'pointer', whiteSpace: 'nowrap', border: `1px solid ${tab === i ? C.accent : C.bdr}` }}>{t}</span>)}
+          {tabs.map((t, i) => <span key={i} onClick={() => setTab(i)} {...getA11yProps(() => setTab(i))} style={{ padding: '8px 18px', borderRadius: 20, fontSize: 13, fontWeight: 600, background: tab === i ? C.accent : '#fff', color: tab === i ? '#fff' : C.txS, cursor: 'pointer', whiteSpace: 'nowrap', border: `1px solid ${tab === i ? C.accent : C.bdr}` }}>{t}</span>)}
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: m ? '1fr' : '1fr 1fr 1fr', gap: m ? 8 : 12, marginBottom: 16 }}>
           {[['Total Transfers', txPts.length, C.accent], ['Active', txPts.filter(p => !(p.er && p.er.dx)).length, C.amber], ['Completed', txPts.filter(p => p.er && p.er.dx).length, C.green]].map(([l, n, c], i) => (
             <Cd key={i} m={m} style={{ textAlign: 'center', borderTop: `3px solid ${c}` }} ch={<><div style={{ fontSize: m ? 24 : 28, fontWeight: 900, color: c }}>{n}</div><div style={{ fontSize: 12, color: C.txS }}>{l}</div></>} />
           ))}
         </div>
-        {filtered.length === 0 ? <Cd m={m} ch={<div style={{ textAlign: 'center', padding: 32, color: C.dis }}>No transfers in this category.</div>} /> : filtered.map((pt, i) => (
-          <Cd key={i} m={m} onClick={() => { setPt(pt.id); go(2); }} style={{ cursor: 'pointer', borderLeft: `4px solid ${pt.er && pt.er.dx ? C.green : C.amber}` }} ch={
+        {filtered.length === 0 ? <Cd m={m} ch={<div style={{ textAlign: 'center', padding: 32, color: C.dis }}>No transfers in this category.</div>} /> : filtered.map((pt) => (
+          <Cd key={pt.id} m={m} onClick={() => { setPt(pt.id); go(2); }} style={{ cursor: 'pointer', borderLeft: `4px solid ${pt.er && pt.er.dx ? C.green : C.amber}` }} ch={
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
               <Av sz={36} init={pt.init} />
               <div style={{ flex: 1 }}>
