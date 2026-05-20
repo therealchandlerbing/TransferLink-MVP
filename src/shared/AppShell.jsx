@@ -1,16 +1,20 @@
 // Persistent chrome shared by Prototype and Tour:
-//   — Global CSS (kept identical to the pre-refactor App.jsx)
+//   — Global CSS
 //   — Toast container
 //   — Notification center drawer
-//   — Floating bell + home button
+//   — Notification bell + home button
+//
+// The bell + home are handed to the TB component through TopBarContext so they
+// render inline in the top bar's right slot. They used to float over the page
+// with position:fixed, which overlapped screen content on narrow viewports.
 //
 // Accepts a `homeLabel` / `onHome` so the Tour can label it "Exit Tour" while
-// Prototype says "Home". The chrome is only rendered when `showChrome` is true
-// (scanner / full-bleed screens suppress it, matching current behavior).
+// the Prototype says "Home".
 
 import React, { useState } from 'react';
 import { BellIco } from '../components.jsx';
 import { C } from '../tokens.js';
+import { TopBarContext } from '../topbar-context.js';
 import { ToastContainer, NotificationCenter } from '../modals.jsx';
 
 const globalStyles = `
@@ -25,52 +29,48 @@ const globalStyles = `
   @keyframes slideUp { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
   @keyframes confirmBounce { 0%{opacity:0;transform:scale(.4)}60%{transform:scale(1.12)}100%{opacity:1;transform:scale(1)} }
   @keyframes sc { 0%,100%{top:0}50%{top:calc(100% - 3px)} }
-  .home-btn:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(27,154,170,.5) !important; }
+  .home-btn:hover { background: rgba(255,255,255,.22) !important; }
   .home-btn:active { transform: scale(0.96); }
+  .bell-btn:hover { opacity: .8; }
   input,textarea,button { font-family: inherit; }
   ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(0,0,0,.15); border-radius: 2px; }
 `;
 
-export function BellButton({ onClick, count }) {
-  const label = count > 0
-    ? `Open notifications (${count} unread)`
-    : 'Open notifications';
+// Bell + home, rendered inline inside the top bar's right slot via TopBarContext.
+function TopBarChrome({ m, showBell, unreadCount, onBell, showHome, onHome, homeLabel, homeIcon, homeAriaLabel }) {
+  if (!showBell && !showHome) return null;
   return (
-    <button
-      onClick={onClick}
-      aria-label={label}
-      style={{
-        position: 'fixed', top: 10, right: 12, zIndex: 50,
-        background: 'none', border: 'none', cursor: 'pointer', padding: 4,
-        minWidth: 44, minHeight: 44, display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}
-    >
-      <BellIco n={count} />
-    </button>
-  );
-}
-
-export function HomeButton({ onClick, label = 'Home', icon = '🏠', ariaLabel = 'Go to Home' }) {
-  return (
-    <button
-      className="home-btn"
-      onClick={onClick}
-      aria-label={ariaLabel}
-      style={{
-        position: 'fixed', top: 58, right: 12, zIndex: 49,
-        display: 'flex', alignItems: 'center', gap: 5,
-        padding: '6px 12px', borderRadius: 20,
-        background: `linear-gradient(135deg,${C.navy},${C.navyL})`,
-        border: `1.5px solid rgba(27,154,170,0.4)`,
-        color: 'rgba(255,255,255,0.85)', fontSize: 12, fontWeight: 700,
-        cursor: 'pointer', boxShadow: '0 2px 10px rgba(15,29,47,.3)',
-        transition: 'transform .18s ease, box-shadow .18s ease',
-        letterSpacing: .2, fontFamily: 'inherit',
-      }}
-    >
-      <span style={{ fontSize: 13 }}>{icon}</span>
-      {label}
-    </button>
+    <>
+      {showBell && (
+        <button
+          className="bell-btn"
+          onClick={onBell}
+          aria-label={unreadCount > 0 ? `Open notifications (${unreadCount} unread)` : 'Open notifications'}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, minWidth: 40, minHeight: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'opacity .15s' }}
+        >
+          <BellIco n={unreadCount} />
+        </button>
+      )}
+      {showHome && onHome && (
+        <button
+          className="home-btn"
+          onClick={onHome}
+          aria-label={homeAriaLabel}
+          title={homeLabel}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 5,
+            padding: m ? '8px 10px' : '7px 13px', borderRadius: 18,
+            background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)',
+            color: '#fff', fontSize: 12, fontWeight: 700, cursor: 'pointer',
+            minHeight: 40, letterSpacing: .2, whiteSpace: 'nowrap',
+            transition: 'background .15s, transform .12s', fontFamily: 'inherit',
+          }}
+        >
+          <span style={{ fontSize: 13 }}>{homeIcon}</span>
+          {!m && homeLabel}
+        </button>
+      )}
+    </>
   );
 }
 
@@ -91,28 +91,35 @@ export default function AppShell({
     setShowNotif(false);
   };
 
+  const chrome = (
+    <TopBarChrome
+      m={m}
+      showBell={showBell}
+      unreadCount={unreadCount}
+      onBell={() => { setShowNotif(true); markAllNotifsRead(); }}
+      showHome={showHome}
+      onHome={onHome}
+      homeLabel={homeLabel}
+      homeIcon={homeIcon}
+      homeAriaLabel={homeAriaLabel}
+    />
+  );
+
   return (
-    <div style={{ maxWidth: 680, margin: '0 auto', minHeight: '100vh', position: 'relative', fontFamily: "'Inter',system-ui,sans-serif", color: C.tx }}>
-      <style>{globalStyles}</style>
-      <ToastContainer toasts={toasts} setToasts={setToasts} />
-      {showNotif && (
-        <NotificationCenter
-          notifications={notifs}
-          onClose={() => setShowNotif(false)}
-          onSelect={handleNotifSelect}
-          m={m}
-        />
-      )}
-      {children}
-      {showBell && (
-        <BellButton
-          count={unreadCount}
-          onClick={() => { setShowNotif(true); markAllNotifsRead(); }}
-        />
-      )}
-      {showHome && onHome && (
-        <HomeButton onClick={onHome} label={homeLabel} icon={homeIcon} ariaLabel={homeAriaLabel} />
-      )}
-    </div>
+    <TopBarContext.Provider value={chrome}>
+      <div style={{ maxWidth: 680, margin: '0 auto', minHeight: '100vh', position: 'relative', fontFamily: "'Inter',system-ui,sans-serif", color: C.tx }}>
+        <style>{globalStyles}</style>
+        <ToastContainer toasts={toasts} setToasts={setToasts} />
+        {showNotif && (
+          <NotificationCenter
+            notifications={notifs}
+            onClose={() => setShowNotif(false)}
+            onSelect={handleNotifSelect}
+            m={m}
+          />
+        )}
+        {children}
+      </div>
+    </TopBarContext.Provider>
   );
 }

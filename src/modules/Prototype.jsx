@@ -140,7 +140,9 @@ export default function Prototype({
   }, [setPtId, go]);
 
   const hideChromeScreens = new Set([HOME_SCREEN, 7, 9, 12]);
-  const bellHiddenOn = new Set([HOME_SCREEN, 5, 6, 7, 9, 12, 15]);
+  // Bell is hidden on the patient-switcher screens (2,4,8,10,13) so the top-bar
+  // right slot isn't overcrowded, and on full-bleed / scanner screens.
+  const bellHiddenOn = new Set([HOME_SCREEN, 2, 4, 5, 6, 7, 8, 9, 10, 12, 13, 15]);
   const showBell = !bellHiddenOn.has(screen);
   const showHome = !hideChromeScreens.has(screen) || mode === 'tour';
 

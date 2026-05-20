@@ -328,6 +328,9 @@ export const S15 = ({ go, m, setPersona, setRole }) => {
           <Bt full ch="Sign In" onClick={() => { setPersona(PERSONAS[selPersona]); setRole(roles[selRole]); setLoginStep(1); }} m={m} />
           <div style={{ textAlign: 'center', marginTop: 16, fontSize: 12, color: C.txS }}>Secured with facility-level authentication.</div>
         </>} />
+        <div style={{ textAlign: 'center', marginTop: 18 }}>
+          <button onClick={() => go(0)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,.55)', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>← Back to menu</button>
+        </div>
       </div>
     </div>
   );

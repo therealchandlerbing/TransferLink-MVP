@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Chk, DnA, WarnIco, QR, Bg, Av, Cd, Bt, SL, TB, Bk, FR, Chips, MedSourceBadge } from './components.jsx';
 import { C, getA11yProps } from './tokens.js';
+import { useWindowWidth } from './shared/hooks.js';
 
 // ===== ALLERGY BANNER =====
 export const AllergyB = ({ p, m }) =>
@@ -261,12 +262,13 @@ export const TransferTracker = ({ visited, m }) => {
 // ===== PATIENT SWITCHER =====
 export const PtSwitcher = ({ patients, ptId, setPt }) => {
   const [open, setOpen] = useState(false);
+  const m = useWindowWidth() < 520;
   const p = patients.find(x => x.id === ptId) || patients[0];
   return (
     <div style={{ position: 'relative' }}>
-      <div onClick={() => setOpen(!open)} {...getA11yProps(() => setOpen(!open))} aria-expanded={open} style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', padding: '4px 10px', borderRadius: 20, background: 'rgba(255,255,255,.12)', minHeight: 36 }}>
-        <div style={{ width: 24, height: 24, borderRadius: 12, background: 'rgba(255,255,255,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: '#fff' }}>{p.init}</div>
-        <span style={{ fontSize: 12, fontWeight: 600, color: '#fff' }}>{p.short}</span>
+      <div onClick={() => setOpen(!open)} {...getA11yProps(() => setOpen(!open))} aria-expanded={open} aria-label={`Switch patient — current: ${p.short}`} style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', padding: m ? '5px 8px' : '4px 10px', borderRadius: 20, background: 'rgba(255,255,255,.12)', minHeight: 36 }}>
+        <div style={{ width: 24, height: 24, borderRadius: 12, background: 'rgba(255,255,255,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: '#fff', flexShrink: 0 }}>{p.init}</div>
+        {!m && <span style={{ fontSize: 12, fontWeight: 600, color: '#fff', whiteSpace: 'nowrap' }}>{p.short}</span>}
         <DnA />
       </div>
       {open && (<>
